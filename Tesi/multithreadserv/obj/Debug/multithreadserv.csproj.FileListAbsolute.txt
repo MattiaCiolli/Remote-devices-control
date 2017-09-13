@@ -1,0 +1,11 @@
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe.config
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\ConsoleApplication2\bin\Debug\ConsoleApplication2.pdb
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\ConsoleApplication2\obj\Debug\ConsoleApplication2.exe
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\ConsoleApplication2\obj\Debug\ConsoleApplication2.pdb
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\ConsoleApplication2\obj\Debug\multithreadserv.csprojResolveAssemblyReference.cache
+C:\Users\matti\Desktop\Tesi\multithreadserv\bin\Debug\multithreadserv.exe.config
+C:\Users\matti\Desktop\Tesi\multithreadserv\bin\Debug\multithreadserv.exe
+C:\Users\matti\Desktop\Tesi\multithreadserv\bin\Debug\multithreadserv.pdb
+C:\Users\matti\Desktop\Tesi\multithreadserv\obj\Debug\multithreadserv.exe
+C:\Users\matti\Desktop\Tesi\multithreadserv\obj\Debug\multithreadserv.pdb

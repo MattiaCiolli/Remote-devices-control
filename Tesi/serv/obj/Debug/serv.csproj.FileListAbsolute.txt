@@ -1,0 +1,10 @@
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\serv\bin\Debug\serv.exe.config
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\serv\bin\Debug\serv.exe
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\serv\bin\Debug\serv.pdb
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\serv\obj\Debug\serv.exe
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\serv\obj\Debug\serv.pdb
+C:\Users\matti\Desktop\Tesi\serv\bin\Debug\serv.exe.config
+C:\Users\matti\Desktop\Tesi\serv\bin\Debug\serv.exe
+C:\Users\matti\Desktop\Tesi\serv\bin\Debug\serv.pdb
+C:\Users\matti\Desktop\Tesi\serv\obj\Debug\serv.exe
+C:\Users\matti\Desktop\Tesi\serv\obj\Debug\serv.pdb

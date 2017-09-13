@@ -1,0 +1,29 @@
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\bin\Debug\clntform.exe.config
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\bin\Debug\clntform.exe
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\bin\Debug\clntform.pdb
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\MainWindow.g.cs
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\App.g.cs
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform_MarkupCompile.cache
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform_MarkupCompile.lref
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\MainWindow.baml
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform.g.resources
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform.Form1.resources
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform.Properties.Resources.resources
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform.csproj.GenerateResource.Cache
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform.exe
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform.pdb
+C:\Users\matti\documents\visual studio 2015\Projects\ConsoleApplication1\clntform\obj\Debug\clntform.csprojResolveAssemblyReference.cache
+C:\Users\matti\Desktop\Tesi\clntform\bin\Debug\clntform.exe.config
+C:\Users\matti\Desktop\Tesi\clntform\bin\Debug\clntform.exe
+C:\Users\matti\Desktop\Tesi\clntform\bin\Debug\clntform.pdb
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\MainWindow.g.cs
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\App.g.cs
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform_MarkupCompile.cache
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform_MarkupCompile.lref
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\MainWindow.baml
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform.g.resources
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform.Form1.resources
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform.Properties.Resources.resources
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform.csproj.GenerateResource.Cache
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform.exe
+C:\Users\matti\Desktop\Tesi\clntform\obj\Debug\clntform.pdb
