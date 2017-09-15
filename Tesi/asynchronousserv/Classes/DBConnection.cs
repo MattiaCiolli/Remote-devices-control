@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace asynchronousserv
 {
@@ -14,36 +10,49 @@ namespace asynchronousserv
 
         public DBConnection(string str)
         {
-            /*db connection*/
             string strConnectionString = str;
+            //generates the connection object
             objConn = new SqlConnection(strConnectionString);
         }
 
-        // This method that will be called when the thread is started
+        //Selects a device by the Id passed by the client
         public string SelectDeviceById(string st)
-        {           
+        {
+            //tries to connect to the DB 
             using (objConn)
             {
                 Console.WriteLine("Accessing DB...");
-                objConn.Open();
-                string strSQL = "SELECT * FROM Dispositivi WHERE id = @stringaid";
-                SqlCommand objCmd = new SqlCommand(strSQL, objConn);
-                SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
-                sid.Value = st;
-                SqlDataReader objDR = objCmd.ExecuteReader();
                 string ris = null;
-                if (objDR.Read())
+                try
                 {
-                    ris = (string)objDR["id"] + ", "+ (string)objDR["descrizione"] + ", " + (int)objDR["tipo"];
-                    Console.WriteLine("Query result: " + ris);
+                    objConn.Open();
+                    string strSQL = "SELECT * FROM Dispositivi WHERE id = @stringaid";
+                    SqlCommand objCmd = new SqlCommand(strSQL, objConn);
+                    //create a parameter
+                    SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
+                    //assign a value to that
+                    sid.Value = st;
+                    //execute SQL
+                    SqlDataReader objDR = objCmd.ExecuteReader();
+                    //if the SQL has results
+                    if (objDR.Read())
+                    {
+                        ris = (string)objDR["id"] + ", " + (string)objDR["descrizione"] + ", " + (int)objDR["tipo"];
+                        Console.WriteLine("Query result: " + ris);
+                    }
+                    else
+                    {
+                        ris = "No result";
+                        Console.WriteLine("No result");
+                    }
+                    //close connection and result object
+                    objDR.Close();
+                    objConn.Close();
                 }
-                else
+                catch
                 {
-                    ris = "No result";
-                    Console.WriteLine("No result");
-                }               
-                objDR.Close();
-                objConn.Close();
+                    Console.WriteLine("Database unreachable");
+                }
                 return ris;
             }
         }

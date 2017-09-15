@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace asynchronousserv
 {
@@ -35,16 +31,18 @@ namespace asynchronousserv
             WaitForClients();
         }
 
+        //asynchronously waits for clients without using extra threads
         private static void WaitForClients()
         {
             serverSocket.BeginAcceptTcpClient(new System.AsyncCallback(OnClientConnected), null);
         }
 
+        //callback function launched when a client connects
         private static void OnClientConnected(IAsyncResult asyncResult)
         {
             try
             {
-                TcpClient clientSocket = serverSocket.EndAcceptTcpClient(asyncResult);
+                TcpClient clientSocket = serverSocket.EndAcceptTcpClient(asyncResult);//must be invoked after BeginAcceptTcpClient
                 if (clientSocket != null)
                     Console.WriteLine("Received connection request from: " + clientSocket.Client.RemoteEndPoint.ToString());
                 HandleClientRequest(clientSocket);
@@ -61,20 +59,21 @@ namespace asynchronousserv
             //Write code here to process the incoming client connections
         }*/
 
+        //handles the client's requests. Creates a thread when a client executes a request and destroys it after the request is satisfied
         private static async void HandleClientRequest(TcpClient clientSocket)
         {
-            // sets two streams
+            //sets two streams
             StreamReader sReader = new StreamReader(clientSocket.GetStream(), Encoding.ASCII);
-            // you could use the NetworkStream to read and write, 
-            // but there is no forcing flush, even when requested
-
             String sData = null;
 
+            //while the client is connected
             while (clientSocket.Client.Connected)
             {
                 try
                 {
-                    // reads from stream
+                    //reads from stream
+                    //the await operator is part of the async-await pattern in order to make a function asynchronous
+                    //in this way the server can accept clients and execute multiple actions without having to wait an input by the client
                     sData = await sReader.ReadLineAsync();
 
                     if (sData.Equals("close"))
@@ -88,11 +87,13 @@ namespace asynchronousserv
                         ParserReturn Pr = (ParserReturn)Par.ParseClientRequest(sData);
                         // shows content on the console.
                         Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + ": " + sData);
+                        //create a thread with parameters
                         ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, clientSocket);
-                        // Create the thread object
+                        //set the thread's entry
                         Thread oThread = new Thread(new ThreadStart(tws.DBAction));
-                        // Start the thread
+                        //start the thread
                         oThread.Start();
+                        //join main thread when finished
                         oThread.Join();
                     }
                 }

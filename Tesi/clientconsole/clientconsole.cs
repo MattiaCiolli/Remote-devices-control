@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 class clientconsole
 {
@@ -12,7 +9,6 @@ class clientconsole
     private static bool tryConnection = true;
     private StreamReader sReader;
     private StreamWriter sWriter;
-
     private Boolean isConnected;
 
     public clientconsole(String ipAddress, int portNum)
@@ -22,17 +18,22 @@ class clientconsole
         HandleCommunication();
     }
 
+    //handles communication with the server
     public void HandleCommunication()
     {
-        sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
+
+
+        //stream to write on server's console
         sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+        //stream to read server's messages
+        sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
         tryConnection = false;
         isConnected = true;
         String sData = null;
 
+        //do this when connected
         while (isConnected)
         {
-
             Console.Write("^_^: ");
             sData = Console.ReadLine();
 
@@ -47,22 +48,13 @@ class clientconsole
             }
             else
             {
-                try
-                {
-                    // write data on servers's console and flush
-                    sWriter.WriteLine(sData);
-                    sWriter.Flush();
+                // write data on servers's console and flush
+                sWriter.WriteLine(sData);
+                sWriter.Flush();
 
-                    // receive from server
-                    String sDataIncomming = sReader.ReadLine();
-                    Console.WriteLine(sDataIncomming);
-                }
-                catch
-                {
-                    Console.WriteLine("Lost connection to server");
-                    tryConnection = true;
-                    isConnected = false;
-                }
+                // receive from server
+                String sDataIncomming = sReader.ReadLine();
+                Console.WriteLine(sDataIncomming);
 
             }
         }
@@ -84,6 +76,7 @@ class clientconsole
             catch
             {
                 Console.WriteLine("Server not available");
+                tryConnection = true;
             }
         }
     }
