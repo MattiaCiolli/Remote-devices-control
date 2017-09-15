@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 class clientconsole
 {
     private TcpClient client;
-
+    private static bool tryConnection = true;
     private StreamReader sReader;
     private StreamWriter sWriter;
 
@@ -26,34 +26,44 @@ class clientconsole
     {
         sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
         sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
-
+        tryConnection = false;
         isConnected = true;
         String sData = null;
 
         while (isConnected)
         {
-            Console.Write("&gt; ");
+
+            Console.Write("^_^: ");
             sData = Console.ReadLine();
 
             if (sData.Equals("close"))
             {
                 isConnected = false;
-                //tells the server to close connection
+
+                //tells the server to close the connection
                 sWriter.WriteLine(sData);
                 sWriter.Flush();
                 client.GetStream().Close();
             }
             else
             {
-                // write data and make sure to flush, or the buffer will continue to 
-                // grow, and your data might not be sent when you want it, and will
-                // only be sent once the buffer is filled.
-                sWriter.WriteLine(sData);
-                sWriter.Flush();
+                try
+                {
+                    // write data on servers's console and flush
+                    sWriter.WriteLine(sData);
+                    sWriter.Flush();
 
-                // if you want to receive anything
-                String sDataIncomming = sReader.ReadLine();
-                Console.Write(sDataIncomming + "\n");
+                    // receive from server
+                    String sDataIncomming = sReader.ReadLine();
+                    Console.WriteLine(sDataIncomming);
+                }
+                catch
+                {
+                    Console.WriteLine("Lost connection to server");
+                    tryConnection = true;
+                    isConnected = false;
+                }
+
             }
         }
     }
@@ -61,13 +71,21 @@ class clientconsole
     static void Main(string[] args)
     {
         Console.WriteLine("TCP Client");
-        /*Console.WriteLine("Provide IP:");
-        String ip = Console.ReadLine();
-
-        Console.WriteLine("Provide Port:");
-        int port = Int32.Parse(Console.ReadLine());
-        */
-        clientconsole client = new clientconsole("127.0.0.1", 8001);
+        while (tryConnection == true)
+        {
+            Console.WriteLine("Provide IP:");
+            String ip = Console.ReadLine();
+            Console.WriteLine("Provide Port:");
+            int port = Int32.Parse(Console.ReadLine());
+            try
+            {
+                clientconsole client = new clientconsole(ip, port);
+            }
+            catch
+            {
+                Console.WriteLine("Server not available");
+            }
+        }
     }
 }
 

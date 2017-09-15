@@ -12,48 +12,37 @@ namespace asynchronousserv
     public class ThreadWithState
     {
         // State information used in the task.
+        private int integer;
         private string st;
-        private TcpClient client;
+        private TcpClient client;      
 
         // The constructor obtains the state information.
-        public ThreadWithState(string text, TcpClient cl)
+        public ThreadWithState(int integ, string text, TcpClient cl)
         {
+            integer = integ;
             st = text;
             client = cl;
         }
 
-        // This method that will be called when the thread is started
-        public void Query()
+        public void DBAction()
         {
-            /*db connection*/
-            string strConnectionString = "Server=(local);Database=asd;Trusted_Connection=True;";
-            using (SqlConnection objConn = new SqlConnection(strConnectionString))
-            {
-                Console.WriteLine("Accessing DB...");
-                objConn.Open();
-                string strSQL = "SELECT * FROM Dispositivi WHERE id = @stringaid";
-                SqlCommand objCmd = new SqlCommand(strSQL, objConn);
-                SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
-                sid.Value = st;
-                SqlDataReader objDR = objCmd.ExecuteReader();
+            //ADO.Net connection pooling. Connections are not thread safe so each thread should have its on connection but ADO.Net will deal with that
+            DBConnection DbC = new DBConnection("Server=(local);Database=asd;Trusted_Connection=True;");
+
+            if (integer==1)
+            {              
+                string ris = DbC.SelectDeviceById(st);
                 StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
-                if (objDR.Read())
+                if (ris.Length>0)
                 {
-                    string id = (string)objDR["id"];
-                    string desc = (string)objDR["descrizione"];
-                    int tipo = (int)objDR["tipo"];
-                    Console.WriteLine("Query result: " + id + "," + desc + "," + tipo);
-                    sWriter.WriteLine("Infos sent to the client: " + id + "," + desc + "," + tipo);
+                    sWriter.WriteLine("Infos sent to the client: " + ris);
                     sWriter.Flush();
                 }
                 else
                 {
-                    Console.WriteLine("No result");
                     sWriter.WriteLine("No result");
                     sWriter.Flush();
-                }
-                objDR.Close();
-                objConn.Close();
+                }              
             }
         }
     }

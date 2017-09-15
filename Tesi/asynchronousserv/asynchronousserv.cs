@@ -13,22 +13,25 @@ namespace asynchronousserv
 {
     class asynchronousserv
     {
+        private static Parser Par;
+        private static TcpListener serverSocket;
+        private static string ip = "127.0.0.1";
+        private static int port = 8001;
+
         static void Main(string[] args)
         {
-            SocketServer.StartServer();
+            StartServer();
             Console.Read();
         }
-    }
 
-    public class SocketServer
-    {
-        private static TcpListener serverSocket;
+        //initializes the server
         public static void StartServer()
         {
-            IPAddress ipAd = IPAddress.Parse("127.0.0.1");
-            serverSocket = new TcpListener(ipAd, 8001);
+            IPAddress ipAd = IPAddress.Parse(ip);
+            serverSocket = new TcpListener(ipAd, port);
             serverSocket.Start();
-            Console.WriteLine("Asynchonous server socket is listening at: 8001");
+            Par = new Parser();
+            Console.WriteLine("Asynchronous server socket is listening at: 8001");
             WaitForClients();
         }
 
@@ -53,10 +56,10 @@ namespace asynchronousserv
             WaitForClients();
         }
 
-        private async void HandleConnectionAsync(TcpClient tcpClient)
+        /*private async void HandleConnectionAsync(TcpClient tcpClient)
         {
             //Write code here to process the incoming client connections
-        }
+        }*/
 
         private static async void HandleClientRequest(TcpClient clientSocket)
         {
@@ -69,28 +72,35 @@ namespace asynchronousserv
 
             while (clientSocket.Client.Connected)
             {
-                // reads from stream
-                sData = await sReader.ReadLineAsync();
-
-                // shows content on the console.
-                Console.WriteLine("Client " + sData);
-
-                if (sData.Equals("close"))
+                try
                 {
-                    Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + " disconnecting");
-                    clientSocket.GetStream().Close();
-                    clientSocket.Close();
+                    // reads from stream
+                    sData = await sReader.ReadLineAsync();
+
+                    if (sData.Equals("close"))
+                    {
+                        Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + " disconnecting");
+                        clientSocket.GetStream().Close();
+                        clientSocket.Close();
+                    }
+                    else
+                    {
+                        ParserReturn Pr = (ParserReturn)Par.ParseClientRequest(sData);
+                        // shows content on the console.
+                        Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + ": " + sData);
+                        ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, clientSocket);
+                        // Create the thread object
+                        Thread oThread = new Thread(new ThreadStart(tws.DBAction));
+                        // Start the thread
+                        oThread.Start();
+                        oThread.Join();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + " not reachable");
                 }
 
-                else
-                {
-                    ThreadWithState tws = new ThreadWithState(sData, clientSocket);
-                    // Create the thread object
-                    Thread oThread = new Thread(new ThreadStart(tws.Query));
-                    // Start the thread
-                    oThread.Start();
-                    oThread.Join();
-                }
             }
 
             if (!clientSocket.Client.Connected)
