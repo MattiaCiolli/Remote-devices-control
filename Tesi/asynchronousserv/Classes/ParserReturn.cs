@@ -6,11 +6,13 @@ namespace asynchronousserv
     {
         private int actionId;
         private string objId;
+        private string data;
 
-        public ParserReturn(int i, string s)
+        public ParserReturn(int i, string s, string d)
         {
             actionId = i;
             objId = s;
+            data = d;
         }
 
         public int ActionId
@@ -36,6 +38,19 @@ namespace asynchronousserv
             set
             {
                 objId = value;
+            }
+        }
+
+        public string Data
+        {
+            get
+            {
+                return data;
+            }
+
+            set
+            {
+                data = value;
             }
         }
     }

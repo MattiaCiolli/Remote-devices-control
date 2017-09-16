@@ -65,13 +65,14 @@ class clientconsole
         Console.WriteLine("TCP Client");
         while (tryConnection == true)
         {
-            Console.WriteLine("Provide IP:");
+            /*Console.WriteLine("Provide IP:");
             String ip = Console.ReadLine();
             Console.WriteLine("Provide Port:");
             int port = Int32.Parse(Console.ReadLine());
+            */
             try
             {
-                clientconsole client = new clientconsole(ip, port);
+                clientconsole client = new clientconsole("127.0.0.1", 8001);
             }
             catch
             {

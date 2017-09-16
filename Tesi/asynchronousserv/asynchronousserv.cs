@@ -88,7 +88,7 @@ namespace asynchronousserv
                         // shows content on the console.
                         Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + ": " + sData);
                         //create a thread with parameters
-                        ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, clientSocket);
+                        ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket);
                         //set the thread's entry
                         Thread oThread = new Thread(new ThreadStart(tws.DBAction));
                         //start the thread
