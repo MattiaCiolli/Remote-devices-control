@@ -3,11 +3,11 @@ using System;
 
 namespace asynchronousserv
 {
-    //accepted packet structure: header, select action, separator, select device, separator, miscellaneus data, footer. 
+    //accepted package structure: header, select action, separator, select device, separator, miscellaneus data, footer. 
     //all data exept header, footer and separators must be in lowercase. Example: ABC actionid DEF deviceid GHI data JKL
     class Parser
     {
-        //gets the client request packet and extracts it ABC1DEFasd1GHIdataJKL
+        //gets the client request package and extracts it ABC1DEFasd1GHIdataJKL
         public ParserReturn ParseClientRequest(string sData)
         {
             int action = 0;
@@ -24,7 +24,7 @@ namespace asynchronousserv
                 }
                 catch
                 {
-                    Console.WriteLine("Packet format error");
+                    Console.WriteLine("package format error");
                     action = 0;
                     id = null;
                     data = null;

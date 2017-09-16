@@ -8,3 +8,4 @@ C:\Users\matti\Desktop\Tesi\serv\bin\Debug\serv.exe
 C:\Users\matti\Desktop\Tesi\serv\bin\Debug\serv.pdb
 C:\Users\matti\Desktop\Tesi\serv\obj\Debug\serv.exe
 C:\Users\matti\Desktop\Tesi\serv\obj\Debug\serv.pdb
+C:\Users\matti\Desktop\Tesi\serv\obj\Debug\serv.csprojResolveAssemblyReference.cache
