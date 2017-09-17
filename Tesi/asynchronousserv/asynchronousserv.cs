@@ -64,6 +64,7 @@ namespace asynchronousserv
         {
             //sets two streams
             StreamReader sReader = new StreamReader(clientSocket.GetStream(), Encoding.ASCII);
+            StreamWriter sWriter = new StreamWriter(clientSocket.GetStream(), Encoding.ASCII);
             String sData = null;
 
             //while the client is connected
@@ -87,14 +88,23 @@ namespace asynchronousserv
                         ParserReturn Pr = (ParserReturn)Par.ParseClientRequest(sData);
                         // shows content on the console.
                         Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + ": " + sData);
-                        //create a thread with parameters
-                        ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket);
-                        //set the thread's entry
-                        Thread oThread = new Thread(new ThreadStart(tws.DBAction));
-                        //start the thread
-                        oThread.Start();
-                        //join main thread when finished
-                        oThread.Join();
+                        if (Pr.ActionId != 0 && Pr.ObjId != null && Pr.Data != null)
+                        {
+                            //create a thread with parameters
+                            ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket);
+                            //set the thread's entry
+                            Thread oThread = new Thread(new ThreadStart(tws.DBAction));
+                            //start the thread
+                            oThread.Start();
+                            //join main thread when finished
+                            oThread.Join();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + " sent wrong data");
+                            sWriter.WriteLine("Infos from server: wrong data from client");
+                            sWriter.Flush();
+                        }
                     }
                 }
                 catch

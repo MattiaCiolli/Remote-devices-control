@@ -24,7 +24,7 @@ namespace asynchronousserv
                 }
                 catch
                 {
-                    Console.WriteLine("package format error");
+                    Console.WriteLine("Package format error");
                     action = 0;
                     id = null;
                     data = null;

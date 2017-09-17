@@ -32,7 +32,7 @@ namespace asynchronousserv
                 StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
                 if (ris.Length > 0)
                 {
-                    sWriter.WriteLine("Infos sent to the client: " + ris);
+                    sWriter.WriteLine("Infos from server: " + ris);
                     sWriter.Flush();
                 }
                 else

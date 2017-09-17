@@ -66,6 +66,7 @@ namespace clientconsole
         static void Main(string[] args)
         {
             Console.WriteLine("TCP Client");
+            Console.WriteLine("Type \"help\" for available commands");
             while (tryConnection == true)
             {
                 /*Console.WriteLine("Provide IP:");
