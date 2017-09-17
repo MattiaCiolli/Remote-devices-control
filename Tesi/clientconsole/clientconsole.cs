@@ -12,25 +12,27 @@ namespace clientconsole
         private StreamReader sReader;
         private StreamWriter sWriter;
         private Boolean isConnected;
+        private Interpreter intp;
 
         public clientconsole(String ipAddress, int portNum)
         {
             client = new TcpClient();
             client.Connect(ipAddress, portNum);
+            //stream to write on server's console
+            sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+            //stream to read server's messages
+            sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
+            //initializes interpreter
+            intp = new Interpreter();
             HandleCommunication();
         }
 
         //handles communication with the server
         public void HandleCommunication()
-        {
-            //stream to write on server's console
-            sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
-            //stream to read server's messages
-            sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
+        {       
             tryConnection = false;
             isConnected = true;
             String sData = null;
-            Interpreter intp = new Interpreter();
             //do this when connected
             while (isConnected)
             {

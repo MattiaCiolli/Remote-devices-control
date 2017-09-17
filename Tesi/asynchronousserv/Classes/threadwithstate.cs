@@ -41,6 +41,21 @@ namespace asynchronousserv
                     sWriter.Flush();
                 }
             }
+            else if (action == 2)
+            {
+                string ris = DbC.ShowDeviceFunctions(id);
+                StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+                if (ris.Length > 0)
+                {
+                    sWriter.WriteLine("Infos from server: " + ris);
+                    sWriter.Flush();
+                }
+                else
+                {
+                    sWriter.WriteLine("No result");
+                    sWriter.Flush();
+                }
+            }
         }
     }
 }

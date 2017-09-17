@@ -30,9 +30,23 @@ namespace clientconsole
                     Console.WriteLine("Syntax error. Usage dinfo [deviceid]");
                 }
             }
+            //command dinfo
+            else if (command.Contains("dfunc "))
+            {
+                actionid = 2;
+                try
+                {
+                    //extract the deviceid after the command and trim spaces
+                    id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length).Trim();
+                }
+                catch
+                {
+                    Console.WriteLine("Syntax error. Usage dfunc [deviceid]");
+                }
+            }
             else
             {
-                Console.WriteLine("Syntax error. Usage dinfo [deviceid]");
+                Console.WriteLine("Syntax error");
             }
 
             //return package
@@ -48,8 +62,9 @@ namespace clientconsole
             if (command.Equals("help"))
             {
                 Console.WriteLine("Available commands:");
-                Console.WriteLine("help:  show available commands");
-                Console.WriteLine("dinfo [deviceid]:  show infos about the selected device");
+                Console.WriteLine("help:  shows available commands");
+                Console.WriteLine("dinfo [deviceid]:  shows infos about the selected device");
+                Console.WriteLine("dfunc [deviceid]:  shows functions available for the selected device");
                 Console.WriteLine("close:  closes connection to server");
             }
 
@@ -57,6 +72,12 @@ namespace clientconsole
             else if (command.Contains("dinfo"))
             {
                 returnstring = Command2Package(command, "dinfo ");
+            }
+
+            //dfunc command
+            else if (command.Contains("dfunc"))
+            {
+                returnstring = Command2Package(command, "dfunc ");
             }
 
             //close command
