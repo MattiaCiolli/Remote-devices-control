@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="asynchronousserv.cs" />
+    <Compile Include="Classes\Caller.cs" />
+    <Compile Include="Classes\Device.cs" />
     <Compile Include="Classes\ParserReturn.cs" />
     <Compile Include="Classes\Parser.cs" />
     <Compile Include="Classes\DBConnection.cs" />

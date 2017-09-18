@@ -44,6 +44,38 @@ namespace clientconsole
                     Console.WriteLine("Syntax error. Usage dfunc [deviceid]");
                 }
             }
+            //command check
+            else if (command.Contains("check "))
+            {
+                string checkId = null;
+                try
+                {
+                    //extract the deviceid after the command and trim spaces
+                     checkId = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length, 2).Trim();
+                    id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length +2).Trim();
+                }
+                catch
+                {
+                    Console.WriteLine("Syntax error. Usage check [*] [deviceid]");
+                }
+
+                if(checkId.Equals("t"))
+                {
+                    actionid = 3;
+                }
+                else if (checkId.Equals("n"))
+                {
+                    actionid = 4;
+                }
+                else if (checkId.Equals("h"))
+                {
+                    actionid = 5;
+                }
+                else
+                {
+                    Console.WriteLine("Syntax error");
+                }
+            }
             else
             {
                 Console.WriteLine("Syntax error");
@@ -65,6 +97,8 @@ namespace clientconsole
                 Console.WriteLine("help:  shows available commands");
                 Console.WriteLine("dinfo [deviceid]:  shows infos about the selected device");
                 Console.WriteLine("dfunc [deviceid]:  shows functions available for the selected device");
+                Console.WriteLine("check [*] [deviceid]:  checks the state of the functionality selected by [*] on the selected device");
+                Console.WriteLine("                       [*]: \"t\" = temperature, \"n\" = nodes, \"h\" = time");
                 Console.WriteLine("close:  closes connection to server");
             }
 
@@ -78,6 +112,12 @@ namespace clientconsole
             else if (command.Contains("dfunc"))
             {
                 returnstring = Command2Package(command, "dfunc ");
+            }
+
+            //check command
+            else if (command.Contains("check"))
+            {
+                returnstring = Command2Package(command, "check ");
             }
 
             //close command

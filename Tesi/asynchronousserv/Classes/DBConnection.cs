@@ -84,15 +84,16 @@ namespace asynchronousserv
                         {
                             ris = ris + Convert.ToString(objDR["id"]) + " (" + Convert.ToString(objDR["descrizione"]) + "), ";
                         }
+
+                        //delete unuseful last ", "
+                        ris = ris.Substring(0, ris.Length - 2);
                     }
                     else
                     {
                         ris = "No result";
                         Console.WriteLine("No result");
                     }
-
-                    //delete unuseful last ", "
-                    ris = ris.Substring(0, ris.Length - 2);
+                    
                     Console.WriteLine("Query result: " + ris);
                     //close connection and result object
                     objDR.Close();

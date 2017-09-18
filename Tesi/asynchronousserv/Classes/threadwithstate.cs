@@ -41,6 +41,7 @@ namespace asynchronousserv
                     sWriter.Flush();
                 }
             }
+            //case dinfo
             else if (action == 2)
             {
                 string ris = DbC.ShowDeviceFunctions(id);
@@ -55,6 +56,54 @@ namespace asynchronousserv
                     sWriter.WriteLine("No result");
                     sWriter.Flush();
                 }
+            }
+            //case check temp
+            else if (action == 3)
+            {
+                /*string ris = DbC.ShowDeviceFunctions(id);
+                StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+                if (ris.Length > 0)
+                {
+                    sWriter.WriteLine("Infos from server: " + ris);
+                    sWriter.Flush();
+                }
+                else
+                {
+                    sWriter.WriteLine("No result");
+                    sWriter.Flush();
+                }*/
+            }
+            //case check nodes
+            else if (action == 4)
+            {
+                /*string ris = DbC.ShowDeviceFunctions(id);
+                StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+                if (ris.Length > 0)
+                {
+                    sWriter.WriteLine("Infos from server: " + ris);
+                    sWriter.Flush();
+                }
+                else
+                {
+                    sWriter.WriteLine("No result");
+                    sWriter.Flush();
+                }*/
+            }
+            //case check time
+            else if (action == 5)
+            {
+                /*string ris = DbC.ShowDeviceFunctions(id);
+                StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+                if (ris.Length > 0)
+                {
+                    sWriter.WriteLine("Infos from server: " + ris);
+                    sWriter.Flush();
+                }
+                else
+                {
+                    sWriter.WriteLine("No result");
+                    sWriter.Flush();
+                }*/
             }
         }
     }
