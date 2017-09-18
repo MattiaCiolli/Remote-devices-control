@@ -51,15 +51,15 @@ namespace clientconsole
                 try
                 {
                     //extract the deviceid after the command and trim spaces
-                     checkId = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length, 2).Trim();
-                    id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length +2).Trim();
+                    checkId = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length, 2).Trim();
+                    id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length + 2).Trim();
                 }
                 catch
                 {
                     Console.WriteLine("Syntax error. Usage check [*] [deviceid]");
                 }
 
-                if(checkId.Equals("t"))
+                if (checkId.Equals("t"))
                 {
                     actionid = 3;
                 }
@@ -103,25 +103,25 @@ namespace clientconsole
             }
 
             //dinfo command
-            else if (command.Contains("dinfo"))
+            else if (command.Contains("dinfo "))
             {
                 returnstring = Command2Package(command, "dinfo ");
             }
 
             //dfunc command
-            else if (command.Contains("dfunc"))
+            else if (command.Contains("dfunc "))
             {
                 returnstring = Command2Package(command, "dfunc ");
             }
 
             //check command
-            else if (command.Contains("check"))
+            else if (command.Contains("check "))
             {
                 returnstring = Command2Package(command, "check ");
             }
 
             //close command
-            else if (command.Equals("close"))
+            else if (command.Equals("close "))
             {
                 returnstring = "close";
             }

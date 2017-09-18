@@ -11,6 +11,25 @@ namespace asynchronousserv
         public void call(Device device)
         {
             //do things based on device type and actions requested
+            temp();
+            nodes();
+            time();
         }
+
+        public void temp()
+        {
+
+        }
+
+        public void nodes()
+        {
+
+        }
+
+        public void time()
+        {
+
+        }
+
     }
 }
