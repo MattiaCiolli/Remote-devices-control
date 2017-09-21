@@ -16,6 +16,8 @@ namespace clientconsole
             string id = null;
             string data = null;
 
+            //usare pattern observer 
+
             //command dinfo
             if (command.Contains("dinfo "))
             {
@@ -71,6 +73,10 @@ namespace clientconsole
                 {
                     actionid = 5;
                 }
+                else if (checkId.Equals("r"))
+                {
+                    actionid = 6;
+                }
                 else
                 {
                     Console.WriteLine("Syntax error");
@@ -98,7 +104,7 @@ namespace clientconsole
                 Console.WriteLine("dinfo [deviceid]:  shows infos about the selected device");
                 Console.WriteLine("dfunc [deviceid]:  shows functions available for the selected device");
                 Console.WriteLine("check [*] [deviceid]:  checks the state of the functionality selected by [*] on the selected device");
-                Console.WriteLine("                       [*]: \"t\" = temperature, \"n\" = nodes, \"h\" = time");
+                Console.WriteLine("                       [*]: \"r\" = reachability, \"t\" = temperature, \"n\" = nodes, \"h\" = time");
                 Console.WriteLine("close:  closes connection to server");
             }
 
