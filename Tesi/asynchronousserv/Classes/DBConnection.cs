@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace asynchronousserv
@@ -15,6 +16,21 @@ namespace asynchronousserv
             objConn = new SqlConnection(strConnectionString);
         }
 
+        //opens connection
+        public void OpenConn()
+        {
+            if (objConn.State != ConnectionState.Open)
+            {
+                objConn.Open();
+            }
+        }
+
+        //closes connection
+        public void CloseConn()
+        {
+            objConn.Close();
+        }
+
         //Selects a device by the Id passed by the client
         public string SelectDeviceById(string st)
         {
@@ -25,7 +41,7 @@ namespace asynchronousserv
                 string ris = null;
                 try
                 {
-                    objConn.Open();
+                    OpenConn();
                     string strSQL = "SELECT * FROM Dispositivi WHERE id = @stringaid";
                     SqlCommand objCmd = new SqlCommand(strSQL, objConn);
                     //create a parameter
@@ -47,7 +63,7 @@ namespace asynchronousserv
                     }
                     //close connection and result object
                     objDR.Close();
-                    objConn.Close();
+                    CloseConn();
                 }
                 catch
                 {
@@ -67,7 +83,7 @@ namespace asynchronousserv
                 string ris = null;
                 try
                 {
-                    objConn.Open();
+                    OpenConn();
                     string strSQL = "SELECT DISTINCT f.* FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid";
                     SqlCommand objCmd = new SqlCommand(strSQL, objConn);
                     //create a parameter
@@ -93,11 +109,11 @@ namespace asynchronousserv
                         ris = "No result";
                         Console.WriteLine("No result");
                     }
-                    
+
                     Console.WriteLine("Query result: " + ris);
                     //close connection and result object
                     objDR.Close();
-                    objConn.Close();
+                    CloseConn();
                 }
                 catch
                 {

@@ -10,7 +10,6 @@ namespace asynchronousserv
         private int action;
         private string id;
         private string data;
-        private Caller caller;
         private TcpClient client;
 
         public ThreadWithState(int integ, string text, string d, TcpClient cl)
@@ -21,101 +20,55 @@ namespace asynchronousserv
             client = cl;
         }
 
-        public void DBAction()
+        public void DeviceAction()
         {
-            //ADO.Net connection pooling. Connections are not thread safe so each thread should have its on connection but ADO.Net will deal with that
-            DBConnection DbC = new DBConnection("Server=(local);Database=asd;Trusted_Connection=True;");
-            caller = new Caller();
             StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
-            //case 1 -> select device by id
+            State state = null;
+            //case dinfo
             if (action == 1)
             {
-                string ris = DbC.SelectDeviceById(id);
-                if (ris.Length > 0)
-                {
-                    sWriter.WriteLine("Infos from server: " + ris);
-                    sWriter.Flush();
-                }
-                else
-                {
-                    sWriter.WriteLine("No result");
-                    sWriter.Flush();
-                }
+                state = new dinfo();
             }
-            //case dinfo
+            //case dfunc
             else if (action == 2)
             {
-                string ris = DbC.ShowDeviceFunctions(id);
-                if (ris.Length > 0)
-                {
-                    sWriter.WriteLine("Infos from server: " + ris);
-                    sWriter.Flush();
-                }
-                else
-                {
-                    sWriter.WriteLine("No result");
-                    sWriter.Flush();
-                }
+                state = new dfunc();
             }
             //case check temp
             else if (action == 3)
             {
-                if (DbC.ShowDeviceFunctions(id).Contains("temperatura"))
-                {
-                    string ris = caller.temp().ToString();
-                    sWriter.WriteLine("Infos from server: " + ris + "°");
-                    sWriter.Flush();
-                }
-                else
-                {
-                    sWriter.WriteLine("Functionality not available on the device selected");
-                    sWriter.Flush();
-                }
+                state = new checkTemp();
             }
             //case check nodes
             else if (action == 4)
             {
-                if (DbC.ShowDeviceFunctions(id).Contains("nodi"))
-                {
-                    string ris = caller.nodes().ToString();
-                    sWriter.WriteLine("Infos from server: " + ris);
-                    sWriter.Flush();
-                }
-                else
-                {
-                    sWriter.WriteLine("Functionality not available on the device selected");
-                    sWriter.Flush();
-                }
+                state = new checkNodes();
             }
             //case check time
             else if (action == 5)
             {
-                if (DbC.ShowDeviceFunctions(id).Contains("orario"))
-                {
-                    string ris = caller.time().ToString();
-                    sWriter.WriteLine("Infos from server: " + ris);
-                    sWriter.Flush();
-                }
-                else
-                {
-                    sWriter.WriteLine("Functionality not available on the device selected");
-                    sWriter.Flush();
-                }
+                state = new checkTime();
             }
             //case check reachable
             else if (action == 6)
             {
-                if (DbC.ShowDeviceFunctions(id).Contains("raggiungibilita"))
-                {
-                    string ris = caller.reach().ToString();
-                    sWriter.WriteLine("Infos from server: " + ris);
-                    sWriter.Flush();
-                }
-                else
-                {
-                    sWriter.WriteLine("Functionality not available on the device selected");
-                    sWriter.Flush();
-                }
+                state = new checkReach();
+            }
+            
+            //create an action
+            Action a = new Action(state, id);
+            //and launch it saving its result in a string
+            string ris = a.Request();
+
+            if (ris.Length > 0)
+            {
+                sWriter.WriteLine("Infos from server: " + ris);
+                sWriter.Flush();
+            }
+            else
+            {
+                sWriter.WriteLine("Functionality not available on the device selected");
+                sWriter.Flush();
             }
         }
     }

@@ -127,7 +127,7 @@ namespace clientconsole
             }
 
             //close command
-            else if (command.Equals("close "))
+            else if (command.Equals("close"))
             {
                 returnstring = "close";
             }

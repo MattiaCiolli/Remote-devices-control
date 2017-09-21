@@ -93,7 +93,7 @@ namespace asynchronousserv
                             //create a thread with parameters
                             ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket);
                             //set the thread's entry
-                            Thread oThread = new Thread(new ThreadStart(tws.DBAction));
+                            Thread oThread = new Thread(new ThreadStart(tws.DeviceAction));
                             //start the thread
                             oThread.Start();
                             //join main thread when finished
