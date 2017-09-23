@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace asynchronousserv
 {
     class Caller
     {
-        public string call(Device device)
+        public string checkAll(Device device)
         {
             //do things based on device type and actions requested
             string x = reach().ToString();

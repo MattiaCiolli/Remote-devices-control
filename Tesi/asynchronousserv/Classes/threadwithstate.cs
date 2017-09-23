@@ -60,7 +60,7 @@ namespace asynchronousserv
             //and launch it saving its result in a string
             string ris = a.Request();
 
-            if (ris.Length > 0)
+            if (ris!=null)
             {
                 sWriter.WriteLine("Infos from server: " + ris);
                 sWriter.Flush();

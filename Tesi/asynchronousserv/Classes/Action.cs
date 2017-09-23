@@ -7,7 +7,7 @@ namespace asynchronousserv
     abstract class State
     {
         //ADO.Net connection pooling. Connections are not thread safe so each thread should have its on connection but ADO.Net will deal with that
-        public DBConnection DbC = new DBConnection("Server=(local);Database=asd;Trusted_Connection=True;");
+        public DBConnection DbC = new DBConnection();
         public Caller caller = new Caller();
         public abstract string HandleCmd(string id);
     }
@@ -106,6 +106,25 @@ namespace asynchronousserv
             return ris;
         }
     }
+
+    // A 'ConcreteState' class for check all command
+    /*class checkAll : State
+    {
+        public override string HandleCmd(string id)
+        {
+
+            string ris = null;
+            if (DbC.ShowDeviceFunctions(id).Contains("orario"))
+            {
+                ris = caller.time().ToString();
+            }
+            else
+            {
+                ris = "Functionality not available on the device selected";
+            }
+            return ris;
+        }
+    }*/
 
 
     // The 'Context' class

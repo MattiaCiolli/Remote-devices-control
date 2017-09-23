@@ -8,6 +8,7 @@ namespace asynchronousserv
 {
     interface Device
     {
+        void CheckAll(string address);
         void CheckReachable(string address);
         void CheckTemperature(string address);
         void CheckTime(string address);
@@ -18,6 +19,8 @@ namespace asynchronousserv
     {
         private string IpAddress { get; set; }
 
+        public void CheckAll(string IpAddress)
+        { }
         public void CheckReachable(string IpAddress)
         { }
         public void CheckTemperature(string IpAddress)
@@ -32,6 +35,8 @@ namespace asynchronousserv
     {
         private string PhoneNumber { get; set; }
 
+        public void CheckAll(string PhoneNumber)
+        { }
         public void CheckReachable(string PhoneNumber)
         { }
         public void CheckTemperature(string PhoneNumber)
