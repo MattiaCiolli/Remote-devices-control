@@ -47,9 +47,11 @@
     <Compile Include="Classes\Action.cs" />
     <Compile Include="Classes\Caller.cs" />
     <Compile Include="Classes\Device.cs" />
+    <Compile Include="Classes\ErrMsgObj.cs" />
     <Compile Include="Classes\ParserReturn.cs" />
     <Compile Include="Classes\Parser.cs" />
     <Compile Include="Classes\DBConnection.cs" />
+    <Compile Include="Classes\ReturnManager.cs" />
     <Compile Include="Classes\threadwithstate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

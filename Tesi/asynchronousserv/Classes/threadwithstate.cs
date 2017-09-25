@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
@@ -62,12 +63,14 @@ namespace asynchronousserv
 
             if (ris!=null)
             {
+                Console.WriteLine(ris);
                 sWriter.WriteLine("Infos from server: " + ris);
                 sWriter.Flush();
             }
             else
             {
-                sWriter.WriteLine("Functionality not available on the device selected");
+                Console.WriteLine("error");
+                sWriter.WriteLine("error");
                 sWriter.Flush();
             }
         }

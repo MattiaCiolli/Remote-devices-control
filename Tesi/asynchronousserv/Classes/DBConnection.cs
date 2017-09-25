@@ -32,13 +32,14 @@ namespace asynchronousserv
         }
 
         //Selects a device by the Id passed by the client
-        public string SelectDeviceById(string st)
+        public ErrMsgObj SelectDeviceById(string st)
         {
             //creates a new connection
             NewConnObj();
 
             //tries to connect to the DB 
             string ris = null;
+            int ecode;
             try
             {
                 Console.WriteLine("Accessing DB...");
@@ -55,12 +56,12 @@ namespace asynchronousserv
                 if (objDR.Read())
                 {
                     ris = (string)objDR["id"] + ", " + (string)objDR["descrizione"] + ", " + (int)objDR["tipo"];
-                    Console.WriteLine("Query result: " + ris);
+                    ecode = 0;
                 }
                 else
                 {
-                    ris = "No result";
-                    Console.WriteLine("No result");
+                    //no result code
+                    ecode = 1;
                 }
 
                 //close result object
@@ -68,7 +69,8 @@ namespace asynchronousserv
             }
             catch
             {
-                Console.WriteLine("Database unreachable");
+                //db unreachable
+                ecode = 100;
             }
             finally
             {
@@ -76,17 +78,19 @@ namespace asynchronousserv
                 CloseConn();
             }
 
-            return ris;
+            return new ErrMsgObj(ecode, ris);
         }
 
         //Shows available functions for a device selected by the Id passed by the client
-        public string ShowDeviceFunctions(string st)
+        public ErrMsgObj ShowDeviceFunctions(string st)
         {
             //tries to connect to the DB               
             string ris = null;
+            int ecode;
             try
             {
-                if (SelectDeviceById(st) != null)
+                ErrMsgObj emo = SelectDeviceById(st);
+                if (emo.ErrCode == 0)
                 {
                     Console.WriteLine("Accessing DB...");
                     //creates a new connection
@@ -112,26 +116,27 @@ namespace asynchronousserv
 
                         //delete unuseful last ", "
                         ris = ris.Substring(0, ris.Length - 2);
+                        ecode = 0;
                     }
                     else
                     {
-                        ris = "No result";
-                        Console.WriteLine("No result");
+                        //no result code
+                        ecode = 1;
                     }
 
-                    Console.WriteLine("Query result: " + ris);
                     //close result object
                     objDR.Close();
                 }
                 else
                 {
-                    ris = "No device found";
-                    Console.WriteLine("No device found");
+                    //no device found code
+                    ecode = 2;
                 }
             }
             catch
             {
-                Console.WriteLine("Database unreachable");
+                //db unreachable
+                ecode = 100;
             }
             finally
             {
@@ -139,7 +144,76 @@ namespace asynchronousserv
                 CloseConn();
             }
 
-            return ris;
+            return new ErrMsgObj(ecode, ris);
+        }
+
+        //check if a function is available in the device selected by the Id passed by the client
+        public ErrMsgObj FindDeviceFunction(string st, int func)
+        {
+            //tries to connect to the DB               
+            string ris = null;
+            int ecode;
+            try
+            {
+                ErrMsgObj emo = SelectDeviceById(st);
+                if (emo.ErrCode == 0)
+                {
+                    Console.WriteLine("Accessing DB...");
+                    //creates a new connection
+                    NewConnObj();
+                    //opens it
+                    OpenConn();
+                    string strSQL = "SELECT DISTINCT f.* FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid AND f.id = @idfunc";
+                    SqlCommand objCmd = new SqlCommand(strSQL, objConn);
+                    //create a parameter
+                    SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
+                    SqlParameter sid1 = objCmd.Parameters.Add("@idfunc", System.Data.SqlDbType.Int, 15);
+                    //assign a value to that
+                    sid.Value = st;
+                    sid1.Value = func;
+                    //execute SQL
+                    SqlDataReader objDR = objCmd.ExecuteReader();
+                    //if the SQL has results
+                    if (objDR.HasRows)
+                    {
+                        //take all rows
+                        while (objDR.Read())
+                        {
+                            ris = ris + Convert.ToString(objDR["id"]) + " (" + Convert.ToString(objDR["descrizione"]) + "), ";
+                        }
+
+                        //delete unuseful last ", "
+                        ris = ris.Substring(0, ris.Length - 2);
+                        ecode = 0;
+                    }
+                    else
+                    {
+                        //no functionality code
+                        ecode = 3;
+                    }
+
+                    //close result object
+                    objDR.Close();
+                }
+                else
+                {
+                    //no device found code
+                    ecode = 2;
+                }
+            }
+            catch
+            {
+                //db unreachable
+                ecode = 100;
+            }
+            finally
+            {
+                //close connection
+                CloseConn();
+            }
+
+            return new ErrMsgObj(ecode, ris);
         }
     }
 }
+

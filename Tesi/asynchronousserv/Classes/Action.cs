@@ -7,8 +7,49 @@ namespace asynchronousserv
     abstract class State
     {
         //ADO.Net connection pooling. Connections are not thread safe so each thread should have its on connection but ADO.Net will deal with that
-        public DBConnection DbC = new DBConnection();
-        public Caller caller = new Caller();
+        private DBConnection DbC = new DBConnection();
+        private Caller caller = new Caller();
+        private ReturnManager rm = new ReturnManager();
+
+        public DBConnection DBC
+        {
+            get
+            {
+                return DbC;
+            }
+
+            set
+            {
+                DbC = value;
+            }
+        }
+
+        internal ReturnManager Rm
+        {
+            get
+            {
+                return rm;
+            }
+
+            set
+            {
+                rm = value;
+            }
+        }
+
+        internal Caller Caller
+        {
+            get
+            {
+                return caller;
+            }
+
+            set
+            {
+                caller = value;
+            }
+        }
+
         public abstract string HandleCmd(string id);
     }
 
@@ -17,8 +58,8 @@ namespace asynchronousserv
     {
         public override string HandleCmd(string id)
         {
-            string ris = DbC.SelectDeviceById(id);
-            return ris;
+            ErrMsgObj emo = DBC.SelectDeviceById(id);
+            return Rm.AnalyzeErrMsgObj(emo);
         }
     }
 
@@ -27,8 +68,8 @@ namespace asynchronousserv
     {
         public override string HandleCmd(string id)
         {
-            string ris = DbC.ShowDeviceFunctions(id);
-            return ris;
+            ErrMsgObj emo = DBC.ShowDeviceFunctions(id);
+            return Rm.AnalyzeErrMsgObj(emo);
         }
     }
 
@@ -38,16 +79,18 @@ namespace asynchronousserv
         public override string HandleCmd(string id)
         {
             string ris = null;
-            if (DbC.ShowDeviceFunctions(id).Contains("temperatura"))
+            ErrMsgObj emo = DBC.FindDeviceFunction(id, 3);
+            string risT = Rm.AnalyzeErrMsgObj(emo);
+            if (emo.ErrCode == 0)
             {
-                ris = caller.temp().ToString();
+                ris = Caller.temp().ToString();
             }
             else
             {
-                ris = "Functionality not available on the device selected";
+                ris = risT;
             }
-            return ris;
 
+            return ris;
         }
     }
 
@@ -57,14 +100,17 @@ namespace asynchronousserv
         public override string HandleCmd(string id)
         {
             string ris = null;
-            if (DbC.ShowDeviceFunctions(id).Contains("nodi"))
+            ErrMsgObj emo = DBC.FindDeviceFunction(id, 4);
+            string risT = Rm.AnalyzeErrMsgObj(emo);
+            if (emo.ErrCode == 0)
             {
-                ris = caller.nodes().ToString();
+                ris = Caller.nodes().ToString();
             }
             else
             {
-                ris = "Functionality not available on the device selected";
+                ris = risT;
             }
+
             return ris;
         }
     }
@@ -75,15 +121,17 @@ namespace asynchronousserv
         public override string HandleCmd(string id)
         {
             string ris = null;
-
-            if (DbC.ShowDeviceFunctions(id).Contains("raggiungibilita"))
+            ErrMsgObj emo = DBC.FindDeviceFunction(id, 1);
+            string risT = Rm.AnalyzeErrMsgObj(emo);
+            if (emo.ErrCode == 0)
             {
-                ris = caller.reach().ToString();
+                ris = Caller.reach().ToString();
             }
             else
             {
-                ris = "Functionality not available on the device selected";
+                ris = risT;
             }
+
             return ris;
         }
     }
@@ -95,14 +143,17 @@ namespace asynchronousserv
         {
 
             string ris = null;
-            if (DbC.ShowDeviceFunctions(id).Contains("orario"))
+            ErrMsgObj emo = DBC.FindDeviceFunction(id, 2);
+            string risT = Rm.AnalyzeErrMsgObj(emo);
+            if (emo.ErrCode == 0)
             {
-                ris = caller.time().ToString();
+                ris = Caller.time().ToString();
             }
             else
             {
-                ris = "Functionality not available on the device selected";
+                ris = risT;
             }
+
             return ris;
         }
     }
