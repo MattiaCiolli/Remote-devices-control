@@ -44,7 +44,7 @@ namespace asynchronousserv
             {
                 Console.WriteLine("Accessing DB...");
                 OpenConn();
-                string strSQL = "SELECT * FROM Dispositivi WHERE id = @stringaid";
+                string strSQL = "SELECT id, descrizione, tipo FROM Dispositivi WHERE id = @stringaid";
                 SqlCommand objCmd = new SqlCommand(strSQL, objConn);
                 //create a parameter
                 SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
@@ -55,7 +55,7 @@ namespace asynchronousserv
                 //if the SQL has results
                 if (objDR.Read())
                 {
-                    ris = (string)objDR["id"] + ", " + (string)objDR["descrizione"] + ", " + (int)objDR["tipo"];
+                    ris = st + ", " + (string)objDR["descrizione"] + ", " + (int)objDR["tipo"];
                     ecode = 0;
                 }
                 else
@@ -97,7 +97,7 @@ namespace asynchronousserv
                     NewConnObj();
                     //opens it
                     OpenConn();
-                    string strSQL = "SELECT DISTINCT f.* FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid";
+                    string strSQL = "SELECT DISTINCT f.id, f.descrizione FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid";
                     SqlCommand objCmd = new SqlCommand(strSQL, objConn);
                     //create a parameter
                     SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
@@ -163,7 +163,7 @@ namespace asynchronousserv
                     NewConnObj();
                     //opens it
                     OpenConn();
-                    string strSQL = "SELECT DISTINCT f.* FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid AND f.id = @idfunc";
+                    string strSQL = "SELECT DISTINCT f.id, f.descrizione FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid AND f.id = @idfunc";
                     SqlCommand objCmd = new SqlCommand(strSQL, objConn);
                     //create a parameter
                     SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);

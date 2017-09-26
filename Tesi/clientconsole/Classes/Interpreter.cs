@@ -16,7 +16,7 @@ namespace clientconsole
             string id = null;
             string data = null;
 
-            //usare pattern observer 
+            //usare pattern observer o state
 
             //command dinfo
             if (command.Contains("dinfo "))
@@ -26,6 +26,11 @@ namespace clientconsole
                 {
                     //extract the deviceid after the command and trim spaces
                     id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length).Trim();
+                    if (id.Length == 0)
+                    {
+                        actionid = 0;
+                        Console.WriteLine("Syntax error. Usage dinfo [deviceid]");
+                    }
                 }
                 catch
                 {
@@ -40,9 +45,15 @@ namespace clientconsole
                 {
                     //extract the deviceid after the command and trim spaces
                     id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length).Trim();
+                    if(id.Length==0)
+                    {                       
+                        actionid = 0;
+                        Console.WriteLine("Syntax error. Usage dfunc [deviceid]");
+                    }
                 }
                 catch
                 {
+                    actionid = 0;
                     Console.WriteLine("Syntax error. Usage dfunc [deviceid]");
                 }
             }
@@ -55,6 +66,11 @@ namespace clientconsole
                     //extract the deviceid after the command and trim spaces
                     checkId = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length, 2).Trim();
                     id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length + 2).Trim();
+                    if (id.Length == 0)
+                    {
+                        actionid = 0;
+                        Console.WriteLine("Syntax error. Usage check [*] [deviceid]");
+                    }
                 }
                 catch
                 {

@@ -24,7 +24,7 @@ namespace asynchronousserv
             }
         }
 
-        internal ReturnManager Rm
+        public ReturnManager Rm
         {
             get
             {
@@ -37,7 +37,7 @@ namespace asynchronousserv
             }
         }
 
-        internal Caller Caller
+        public Caller Caller
         {
             get
             {

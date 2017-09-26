@@ -36,7 +36,7 @@ namespace clientconsole
             //do this when connected
             while (isConnected)
             {
-                Console.Write("^_^: ");
+                Console.Write(">.>: ");
                 sData = Console.ReadLine();
                 string cmd = intp.CheckCommands(sData);
                 if (cmd != null)

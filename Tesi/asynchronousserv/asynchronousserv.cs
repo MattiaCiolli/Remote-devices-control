@@ -34,7 +34,7 @@ namespace asynchronousserv
         //asynchronously waits for clients without using extra threads
         private static void WaitForClients()
         {
-            serverSocket.BeginAcceptTcpClient(new System.AsyncCallback(OnClientConnected), null);
+            serverSocket.BeginAcceptTcpClient(new AsyncCallback(OnClientConnected), null);
         }
 
         //callback function launched when a client connects
