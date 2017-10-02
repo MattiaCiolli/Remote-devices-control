@@ -29,7 +29,7 @@ namespace clientconsole
 
         //handles communication with the server
         public void HandleCommunication()
-        {       
+        {
             tryConnection = false;
             isConnected = true;
             String sData = null;
@@ -50,7 +50,7 @@ namespace clientconsole
                         sWriter.Flush();
                         client.GetStream().Close();
                     }
-                    else
+                    else if (cmd != "error")
                     {
                         // write data on servers's console and flush
                         sWriter.WriteLine(cmd);

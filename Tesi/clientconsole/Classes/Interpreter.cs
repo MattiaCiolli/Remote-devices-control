@@ -1,110 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace clientconsole
 {
     //this class checks if a command exists and converts it in a package to be sent to the server
     public class Interpreter
     {
+        private ReturnManagerClient rmc = new ReturnManagerClient();
+
+        internal ReturnManagerClient Rmc
+        {
+            get
+            {
+                return rmc;
+            }
+
+            set
+            {
+                rmc = value;
+            }
+        }
+
         //converts a command to a package
         public string Command2Package(string command, string cmdconsole)
         {
-            int actionid = 0;
-            string id = null;
-            string data = null;
-
-            //usare pattern observer o state
+            StateClient sc = null;
 
             //command dinfo
             if (command.Contains("dinfo "))
             {
-                actionid = 1;
-                try
-                {
-                    //extract the deviceid after the command and trim spaces
-                    id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length).Trim();
-                    if (id.Length == 0)
-                    {
-                        actionid = 0;
-                        Console.WriteLine("Syntax error. Usage dinfo [deviceid]");
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Syntax error. Usage dinfo [deviceid]");
-                }
+                sc = new dinfo();
             }
-            //command dinfo
+            //command dfunc
             else if (command.Contains("dfunc "))
             {
-                actionid = 2;
-                try
-                {
-                    //extract the deviceid after the command and trim spaces
-                    id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length).Trim();
-                    if(id.Length==0)
-                    {                       
-                        actionid = 0;
-                        Console.WriteLine("Syntax error. Usage dfunc [deviceid]");
-                    }
-                }
-                catch
-                {
-                    actionid = 0;
-                    Console.WriteLine("Syntax error. Usage dfunc [deviceid]");
-                }
+                sc = new dfunc();
             }
             //command check
             else if (command.Contains("check "))
             {
-                string checkId = null;
-                try
-                {
-                    //extract the deviceid after the command and trim spaces
-                    checkId = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length, 2).Trim();
-                    id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length + 2).Trim();
-                    if (id.Length == 0)
-                    {
-                        actionid = 0;
-                        Console.WriteLine("Syntax error. Usage check [*] [deviceid]");
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Syntax error. Usage check [*] [deviceid]");
-                }
-
-                if (checkId.Equals("t"))
-                {
-                    actionid = 3;
-                }
-                else if (checkId.Equals("n"))
-                {
-                    actionid = 4;
-                }
-                else if (checkId.Equals("h"))
-                {
-                    actionid = 5;
-                }
-                else if (checkId.Equals("r"))
-                {
-                    actionid = 6;
-                }
-                else
-                {
-                    Console.WriteLine("Syntax error");
-                }
+                sc = new check();
             }
             else
             {
                 Console.WriteLine("Syntax error");
             }
 
+            //create a Command
+            Command c = new Command(sc, command, cmdconsole);
+            //and launch it saving its result 
+            ErrMsgObjClient emoc = c.Request();
+            //analayze result
+            string ris = Rmc.AnalyzeErrMsgObj(emoc);
+            //if error
+            if (ris.Equals("no error"))
+            {
+                ris = "ABC" + emoc.Actionid + "DEF" + emoc.Id + "GHI" + emoc.Data + "JKL";
+            }
+            else
+            {
+                Console.WriteLine(ris);
+                ris = "error";
+            }
             //return package
-            return "ABC" + actionid + "DEF" + id + "GHI" + data + "JKL";
+            return ris;
         }
 
         //check if a command exists
@@ -151,7 +109,7 @@ namespace clientconsole
             //command doesn't exist
             else
             {
-                Console.WriteLine("Unknown command. Type \"help\" for available commands");
+                Console.WriteLine("Unknown command. Type \"help\" for available commands or correct syntax.");
             }
 
             return returnstring;
