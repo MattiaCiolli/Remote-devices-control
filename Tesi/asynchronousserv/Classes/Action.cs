@@ -8,7 +8,7 @@ namespace asynchronousserv
     {
         //ADO.Net connection pooling. Connections are not thread safe so each thread should have its on connection but ADO.Net will deal with that
         private DBConnection DbC = new DBConnection();
-        private Caller caller = new Caller();
+        private Device dev;
         private ReturnManager rm = new ReturnManager();
 
         public DBConnection DBC
@@ -37,20 +37,37 @@ namespace asynchronousserv
             }
         }
 
-        public Caller Caller
+        public Device Dev
         {
             get
             {
-                return caller;
+                return dev;
             }
 
             set
             {
-                caller = value;
+                dev = value;
             }
         }
 
         public abstract string HandleCmd(string id);
+
+        public Device instantiateDeviceByType(int type)
+        {
+            Device d = null;
+            if(type==1)
+            {
+                d = new IPDevice();
+            }
+            else if(type==2)
+            {
+                d = new SerialDevice();
+            }else
+            {
+                //
+            }
+            return d;
+        }
     }
 
     // A 'ConcreteState' class for dinfo command
@@ -80,10 +97,11 @@ namespace asynchronousserv
         {
             string ris = null;
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 3);
+            Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
             if (emo.ErrCode == 0)
             {
-                ris = Caller.temp().ToString();
+                ris = Dev.CheckTemperature(emo.Address).ToString();
             }
             else
             {
@@ -101,10 +119,11 @@ namespace asynchronousserv
         {
             string ris = null;
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 4);
+            Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
             if (emo.ErrCode == 0)
             {
-                ris = Caller.nodes().ToString();
+                ris = Dev.CheckNodes(emo.Address).ToString();
             }
             else
             {
@@ -122,10 +141,11 @@ namespace asynchronousserv
         {
             string ris = null;
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 1);
+            Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
             if (emo.ErrCode == 0)
             {
-                ris = Caller.reach().ToString();
+                ris = Dev.CheckReachable(emo.Address).ToString();
             }
             else
             {
@@ -141,13 +161,13 @@ namespace asynchronousserv
     {
         public override string HandleCmd(string id)
         {
-
             string ris = null;
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 2);
+            Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
             if (emo.ErrCode == 0)
             {
-                ris = Caller.time().ToString();
+                ris = Dev.CheckTime(emo.Address).ToString();
             }
             else
             {

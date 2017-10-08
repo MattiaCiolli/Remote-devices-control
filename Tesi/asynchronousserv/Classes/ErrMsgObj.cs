@@ -11,6 +11,8 @@ namespace asynchronousserv
     {
         private int errCode;
         private string data;
+        private string addr;
+        private int deviceType;
 
         public int ErrCode
         {
@@ -36,6 +38,40 @@ namespace asynchronousserv
             {
                 data = value;
             }
+        }
+
+        public int DeviceType
+        {
+            get
+            {
+                return deviceType;
+            }
+
+            set
+            {
+                deviceType = value;
+            }
+        }
+
+        public string Address
+        {
+            get
+            {
+                return addr;
+            }
+
+            set
+            {
+                addr = value;
+            }
+        }
+
+        public ErrMsgObj(int i, string s, string a, int d)
+        {
+            errCode = i;
+            data = s;
+            deviceType = d;
+            addr = a;
         }
 
         public ErrMsgObj(int i, string s)

@@ -40,11 +40,13 @@ namespace asynchronousserv
             //tries to connect to the DB 
             string ris = null;
             int ecode;
+            int devType=0;
+            string addr=null;
             try
             {
                 Console.WriteLine("Accessing DB...");
                 OpenConn();
-                string strSQL = "SELECT id, descrizione, tipo FROM Dispositivi WHERE id = @stringaid";
+                string strSQL = "SELECT id, descrizione, tipo, indirizzo FROM Dispositivi WHERE id = @stringaid";
                 SqlCommand objCmd = new SqlCommand(strSQL, objConn);
                 //create a parameter
                 SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
@@ -55,7 +57,9 @@ namespace asynchronousserv
                 //if the SQL has results
                 if (objDR.Read())
                 {
-                    ris = st + ", " + (string)objDR["descrizione"] + ", " + (int)objDR["tipo"];
+                    devType = (int)objDR["tipo"];
+                    addr = (string)objDR["indirizzo"];
+                    ris = st + ", " + (string)objDR["descrizione"] + ", " + devType + ", " + addr;
                     ecode = 0;
                 }
                 else
@@ -78,7 +82,7 @@ namespace asynchronousserv
                 CloseConn();
             }
 
-            return new ErrMsgObj(ecode, ris);
+            return new ErrMsgObj(ecode, ris, addr, devType);
         }
 
         //Shows available functions for a device selected by the Id passed by the client
@@ -87,9 +91,10 @@ namespace asynchronousserv
             //tries to connect to the DB               
             string ris = null;
             int ecode;
+            ErrMsgObj emo = null;
             try
             {
-                ErrMsgObj emo = SelectDeviceById(st);
+                emo = SelectDeviceById(st);
                 if (emo.ErrCode == 0)
                 {
                     Console.WriteLine("Accessing DB...");
@@ -144,7 +149,7 @@ namespace asynchronousserv
                 CloseConn();
             }
 
-            return new ErrMsgObj(ecode, ris);
+            return new ErrMsgObj(ecode, ris, emo.Address, emo.DeviceType);
         }
 
         //check if a function is available in the device selected by the Id passed by the client
@@ -153,9 +158,10 @@ namespace asynchronousserv
             //tries to connect to the DB               
             string ris = null;
             int ecode;
+            ErrMsgObj emo = null;
             try
             {
-                ErrMsgObj emo = SelectDeviceById(st);
+                emo = SelectDeviceById(st);
                 if (emo.ErrCode == 0)
                 {
                     Console.WriteLine("Accessing DB...");
@@ -212,7 +218,7 @@ namespace asynchronousserv
                 CloseConn();
             }
 
-            return new ErrMsgObj(ecode, ris);
+            return new ErrMsgObj(ecode, ris, emo.Address, emo.DeviceType);
         }
     }
 }
