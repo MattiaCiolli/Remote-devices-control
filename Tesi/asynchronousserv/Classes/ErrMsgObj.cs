@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace asynchronousserv
 {
-    //0: ok, 1:no result, 2:no device found, 3:no function available, 100: database unreachable
+    //object used to get data from queries. It stores also errors and the device type and address in order to instantiate the correct device.
     public class ErrMsgObj
     {
         private int errCode;
@@ -72,12 +72,6 @@ namespace asynchronousserv
             data = s;
             deviceType = d;
             addr = a;
-        }
-
-        public ErrMsgObj(int i, string s)
-        {
-            errCode = i;
-            data = s;
         }
     }
 }

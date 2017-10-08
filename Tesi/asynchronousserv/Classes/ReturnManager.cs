@@ -8,6 +8,7 @@ namespace asynchronousserv
 {
     class ReturnManager
     {
+        //0: ok, 1:no result, 2:no device found, 3:no function available, 100: database unreachable
         public string AnalyzeErrMsgObj(ErrMsgObj emo)
         {
             string ris = null;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,8 +26,30 @@ namespace asynchronousserv
 
         public bool CheckReachable(string IpAddress)
         {
-            //ping
-            return false;
+            bool pingOk;
+            // Ping's the desired machine
+            Ping pingSender = new Ping();
+            IPAddress address = IPAddress.Parse(IpAddress);
+            PingReply reply = pingSender.Send(address);
+
+            if (reply.Status == IPStatus.Success)
+            {
+                pingOk = true;
+                /*
+                Console.WriteLine("Address: {0}", reply.Address.ToString());
+                Console.WriteLine("RoundTrip time: {0}", reply.RoundtripTime);
+                Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
+                Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
+                Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);
+                */
+            }
+            else
+            {
+                pingOk = false;
+                //Console.WriteLine(reply.Status);
+            }
+
+            return pingOk;
         }
 
         public double CheckTemperature(string IpAddress)
@@ -52,7 +76,7 @@ namespace asynchronousserv
         { }
         public bool CheckReachable(string PhoneNumber)
         {
-            return true;
+            return false;
         }
         public double CheckTemperature(string PhoneNumber)
         {

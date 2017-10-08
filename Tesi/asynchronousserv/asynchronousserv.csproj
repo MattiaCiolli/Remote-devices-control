@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="asynchronousserv.cs" />
     <Compile Include="Classes\Action.cs" />
-    <Compile Include="Classes\Caller.cs" />
     <Compile Include="Classes\Device.cs" />
     <Compile Include="Classes\ErrMsgObj.cs" />
     <Compile Include="Classes\ParserReturn.cs" />

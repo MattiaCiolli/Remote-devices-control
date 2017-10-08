@@ -52,6 +52,7 @@ namespace asynchronousserv
 
         public abstract string HandleCmd(string id);
 
+        //instantiates the correct device type according to the selected device on the DB
         public Device instantiateDeviceByType(int type)
         {
             Device d = null;
