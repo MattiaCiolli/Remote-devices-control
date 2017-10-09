@@ -52,8 +52,9 @@ namespace asynchronousserv
             }
             //case check reachable
             else if (action == 6)
-            {
+            {             
                 state = new checkReach();
+                sWriter.WriteLine("Checking "+ id +" reachability");
             }
             
             //create an action

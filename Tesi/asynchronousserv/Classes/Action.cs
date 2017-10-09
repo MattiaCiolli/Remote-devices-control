@@ -146,7 +146,7 @@ namespace asynchronousserv
             string risT = Rm.AnalyzeErrMsgObj(emo);
             if (emo.ErrCode == 0)
             {
-                ris = Dev.CheckReachable(emo.Address).ToString();
+                ris = Dev.CheckReachable(emo.Address);
             }
             else
             {

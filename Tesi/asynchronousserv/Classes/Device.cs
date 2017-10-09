@@ -11,7 +11,7 @@ namespace asynchronousserv
     interface Device
     {
         void CheckAll(string address);
-        bool CheckReachable(string address);
+        string CheckReachable(string address);
         double CheckTemperature(string address);
         DateTime CheckTime(string address);
         string CheckNodes(string address);
@@ -24,9 +24,9 @@ namespace asynchronousserv
         public void CheckAll(string IpAddress)
         { }
 
-        public bool CheckReachable(string IpAddress)
+        public string CheckReachable(string IpAddress)
         {
-            bool pingOk;
+            string ris = null;
             // Ping's the desired machine
             Ping pingSender = new Ping();
             IPAddress address = IPAddress.Parse(IpAddress);
@@ -34,22 +34,14 @@ namespace asynchronousserv
 
             if (reply.Status == IPStatus.Success)
             {
-                pingOk = true;
-                /*
-                Console.WriteLine("Address: {0}", reply.Address.ToString());
-                Console.WriteLine("RoundTrip time: {0}", reply.RoundtripTime);
-                Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
-                Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
-                Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);
-                */
+                ris = "Address: " + reply.Address.ToString() + " RoundTrip time: "+ reply.RoundtripTime + " Ttl: " + reply.Options.Ttl;
             }
             else
             {
-                pingOk = false;
-                //Console.WriteLine(reply.Status);
+                ris = reply.Status.ToString();
             }
 
-            return pingOk;
+            return ris;
         }
 
         public double CheckTemperature(string IpAddress)
@@ -74,9 +66,9 @@ namespace asynchronousserv
 
         public void CheckAll(string PhoneNumber)
         { }
-        public bool CheckReachable(string PhoneNumber)
+        public string CheckReachable(string PhoneNumber)
         {
-            return false;
+            return "false";
         }
         public double CheckTemperature(string PhoneNumber)
         {

@@ -56,10 +56,13 @@ namespace clientconsole
                         sWriter.WriteLine(cmd);
                         sWriter.Flush();
 
-                        // receive from server
-                        String sDataIncomming = sReader.ReadLine();
-                        Console.WriteLine(sDataIncomming);
+                        while (sReader.Peek() >= 0)
+                        {
+                            String sDataIncoming = sReader.ReadLine();
+                            Console.WriteLine(sDataIncoming);
+                        }
 
+                        sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
                     }
                 }
             }
