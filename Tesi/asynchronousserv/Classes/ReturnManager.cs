@@ -12,23 +12,23 @@ namespace asynchronousserv
         public string AnalyzeErrMsgObj(ErrMsgObj emo)
         {
             string ris = null;
-            if(emo.ErrCode==0)
+            if(emo.ErrCode== ENUM.ERRORS.NO_ERRORS)
             {
                 ris = emo.Data;
             }
-            else if(emo.ErrCode==1)
+            else if(emo.ErrCode== ENUM.ERRORS.DB_NO_RESULT)
             {
                 ris = "No result";
             }
-            else if (emo.ErrCode == 2)
+            else if (emo.ErrCode == ENUM.ERRORS.DEVICE_NOT_FOUND)
             {
                 ris = "Device not found";
             }
-            else if (emo.ErrCode == 3)
+            else if (emo.ErrCode == ENUM.ERRORS.DEVICE_FUNCTIONALITY_NOT_SUPPORTED)
             {
-                ris = "Functionality not available";
+                ris = "Functionality not supported";
             }
-            else if (emo.ErrCode == 100)
+            else if (emo.ErrCode == ENUM.ERRORS.DB_UNREACHABLE)
             {
                 ris = "Database unreachable";
             }

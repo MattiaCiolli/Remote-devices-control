@@ -88,7 +88,7 @@ namespace asynchronousserv
                         ParserReturn Pr = (ParserReturn)Par.ParseClientRequest(sData);
                         // shows content on the console.
                         Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + ": " + sData);
-                        if (Pr.ActionId != 0 && Pr.ObjId != null && Pr.Data != null)
+                        if (Pr.ActionId != ENUM.ACTIONS.NO_ACTION && Pr.ObjId != null && Pr.Data != null)
                         {
                             //create a thread with parameters
                             ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket);

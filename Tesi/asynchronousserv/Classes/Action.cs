@@ -53,19 +53,19 @@ namespace asynchronousserv
         public abstract string HandleCmd(string id);
 
         //instantiates the correct device type according to the selected device on the DB
-        public Device instantiateDeviceByType(int type)
+        public Device instantiateDeviceByType(ENUM.DEVICES type)
         {
             Device d = null;
-            if(type==1)
+            switch (type)
             {
-                d = new IPDevice();
-            }
-            else if(type==2)
-            {
-                d = new SerialDevice();
-            }else
-            {
-                //
+                case ENUM.DEVICES.IP:
+                    d = new IPDevice();
+                    break;
+                case ENUM.DEVICES.SERIAL232_TYPE1:
+                    d = new SerialDevice();
+                    break;
+                default:
+                    break;
             }
             return d;
         }
@@ -100,7 +100,7 @@ namespace asynchronousserv
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 3);
             Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
-            if (emo.ErrCode == 0)
+            if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
             {
                 ris = Dev.CheckTemperature(emo.Address).ToString();
             }
@@ -122,7 +122,7 @@ namespace asynchronousserv
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 4);
             Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
-            if (emo.ErrCode == 0)
+            if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
             {
                 ris = Dev.CheckNodes(emo.Address).ToString();
             }
@@ -144,7 +144,7 @@ namespace asynchronousserv
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 1);
             Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
-            if (emo.ErrCode == 0)
+            if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
             {
                 ris = Dev.CheckReachable(emo.Address);
             }
@@ -166,7 +166,7 @@ namespace asynchronousserv
             ErrMsgObj emo = DBC.FindDeviceFunction(id, 2);
             Dev = instantiateDeviceByType(emo.DeviceType);
             string risT = Rm.AnalyzeErrMsgObj(emo);
-            if (emo.ErrCode == 0)
+            if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
             {
                 ris = Dev.CheckTime(emo.Address).ToString();
             }

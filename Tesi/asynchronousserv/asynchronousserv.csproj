@@ -46,11 +46,14 @@
     <Compile Include="asynchronousserv.cs" />
     <Compile Include="Classes\Action.cs" />
     <Compile Include="Classes\Device.cs" />
+    <Compile Include="Classes\ENUM.cs" />
     <Compile Include="Classes\ErrMsgObj.cs" />
+    <Compile Include="Classes\IPDevice.cs" />
     <Compile Include="Classes\ParserReturn.cs" />
     <Compile Include="Classes\Parser.cs" />
     <Compile Include="Classes\DBConnection.cs" />
     <Compile Include="Classes\ReturnManager.cs" />
+    <Compile Include="Classes\SerialDevice.cs" />
     <Compile Include="Classes\threadwithstate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -9,12 +9,12 @@ namespace asynchronousserv
     //object used to get data from queries. It stores also errors and the device type and address in order to instantiate the correct device.
     public class ErrMsgObj
     {
-        private int errCode;
+        private ENUM.ERRORS errCode;
         private string data;
         private string addr;
-        private int deviceType;
+        private ENUM.DEVICES deviceType;
 
-        public int ErrCode
+        public ENUM.ERRORS ErrCode
         {
             get
             {
@@ -40,7 +40,7 @@ namespace asynchronousserv
             }
         }
 
-        public int DeviceType
+        public ENUM.DEVICES DeviceType
         {
             get
             {
@@ -66,7 +66,7 @@ namespace asynchronousserv
             }
         }
 
-        public ErrMsgObj(int i, string s, string a, int d)
+        public ErrMsgObj(ENUM.ERRORS i, string s, string a, ENUM.DEVICES d)
         {
             errCode = i;
             data = s;

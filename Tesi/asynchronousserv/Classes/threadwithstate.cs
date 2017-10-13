@@ -8,14 +8,14 @@ namespace asynchronousserv
 {
     public class ThreadWithState
     {
-        private int action;
+        private ENUM.ACTIONS action;
         private string id;
         private string data;
         private TcpClient client;
 
-        public ThreadWithState(int integ, string text, string d, TcpClient cl)
+        public ThreadWithState(ENUM.ACTIONS act, string text, string d, TcpClient cl)
         {
-            action = integ;
+            action = act;
             id = text;
             data = d;
             client = cl;
@@ -25,37 +25,30 @@ namespace asynchronousserv
         {
             StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
             State state = null;
-            //case dinfo
-            if (action == 1)
+            switch (action)
             {
-                state = new dinfo();
-            }
-            //case dfunc
-            else if (action == 2)
-            {
-                state = new dfunc();
-            }
-            //case check temp
-            else if (action == 3)
-            {
-                state = new checkTemp();
-            }
-            //case check nodes
-            else if (action == 4)
-            {
-                state = new checkNodes();
-            }
-            //case check time
-            else if (action == 5)
-            {
-                state = new checkTime();
-            }
-            //case check reachable
-            else if (action == 6)
-            {             
-                state = new checkReach();
-                sWriter.WriteLine("Checking "+ id +" reachability");
-            }
+                case ENUM.ACTIONS.DEVICE_INFO:
+                    state = new dinfo();
+                    break;
+                case ENUM.ACTIONS.DEVICE_FUNCTIONS:
+                    state = new dfunc();
+                    break;
+                case ENUM.ACTIONS.CHECK_TEMPERATURE:
+                    state = new checkTemp();
+                    break;
+                case ENUM.ACTIONS.CHECK_NODES:
+                    state = new checkNodes();
+                    break;
+                case ENUM.ACTIONS.CHECK_TIME:
+                    state = new checkTime();
+                    break;
+                case ENUM.ACTIONS.CHECK_REACHABILITY:
+                    state = new checkReach();
+                    sWriter.WriteLine("Checking " + id + " reachability");
+                    break;
+                default:
+                    break;
+            }            
             
             //create an action
             Action a = new Action(state, id);

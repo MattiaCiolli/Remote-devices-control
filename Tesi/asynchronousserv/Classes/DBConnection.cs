@@ -39,8 +39,8 @@ namespace asynchronousserv
 
             //tries to connect to the DB 
             string ris = null;
-            int ecode;
-            int devType=0;
+            ENUM.ERRORS ecode;
+            ENUM.DEVICES devType = ENUM.DEVICES.UNDEFINED;
             string addr=null;
             try
             {
@@ -57,15 +57,15 @@ namespace asynchronousserv
                 //if the SQL has results
                 if (objDR.Read())
                 {
-                    devType = (int)objDR["tipo"];
+                    devType = (ENUM.DEVICES)objDR["tipo"];
                     addr = (string)objDR["indirizzo"];
-                    ris = st + ", " + (string)objDR["descrizione"] + ", " + devType + ", " + addr;
-                    ecode = 0;
+                    ris = st + ", " + (string)objDR["descrizione"] + ", " + (int)devType + ", " + addr;
+                    ecode = ENUM.ERRORS.NO_ERRORS;
                 }
                 else
                 {
                     //no result code
-                    ecode = 1;
+                    ecode = ENUM.ERRORS.DB_NO_RESULT;
                 }
 
                 //close result object
@@ -74,7 +74,7 @@ namespace asynchronousserv
             catch
             {
                 //db unreachable
-                ecode = 100;
+                ecode = ENUM.ERRORS.DB_UNREACHABLE;
             }
             finally
             {
@@ -90,12 +90,12 @@ namespace asynchronousserv
         {
             //tries to connect to the DB               
             string ris = null;
-            int ecode;
+            ENUM.ERRORS ecode;
             ErrMsgObj emo = null;
             try
             {
                 emo = SelectDeviceById(st);
-                if (emo.ErrCode == 0)
+                if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
                 {
                     Console.WriteLine("Accessing DB...");
                     //creates a new connection
@@ -121,12 +121,12 @@ namespace asynchronousserv
 
                         //delete unuseful last ", "
                         ris = ris.Substring(0, ris.Length - 2);
-                        ecode = 0;
+                        ecode = ENUM.ERRORS.NO_ERRORS;
                     }
                     else
                     {
                         //no result code
-                        ecode = 1;
+                        ecode = ENUM.ERRORS.DB_NO_RESULT;
                     }
 
                     //close result object
@@ -135,13 +135,13 @@ namespace asynchronousserv
                 else
                 {
                     //no device found code
-                    ecode = 2;
+                    ecode = ENUM.ERRORS.DEVICE_NOT_FOUND;
                 }
             }
             catch
             {
                 //db unreachable
-                ecode = 100;
+                ecode = ENUM.ERRORS.DB_UNREACHABLE;
             }
             finally
             {
@@ -157,12 +157,12 @@ namespace asynchronousserv
         {
             //tries to connect to the DB               
             string ris = null;
-            int ecode;
+            ENUM.ERRORS ecode;
             ErrMsgObj emo = null;
             try
             {
                 emo = SelectDeviceById(st);
-                if (emo.ErrCode == 0)
+                if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
                 {
                     Console.WriteLine("Accessing DB...");
                     //creates a new connection
@@ -190,12 +190,12 @@ namespace asynchronousserv
 
                         //delete unuseful last ", "
                         ris = ris.Substring(0, ris.Length - 2);
-                        ecode = 0;
+                        ecode = ENUM.ERRORS.NO_ERRORS;
                     }
                     else
                     {
                         //no functionality code
-                        ecode = 3;
+                        ecode = ENUM.ERRORS.DEVICE_FUNCTIONALITY_NOT_SUPPORTED;
                     }
 
                     //close result object
@@ -204,13 +204,13 @@ namespace asynchronousserv
                 else
                 {
                     //no device found code
-                    ecode = 2;
+                    ecode = ENUM.ERRORS.DEVICE_NOT_FOUND;
                 }
             }
             catch
             {
                 //db unreachable
-                ecode = 100;
+                ecode = ENUM.ERRORS.DB_UNREACHABLE;
             }
             finally
             {

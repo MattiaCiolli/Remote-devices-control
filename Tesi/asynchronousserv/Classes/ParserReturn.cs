@@ -4,18 +4,18 @@ namespace asynchronousserv
     //parser return object
     class ParserReturn
     {
-        private int actionId;
+        private ENUM.ACTIONS actionId;
         private string objId;
         private string data;
 
-        public ParserReturn(int i, string s, string d)
+        public ParserReturn(ENUM.ACTIONS a, string s, string d)
         {
-            actionId = i;
+            actionId = a;
             objId = s;
             data = d;
         }
 
-        public int ActionId
+        public ENUM.ACTIONS ActionId
         {
             get
             {

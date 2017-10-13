@@ -10,7 +10,7 @@ namespace asynchronousserv
         //gets the client request package and extracts it ABC1DEFasd1GHIdataJKL
         public ParserReturn ParseClientRequest(string sData)
         {
-            int action = 0;
+            ENUM.ACTIONS action = ENUM.ACTIONS.NO_ACTION;
             string id = null;
             string data = null;
             int l = sData.Length;
@@ -18,14 +18,14 @@ namespace asynchronousserv
             {
                 try
                 {
-                    action = Int32.Parse(Between(sData, "ABC", "DEF"));
+                    action = (ENUM.ACTIONS)Int32.Parse(Between(sData, "ABC", "DEF"));
                     id = Between(sData, "DEF", "GHI");
                     data = Between(sData, "GHI", "JKL");
                 }
                 catch
                 {
                     Console.WriteLine("Package format error");
-                    action = 0;
+                    action = ENUM.ACTIONS.NO_ACTION;
                     id = null;
                     data = null;
                 }
@@ -33,7 +33,7 @@ namespace asynchronousserv
             }
             else
             {
-                action = 0;
+                action = ENUM.ACTIONS.NO_ACTION;
                 id = null;
                 data = null;
             }
