@@ -54,7 +54,7 @@ namespace clientconsole
             //if error
             if (ris.Equals("no error"))
             {
-                ris = "ABC" + emoc.Actionid + "DEF" + emoc.Id + "GHI" + emoc.Data + "JKL";
+                ris = "ABC" + (int)emoc.Actionid + "DEF" + emoc.Id + "GHI" + emoc.Data + "JKL";
             }
             else
             {

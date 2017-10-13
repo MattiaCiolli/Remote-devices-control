@@ -8,12 +8,12 @@ namespace clientconsole
 {
     public class ErrMsgObjClient
     {
-        private int errCode;
-        private int actionid;
+        private ENUM.ERRORS errCode;
+        private ENUM.ACTIONS actionid;
         private string id;
         private string data;
 
-        public int ErrCode
+        public ENUM.ERRORS ErrCode
         {
             get
             {
@@ -26,7 +26,7 @@ namespace clientconsole
             }
         }
 
-        public int Actionid
+        public ENUM.ACTIONS Actionid
         {
             get
             {
@@ -65,7 +65,7 @@ namespace clientconsole
             }
         }
 
-        public ErrMsgObjClient(int e, int a, string i, string s)
+        public ErrMsgObjClient(ENUM.ERRORS e, ENUM.ACTIONS a, string i, string s)
         {
             errCode = e;
             actionid = a;

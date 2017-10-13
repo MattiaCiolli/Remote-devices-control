@@ -14,26 +14,26 @@ namespace clientconsole
     {
         public override ErrMsgObjClient HandleCmd(string command, string cmdconsole)
         {
-            int errcode = 0;
-            int actionid;
+            ENUM.ERRORS errcode = ENUM.ERRORS.NO_ERRORS;
+            ENUM.ACTIONS actionid = ENUM.ACTIONS.NO_ACTION;
             string id = null;
             string data = null;
             try
             {
                 //extract the deviceid after the command and trim spaces
                 id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length).Trim();
-                actionid = 1;
+                actionid = ENUM.ACTIONS.DEVICE_INFO;
                 if (id.Length == 0)
                 {
-                    actionid = 0;
-                    errcode = 1;
+                    actionid = ENUM.ACTIONS.NO_ACTION;
+                    errcode = ENUM.ERRORS.SYNTAX_ERROR;
                     data = "dinfo [deviceid]";
                 }
             }
             catch
             {
-                actionid = 0;
-                errcode = 1;
+                actionid = ENUM.ACTIONS.NO_ACTION;
+                errcode = ENUM.ERRORS.SYNTAX_ERROR;
                 data = "dinfo [deviceid]";
             }
             return new ErrMsgObjClient(errcode, actionid, id, data);
@@ -45,26 +45,26 @@ namespace clientconsole
     {
         public override ErrMsgObjClient HandleCmd(string command, string cmdconsole)
         {
-            int errcode = 0;
-            int actionid;
+            ENUM.ERRORS errcode = ENUM.ERRORS.NO_ERRORS;
+            ENUM.ACTIONS actionid = ENUM.ACTIONS.NO_ACTION;
             string id = null;
             string data = null;
             try
             {
                 //extract the deviceid after the command and trim spaces
                 id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length).Trim();
-                actionid = 2;
+                actionid = ENUM.ACTIONS.DEVICE_FUNCTIONS;
                 if (id.Length == 0)
                 {
-                    actionid = 0;
-                    errcode = 1;
+                    actionid = ENUM.ACTIONS.NO_ACTION;
+                    errcode = ENUM.ERRORS.SYNTAX_ERROR;
                     data = "dfunc [deviceid]";
                 }
             }
             catch
             {
-                actionid = 0;
-                errcode = 1;
+                actionid = ENUM.ACTIONS.NO_ACTION;
+                errcode = ENUM.ERRORS.SYNTAX_ERROR;
                 data = "dfunc [deviceid]";
             }
             return new ErrMsgObjClient(errcode, actionid, id, data);
@@ -76,8 +76,8 @@ namespace clientconsole
     {
         public override ErrMsgObjClient HandleCmd(string command, string cmdconsole)
         {
-            int errcode = 0;
-            int actionid;
+            ENUM.ERRORS errcode = ENUM.ERRORS.NO_ERRORS;
+            ENUM.ACTIONS actionid = ENUM.ACTIONS.NO_ACTION;
             string id = null;
             string data = null;
             string checkId = null;
@@ -88,24 +88,24 @@ namespace clientconsole
 
                 if (checkId.Equals("t"))
                 {
-                    actionid = 3;
+                    actionid = ENUM.ACTIONS.CHECK_TEMPERATURE;
                 }
                 else if (checkId.Equals("n"))
                 {
-                    actionid = 4;
+                    actionid = ENUM.ACTIONS.CHECK_NODES;
                 }
                 else if (checkId.Equals("h"))
                 {
-                    actionid = 5;
+                    actionid = ENUM.ACTIONS.CHECK_TIME;
                 }
                 else if (checkId.Equals("r"))
                 {
-                    actionid = 6;
+                    actionid = ENUM.ACTIONS.CHECK_REACHABILITY;
                 }
                 else
                 {
-                    actionid = 0;
-                    errcode = 1;
+                    actionid = ENUM.ACTIONS.NO_ACTION;
+                    errcode = ENUM.ERRORS.SYNTAX_ERROR;
                     data = "check [*] [deviceid]. Type \"help\" for available parameters.";
                 }
 
@@ -113,15 +113,15 @@ namespace clientconsole
                 id = command.Substring(command.IndexOf(cmdconsole) + cmdconsole.Length + 2).Trim();
                 if (id.Length == 0)
                 {
-                    errcode = 1;
-                    actionid = 0;
+                    actionid = ENUM.ACTIONS.NO_ACTION;
+                    errcode = ENUM.ERRORS.SYNTAX_ERROR;
                     data = "check [*] [deviceid]";
                 }
             }
             catch
             {
-                actionid = 0;
-                errcode = 1;
+                actionid = ENUM.ACTIONS.NO_ACTION;
+                errcode = ENUM.ERRORS.SYNTAX_ERROR;
                 data = "check [*] [deviceid]";
             }
 

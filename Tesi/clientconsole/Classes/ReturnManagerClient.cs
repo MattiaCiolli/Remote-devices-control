@@ -12,7 +12,7 @@ namespace clientconsole
         {
             string ris = "no error";
 
-            if (emoc.ErrCode == 1)
+            if (emoc.ErrCode == ENUM.ERRORS.SYNTAX_ERROR)
             {
                 ris = "Syntax error. Usage " + emoc.Data;
             }

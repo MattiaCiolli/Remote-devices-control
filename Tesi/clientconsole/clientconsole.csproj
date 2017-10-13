@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ENUM.cs" />
     <Compile Include="Classes\ReturnManagerClient.cs" />
     <Compile Include="Classes\Command.cs" />
     <Compile Include="Classes\ErrMsgObjClient.cs" />
