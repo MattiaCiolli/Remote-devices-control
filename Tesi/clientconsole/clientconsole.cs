@@ -14,10 +14,10 @@ namespace clientconsole
         private Boolean isConnected;
         private Interpreter intp;
 
-        public clientconsole(String ipAddress, int portNum)
+        public clientconsole(String ipAddress_in, int portNum_in)
         {
             client = new TcpClient();
-            client.Connect(ipAddress, portNum);
+            client.Connect(ipAddress_in, portNum_in);
             //stream to write on server's console
             sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
             //stream to read server's messages

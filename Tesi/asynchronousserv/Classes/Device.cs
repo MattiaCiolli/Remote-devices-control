@@ -10,10 +10,10 @@ namespace asynchronousserv
 {
     interface Device
     {
-        void CheckAll(string address);
-        string CheckReachable(string address);
-        double CheckTemperature(string address);
-        DateTime CheckTime(string address);
-        string CheckNodes(string address);
+        void CheckAll(string address_in);
+        string CheckReachable(string address_in);
+        double CheckTemperature(string address_in);
+        DateTime CheckTime(string address_in);
+        string CheckNodes(string address_in);
     }
 }

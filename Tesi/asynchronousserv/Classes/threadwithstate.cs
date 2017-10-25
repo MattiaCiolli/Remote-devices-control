@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
-
 namespace asynchronousserv
 {
     public class ThreadWithState
@@ -13,49 +12,29 @@ namespace asynchronousserv
         private string data;
         private TcpClient client;
 
-        public ThreadWithState(ENUM.ACTIONS act, string text, string d, TcpClient cl)
+        public ThreadWithState(ENUM.ACTIONS act_in, string text_in, string d_in, TcpClient cl_in)
         {
-            action = act;
-            id = text;
-            data = d;
-            client = cl;
+            action = act_in;
+            id = text_in;
+            data = d_in;
+            client = cl_in;
         }
 
         public void DeviceAction()
         {
             StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
-            State state = null;
-            switch (action)
+
+            if (action == ENUM.ACTIONS.CHECK_REACHABILITY)
             {
-                case ENUM.ACTIONS.DEVICE_INFO:
-                    state = new dinfo();
-                    break;
-                case ENUM.ACTIONS.DEVICE_FUNCTIONS:
-                    state = new dfunc();
-                    break;
-                case ENUM.ACTIONS.CHECK_TEMPERATURE:
-                    state = new checkTemp();
-                    break;
-                case ENUM.ACTIONS.CHECK_NODES:
-                    state = new checkNodes();
-                    break;
-                case ENUM.ACTIONS.CHECK_TIME:
-                    state = new checkTime();
-                    break;
-                case ENUM.ACTIONS.CHECK_REACHABILITY:
-                    state = new checkReach();
-                    sWriter.WriteLine("Checking " + id + " reachability");
-                    break;
-                default:
-                    break;
-            }            
-            
+                sWriter.WriteLine("Checking " + id + " reachability");
+            }
+
             //create an action
-            Action a = new Action(state, id);
+            Action a = new Action(id, action);
             //and launch it saving its result in a string
             string ris = a.Request();
 
-            if (ris!=null)
+            if (ris != null)
             {
                 Console.WriteLine(ris);
                 sWriter.WriteLine("Infos from server: " + ris);

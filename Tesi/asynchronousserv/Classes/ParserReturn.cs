@@ -8,11 +8,11 @@ namespace asynchronousserv
         private string objId;
         private string data;
 
-        public ParserReturn(ENUM.ACTIONS a, string s, string d)
+        public ParserReturn(ENUM.ACTIONS a_in, string s_in, string d_in)
         {
-            actionId = a;
-            objId = s;
-            data = d;
+            actionId = a_in;
+            objId = s_in;
+            data = d_in;
         }
 
         public ENUM.ACTIONS ActionId

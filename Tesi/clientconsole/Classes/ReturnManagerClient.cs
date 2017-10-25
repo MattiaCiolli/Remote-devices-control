@@ -8,13 +8,13 @@ namespace clientconsole
 {
     class ReturnManagerClient
     {
-        public string AnalyzeErrMsgObj(ErrMsgObjClient emoc)
+        public string AnalyzeErrMsgObj(ErrMsgObjClient emoc_in)
         {
             string ris = "no error";
 
-            if (emoc.ErrCode == ENUM.ERRORS.SYNTAX_ERROR)
+            if (emoc_in.ErrCode == ENUM.ERRORS.SYNTAX_ERROR)
             {
-                ris = "Syntax error. Usage " + emoc.Data;
+                ris = "Syntax error. Usage " + emoc_in.Data;
             }
 
             return ris;

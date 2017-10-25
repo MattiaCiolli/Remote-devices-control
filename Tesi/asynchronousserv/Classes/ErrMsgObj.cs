@@ -66,12 +66,12 @@ namespace asynchronousserv
             }
         }
 
-        public ErrMsgObj(ENUM.ERRORS i, string s, string a, ENUM.DEVICES d)
+        public ErrMsgObj(ENUM.ERRORS i_in, string s_in, string a_in, ENUM.DEVICES d_in)
         {
-            errCode = i;
-            data = s;
-            deviceType = d;
-            addr = a;
+            errCode = i_in;
+            data = s_in;
+            deviceType = d_in;
+            addr = a_in;
         }
     }
 }

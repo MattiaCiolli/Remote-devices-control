@@ -10,21 +10,21 @@ namespace asynchronousserv
     {
         private string PhoneNumber { get; set; }
 
-        public void CheckAll(string PhoneNumber)
+        public void CheckAll(string PhoneNumber_in)
         { }
-        public string CheckReachable(string PhoneNumber)
+        public string CheckReachable(string PhoneNumber_in)
         {
             return "false";
         }
-        public double CheckTemperature(string PhoneNumber)
+        public double CheckTemperature(string PhoneNumber_in)
         {
             return 15;
         }
-        public DateTime CheckTime(string PhoneNumber)
+        public DateTime CheckTime(string PhoneNumber_in)
         {
             return new DateTime().AddDays(2);
         }
-        public string CheckNodes(string PhoneNumber)
+        public string CheckNodes(string PhoneNumber_in)
         {
             return "ok,KO,ok";
         }

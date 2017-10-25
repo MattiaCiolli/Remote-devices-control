@@ -32,7 +32,7 @@ namespace asynchronousserv
         }
 
         //Selects a device by the Id passed by the client
-        public ErrMsgObj SelectDeviceById(string st)
+        public ErrMsgObj SelectDeviceById(string st_in)
         {
             //creates a new connection
             NewConnObj();
@@ -51,7 +51,7 @@ namespace asynchronousserv
                 //create a parameter
                 SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
                 //assign a value to that
-                sid.Value = st;
+                sid.Value = st_in;
                 //execute SQL
                 SqlDataReader objDR = objCmd.ExecuteReader();
                 //if the SQL has results
@@ -59,7 +59,7 @@ namespace asynchronousserv
                 {
                     devType = (ENUM.DEVICES)objDR["tipo"];
                     addr = (string)objDR["indirizzo"];
-                    ris = st + ", " + (string)objDR["descrizione"] + ", " + (int)devType + ", " + addr;
+                    ris = st_in + ", " + (string)objDR["descrizione"] + ", " + (int)devType + ", " + addr;
                     ecode = ENUM.ERRORS.NO_ERRORS;
                 }
                 else
@@ -86,7 +86,7 @@ namespace asynchronousserv
         }
 
         //Shows available functions for a device selected by the Id passed by the client
-        public ErrMsgObj ShowDeviceFunctions(string st)
+        public ErrMsgObj ShowDeviceFunctions(string st_in)
         {
             //tries to connect to the DB               
             string ris = null;
@@ -94,7 +94,7 @@ namespace asynchronousserv
             ErrMsgObj emo = null;
             try
             {
-                emo = SelectDeviceById(st);
+                emo = SelectDeviceById(st_in);
                 if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
                 {
                     Console.WriteLine("Accessing DB...");
@@ -107,7 +107,7 @@ namespace asynchronousserv
                     //create a parameter
                     SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
                     //assign a value to that
-                    sid.Value = st;
+                    sid.Value = st_in;
                     //execute SQL
                     SqlDataReader objDR = objCmd.ExecuteReader();
                     //if the SQL has results
@@ -153,7 +153,7 @@ namespace asynchronousserv
         }
 
         //check if a function is available in the device selected by the Id passed by the client
-        public ErrMsgObj FindDeviceFunction(string st, int func)
+        public ErrMsgObj FindDeviceFunction(string st_in, int func_in)
         {
             //tries to connect to the DB               
             string ris = null;
@@ -161,7 +161,7 @@ namespace asynchronousserv
             ErrMsgObj emo = null;
             try
             {
-                emo = SelectDeviceById(st);
+                emo = SelectDeviceById(st_in);
                 if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
                 {
                     Console.WriteLine("Accessing DB...");
@@ -175,8 +175,8 @@ namespace asynchronousserv
                     SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
                     SqlParameter sid1 = objCmd.Parameters.Add("@idfunc", System.Data.SqlDbType.Int, 15);
                     //assign a value to that
-                    sid.Value = st;
-                    sid1.Value = func;
+                    sid.Value = st_in;
+                    sid1.Value = func_in;
                     //execute SQL
                     SqlDataReader objDR = objCmd.ExecuteReader();
                     //if the SQL has results

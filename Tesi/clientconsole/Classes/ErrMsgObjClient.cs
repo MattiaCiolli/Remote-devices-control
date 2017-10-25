@@ -65,12 +65,12 @@ namespace clientconsole
             }
         }
 
-        public ErrMsgObjClient(ENUM.ERRORS e, ENUM.ACTIONS a, string i, string s)
+        public ErrMsgObjClient(ENUM.ERRORS e_in, ENUM.ACTIONS a_in, string i_in, string s_in)
         {
-            errCode = e;
-            actionid = a;
-            id = i;
-            data = s;
+            errCode = e_in;
+            actionid = a_in;
+            id = i_in;
+            data = s_in;
         }
     }
 }

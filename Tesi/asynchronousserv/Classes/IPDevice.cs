@@ -15,12 +15,12 @@ namespace asynchronousserv
         public void CheckAll(string IpAddress)
         { }
 
-        public string CheckReachable(string IpAddress)
+        public string CheckReachable(string IpAddress_in)
         {
             string ris = null;
             // Ping's the desired machine
             Ping pingSender = new Ping();
-            IPAddress address = IPAddress.Parse(IpAddress);
+            IPAddress address = IPAddress.Parse(IpAddress_in);
             PingReply reply = pingSender.Send(address);
 
             if (reply.Status == IPStatus.Success)
@@ -35,17 +35,17 @@ namespace asynchronousserv
             return ris;
         }
 
-        public double CheckTemperature(string IpAddress)
+        public double CheckTemperature(string IpAddress_in)
         {
             return 12.5;
         }
 
-        public DateTime CheckTime(string IpAddress)
+        public DateTime CheckTime(string IpAddress_in)
         {
             return new DateTime();
         }
 
-        public string CheckNodes(string IpAddress)
+        public string CheckNodes(string IpAddress_in)
         {
             return "ok,ok,ok";
         }

@@ -9,26 +9,26 @@ namespace asynchronousserv
     class ReturnManager
     {
         //0: ok, 1:no result, 2:no device found, 3:no function available, 100: database unreachable
-        public string AnalyzeErrMsgObj(ErrMsgObj emo)
+        public string AnalyzeErrMsgObj(ErrMsgObj emo_in)
         {
             string ris = null;
-            if(emo.ErrCode== ENUM.ERRORS.NO_ERRORS)
+            if(emo_in.ErrCode== ENUM.ERRORS.NO_ERRORS)
             {
-                ris = emo.Data;
+                ris = emo_in.Data;
             }
-            else if(emo.ErrCode== ENUM.ERRORS.DB_NO_RESULT)
+            else if(emo_in.ErrCode== ENUM.ERRORS.DB_NO_RESULT)
             {
                 ris = "No result";
             }
-            else if (emo.ErrCode == ENUM.ERRORS.DEVICE_NOT_FOUND)
+            else if (emo_in.ErrCode == ENUM.ERRORS.DEVICE_NOT_FOUND)
             {
                 ris = "Device not found";
             }
-            else if (emo.ErrCode == ENUM.ERRORS.DEVICE_FUNCTIONALITY_NOT_SUPPORTED)
+            else if (emo_in.ErrCode == ENUM.ERRORS.DEVICE_FUNCTIONALITY_NOT_SUPPORTED)
             {
                 ris = "Functionality not supported";
             }
-            else if (emo.ErrCode == ENUM.ERRORS.DB_UNREACHABLE)
+            else if (emo_in.ErrCode == ENUM.ERRORS.DB_UNREACHABLE)
             {
                 ris = "Database unreachable";
             }

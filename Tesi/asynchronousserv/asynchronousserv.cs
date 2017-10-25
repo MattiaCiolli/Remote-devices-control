@@ -38,11 +38,11 @@ namespace asynchronousserv
         }
 
         //callback function launched when a client connects
-        private static void OnClientConnected(IAsyncResult asyncResult)
+        private static void OnClientConnected(IAsyncResult asyncResult_in)
         {
             try
             {
-                TcpClient clientSocket = serverSocket.EndAcceptTcpClient(asyncResult);//must be invoked after BeginAcceptTcpClient
+                TcpClient clientSocket = serverSocket.EndAcceptTcpClient(asyncResult_in);//must be invoked after BeginAcceptTcpClient
                 if (clientSocket != null)
                     Console.WriteLine("Received connection request from: " + clientSocket.Client.RemoteEndPoint.ToString());
                 HandleClientRequest(clientSocket);
@@ -60,15 +60,15 @@ namespace asynchronousserv
         }*/
 
         //handles the client's requests. Creates a thread when a client executes a request and destroys it after the request is satisfied
-        private static async void HandleClientRequest(TcpClient clientSocket)
+        private static async void HandleClientRequest(TcpClient clientSocket_in)
         {
             //sets two streams
-            StreamReader sReader = new StreamReader(clientSocket.GetStream(), Encoding.ASCII);
-            StreamWriter sWriter = new StreamWriter(clientSocket.GetStream(), Encoding.ASCII);
+            StreamReader sReader = new StreamReader(clientSocket_in.GetStream(), Encoding.ASCII);
+            StreamWriter sWriter = new StreamWriter(clientSocket_in.GetStream(), Encoding.ASCII);
             String sData = null;
 
             //while the client is connected
-            while (clientSocket.Client.Connected)
+            while (clientSocket_in.Client.Connected)
             {
                 try
                 {
@@ -79,19 +79,19 @@ namespace asynchronousserv
 
                     if (sData.Equals("close"))
                     {
-                        Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + " disconnecting");
-                        clientSocket.GetStream().Close();
-                        clientSocket.Close();
+                        Console.WriteLine("Client " + clientSocket_in.Client.RemoteEndPoint.ToString() + " disconnecting");
+                        clientSocket_in.GetStream().Close();
+                        clientSocket_in.Close();
                     }
                     else
                     {
                         ParserReturn Pr = (ParserReturn)Par.ParseClientRequest(sData);
                         // shows content on the console.
-                        Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + ": " + sData);
+                        Console.WriteLine("Client " + clientSocket_in.Client.RemoteEndPoint.ToString() + ": " + sData);
                         if (Pr.ActionId != ENUM.ACTIONS.NO_ACTION && Pr.ObjId != null && Pr.Data != null)
                         {
                             //create a thread with parameters
-                            ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket);
+                            ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket_in);
                             //set the thread's entry
                             Thread oThread = new Thread(new ThreadStart(tws.DeviceAction));
                             //start the thread
@@ -101,7 +101,7 @@ namespace asynchronousserv
                         }
                         else
                         {
-                            Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + " sent wrong data");
+                            Console.WriteLine("Client " + clientSocket_in.Client.RemoteEndPoint.ToString() + " sent wrong data");
                             sWriter.WriteLine("Infos from server: wrong data from client");
                             sWriter.Flush();
                         }
@@ -109,12 +109,12 @@ namespace asynchronousserv
                 }
                 catch
                 {
-                    Console.WriteLine("Client " + clientSocket.Client.RemoteEndPoint.ToString() + " not reachable");
+                    Console.WriteLine("Client " + clientSocket_in.Client.RemoteEndPoint.ToString() + " not reachable");
                 }
 
             }
 
-            if (!clientSocket.Client.Connected)
+            if (!clientSocket_in.Client.Connected)
             {
                 Console.WriteLine("Client disconnected");
             }

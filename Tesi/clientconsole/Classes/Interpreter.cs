@@ -21,34 +21,12 @@ namespace clientconsole
         }
 
         //converts a command to a package
-        public string Command2Package(string command, string cmdconsole)
+        public string Command2Package(string command_in, string cmdconsole_in)
         {
-            StateClient sc = null;
-
-            //command dinfo
-            if (command.Contains("dinfo "))
-            {
-                sc = new dinfo();
-            }
-            //command dfunc
-            else if (command.Contains("dfunc "))
-            {
-                sc = new dfunc();
-            }
-            //command check
-            else if (command.Contains("check "))
-            {
-                sc = new check();
-            }
-            else
-            {
-                Console.WriteLine("Syntax error");
-            }
-
             //create a Command
-            Command c = new Command(sc, command, cmdconsole);
+            Command com = new Command(command_in, cmdconsole_in);
             //and launch it saving its result 
-            ErrMsgObjClient emoc = c.Request();
+            ErrMsgObjClient emoc = com.Request();
             //analayze result
             string ris = Rmc.AnalyzeErrMsgObj(emoc);
             //if error
@@ -66,12 +44,12 @@ namespace clientconsole
         }
 
         //check if a command exists
-        public string CheckCommands(string command)
+        public string CheckCommands(string command_in)
         {
             string returnstring = null;
 
             //help command
-            if (command.Equals("help"))
+            if (command_in.Equals("help"))
             {
                 Console.WriteLine("Available commands:");
                 Console.WriteLine("help:  shows available commands");
@@ -83,25 +61,25 @@ namespace clientconsole
             }
 
             //dinfo command
-            else if (command.Contains("dinfo "))
+            else if (command_in.Contains("dinfo "))
             {
-                returnstring = Command2Package(command, "dinfo ");
+                returnstring = Command2Package(command_in, "dinfo ");
             }
 
             //dfunc command
-            else if (command.Contains("dfunc "))
+            else if (command_in.Contains("dfunc "))
             {
-                returnstring = Command2Package(command, "dfunc ");
+                returnstring = Command2Package(command_in, "dfunc ");
             }
 
             //check command
-            else if (command.Contains("check "))
+            else if (command_in.Contains("check "))
             {
-                returnstring = Command2Package(command, "check ");
+                returnstring = Command2Package(command_in, "check ");
             }
 
             //close command
-            else if (command.Equals("close"))
+            else if (command_in.Equals("close"))
             {
                 returnstring = "close";
             }
