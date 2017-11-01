@@ -30,6 +30,9 @@ namespace asynchronousserv
                 case ENUM.ACTIONS.CHECK_REACHABILITY:
                     this.Strategy = new checkReachStrategy();
                     break;
+                case ENUM.ACTIONS.CHECK_VOLTAGE:
+                    this.Strategy = new checkVoltStrategy();
+                    break;
                 default:
                     break;
             }

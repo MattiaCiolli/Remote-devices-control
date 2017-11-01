@@ -28,5 +28,11 @@ namespace asynchronousserv
         {
             return "ok,KO,ok";
         }
+
+        public string CheckVoltage(string PhoneNumber_in)
+        {
+            return "10,11,10";
+        }
+
     }
 }

@@ -22,7 +22,8 @@ namespace clientconsole
             CHECK_TEMPERATURE = 3,
             CHECK_NODES = 4,
             CHECK_TIME = 5,
-            CHECK_REACHABILITY = 6
+            CHECK_REACHABILITY = 6,
+            CHECK_VOLTAGE = 7
         }
     }
 }

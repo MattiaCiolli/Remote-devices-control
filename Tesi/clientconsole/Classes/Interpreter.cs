@@ -56,7 +56,7 @@ namespace clientconsole
                 Console.WriteLine("dinfo [deviceid]:  shows infos about the selected device");
                 Console.WriteLine("dfunc [deviceid]:  shows functions available for the selected device");
                 Console.WriteLine("check [*] [deviceid]:  checks the state of the functionality selected by [*] on the selected device");
-                Console.WriteLine("                       [*]: \"r\" = reachability, \"t\" = temperature, \"n\" = nodes, \"h\" = time");
+                Console.WriteLine("                       [*]: \"r\" = reachability, \"t\" = temperature, \"n\" = nodes, \"h\" = time, \"v\" = voltage");
                 Console.WriteLine("close:  closes connection to server");
             }
 

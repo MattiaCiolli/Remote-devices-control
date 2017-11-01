@@ -56,9 +56,12 @@ namespace clientconsole
                         sWriter.WriteLine(cmd);
                         sWriter.Flush();
 
-                        while (sReader.Peek() >= 0)
+                        String sDataIncoming = sReader.ReadLine();
+                        Console.WriteLine(sDataIncoming);
+
+                        while (sDataIncoming.Contains("Infos from server: ") == false)
                         {
-                            String sDataIncoming = sReader.ReadLine();
+                            sDataIncoming = sReader.ReadLine();
                             Console.WriteLine(sDataIncoming);
                         }
 

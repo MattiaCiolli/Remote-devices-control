@@ -15,5 +15,6 @@ namespace asynchronousserv
         double CheckTemperature(string address_in);
         DateTime CheckTime(string address_in);
         string CheckNodes(string address_in);
+        string CheckVoltage(string address_in);
     }
 }

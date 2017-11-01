@@ -113,6 +113,28 @@ namespace asynchronousserv
         }
     }
 
+    // A class for check voltage command
+    class checkVoltStrategy : ActionStrategy
+    {
+        public override string HandleCmd(string id_in)
+        {
+            string ris = null;
+            ErrMsgObj emo = DBC.FindDeviceFunction(id_in, 5);
+            Dev = instantiateDeviceByType(emo.DeviceType);
+            string risT = Rm.AnalyzeErrMsgObj(emo);
+            if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
+            {
+                ris = Dev.CheckVoltage(emo.Address).ToString();
+            }
+            else
+            {
+                ris = risT;
+            }
+
+            return ris;
+        }
+    }
+
     // A class for check nodes command
     class checkNodesStrategy : ActionStrategy
     {

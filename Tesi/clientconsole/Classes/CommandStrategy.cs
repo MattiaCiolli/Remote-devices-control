@@ -102,6 +102,10 @@ namespace clientconsole
                 {
                     actionid = ENUM.ACTIONS.CHECK_REACHABILITY;
                 }
+                else if (checkId.Equals("v"))
+                {
+                    actionid = ENUM.ACTIONS.CHECK_VOLTAGE;
+                }
                 else
                 {
                     actionid = ENUM.ACTIONS.NO_ACTION;

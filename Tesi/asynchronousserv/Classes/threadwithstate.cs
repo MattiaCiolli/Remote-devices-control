@@ -27,6 +27,7 @@ namespace asynchronousserv
             if (action == ENUM.ACTIONS.CHECK_REACHABILITY)
             {
                 sWriter.WriteLine("Checking " + id + " reachability");
+                sWriter.Flush();
             }
 
             //create an action
