@@ -13,7 +13,7 @@ namespace asynchronousserv
         void CheckAll(string address_in);
         string CheckReachable(string address_in);
         double CheckTemperature(string address_in);
-        DateTime CheckTime(string address_in);
+        string CheckTime(string address_in);
         string CheckNodes(string address_in);
         string CheckVoltage(string address_in);
     }

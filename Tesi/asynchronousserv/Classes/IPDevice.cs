@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace asynchronousserv
@@ -42,9 +43,11 @@ namespace asynchronousserv
             return 12.5;
         }
 
-        public DateTime CheckTime(string IpAddress_in)
+        public string CheckTime(string IpAddress_in)
         {
-            return new DateTime();
+            string pkg = ConnectAndGet(IpAddress_in, 49152);
+            string result = AnalyzeRemotePackage(pkg, "0.9.1", "0.9.2");
+            return result;
         }
 
         public string CheckNodes(string IpAddress_in)
@@ -54,37 +57,96 @@ namespace asynchronousserv
 
         public string CheckVoltage(string IpAddress_in)
         {
-            /*TcpClient client = new TcpClient();
-            client.Connect(IpAddress_in, 49152);
-            NetworkStream tcpStream = client.GetStream();
-            byte[] myWriteBuffer = CreateMessage(175, 63, 33, 141, 10); //af 3f 21 8d 0a
-            tcpStream.Write(myWriteBuffer, 0, myWriteBuffer.Length);
-            StringBuilder myCompleteMessage = new StringBuilder();
+            string pkg = ConnectAndGet(IpAddress_in, 49152);
+            string result = AnalyzeRemotePackage(pkg, "0.9.1", "0.9.2");            
+            return result;
+        }
 
-            try
+        // function to translate integers to exadecimals
+        // "af 3f 21 8d 0a" = ".?!.." but "." is represented also with "2e". Use 175 to represent "af" and so on
+        public byte[] CreateMessage(params int[] parameters)
+        {
+            var buf = new byte[parameters.Length];
+            for (int i = 0; i < parameters.Length; i++)
+                Array.Copy(BitConverter.GetBytes(parameters[i]), 0, buf, i, 1);
+            return buf;
+        }
+
+        // analyzes the package sent by the server searching for all the registers listed in the "params"
+        public string AnalyzeRemotePackage(string pkg_in, params string[] registerId_in)
+        {
+            string returnString = null;            
+            StringReader reader = new StringReader(pkg_in.ToString());
+
+            //in caso di stream multilinea
+            /*string result = null;
+            while ((result = reader.ReadLine()) != null)
             {
-                byte[] myReadBuffer = new byte[1024];
-                int numberOfBytesRead = 0;
-
-                // Incoming message may be larger than the buffer size.
-                do
+                foreach (string r in registerId_in)
                 {
-                    numberOfBytesRead = tcpStream.Read(myReadBuffer, 0, myReadBuffer.Length);
-
-                    myCompleteMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
-
+                    returnString += GetRegisterValue(r, pkg_in);
                 }
-                while (tcpStream.DataAvailable);
-
-                // Print out the received message to the console.
-                Console.WriteLine("You received the following message : " + myCompleteMessage);
-            }
-            catch
-            {
-                Console.WriteLine("Sorry.  You cannot read from this NetworkStream.");
             }*/
 
-            string myCompleteMessage = @"LGZ52ZMD3104407.B24
+            foreach (string r in registerId_in)
+            {
+                returnString += GetRegisterValue(r, pkg_in) + " ";
+            }
+
+            return returnString;
+        }
+
+        // gets a register value
+        public string GetRegisterValue(string RegisterNum_in, string result_in)
+        {
+            string FinalString;
+            string selectString = RegisterNum_in;
+
+            if (result_in.Contains(selectString))
+            {
+                FinalString = FindRegister(result_in, selectString, ")");
+            }
+            else
+            {
+                FinalString = "";
+            }
+
+            return FinalString;
+        }
+
+        // connects to the server and gets its data
+        public string ConnectAndGet(string IpAddress_in, int port)
+        {
+        /*TcpClient client = new TcpClient();
+        client.Connect(IpAddress_in, 49152);
+        NetworkStream tcpStream = client.GetStream();
+        byte[] myWriteBuffer = CreateMessage(175, 63, 33, 141, 10); //af 3f 21 8d 0a
+        tcpStream.Write(myWriteBuffer, 0, myWriteBuffer.Length);
+        StringBuilder myCompleteMessage = new StringBuilder();
+
+        try
+        {
+            byte[] myReadBuffer = new byte[1024];
+            int numberOfBytesRead = 0;
+
+            // Incoming message may be larger than the buffer size.
+            do
+            {
+                numberOfBytesRead = tcpStream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                myCompleteMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
+            }
+            while (tcpStream.DataAvailable);
+
+            // Print out the received message to the console.
+            Console.WriteLine("You received the following message : " + myCompleteMessage);
+        }
+        catch
+        {
+            Console.WriteLine("Sorry.  You cannot read from this NetworkStream.");
+        }*/
+
+            //per quando non funziona il contatore
+       string myCompleteMessage = @"LGZ52ZMD3104407.B24
 F.F(00000000)
 0.0.0(95316176)
 0.0.1(95316176)
@@ -149,58 +211,15 @@ namespace asynchronousserv
 8.8.1 * 19(0000.000 * kvarh)
 8.8.2(0000.000 * kvarh)";
 
-            string result = null;
-            string returnString = null;
-            StringReader reader = new StringReader(myCompleteMessage.ToString());
-            while ((result = reader.ReadLine()) != null)
-            {
-                returnString += GetRegisterValue("0.9.1", result);
-                returnString += GetRegisterValue("0.9.2", result);
-                /*returnString += GetRegisterValue("32.7.0", result);
-                returnString += GetRegisterValue("52.7.0", result);
-                returnString += GetRegisterValue("72.7.0", result);*/
-            }
-            return returnString;
+        return myCompleteMessage;
+
         }
 
-        // function to translate integers to exadecimals
-        // "af 3f 21 8d 0a" = ".?!.." but "." is represented also with "2e". Use 175 to represent "af" and so on
-        public byte[] CreateMessage(params int[] parameters)
-        {
-            var buf = new byte[parameters.Length];
-            for (int i = 0; i < parameters.Length; i++)
-                Array.Copy(BitConverter.GetBytes(parameters[i]), 0, buf, i, 1);
-            return buf;
-        }
-
-        //gets a register value
-        public string GetRegisterValue(string RegisterNum_in, string result_in)
+        // finds a register selected by registerId_in and extracts its value
+        public string FindRegister(string Text_in, string FirstString_in, string LastString_in)
         {
             string FinalString;
-            string selectString = RegisterNum_in + "(";
-
-            if (result_in.Contains(selectString))
-            {
-                FinalString = Between(result_in, selectString, ")");
-            }
-            else
-            {
-                FinalString = "";
-            }
-
-            return FinalString;
-        }
-
-        //extracts a string between FirstString and LastString excluded.
-        //Ex. Between("abc", "a", "c") = b
-        public string Between(string Text_in, string FirstString_in, string LastString_in)
-        {
-            string str = Text_in; ;
-            string FinalString;
-
-            int Pos1 = str.IndexOf(FirstString_in) + FirstString_in.Length;
-            int Pos2 = str.IndexOf(LastString_in);
-            FinalString = str.Substring(Pos1, Pos2 - Pos1);
+            FinalString = Regex.Match(Text_in, FirstString_in +@"\((.*?)\)").Groups[1].Value;
             return FinalString;
         }
     }

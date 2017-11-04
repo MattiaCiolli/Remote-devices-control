@@ -20,9 +20,9 @@ namespace asynchronousserv
         {
             return 15;
         }
-        public DateTime CheckTime(string PhoneNumber_in)
+        public string CheckTime(string PhoneNumber_in)
         {
-            return new DateTime().AddDays(2);
+            return new DateTime().AddDays(2).ToString();
         }
         public string CheckNodes(string PhoneNumber_in)
         {

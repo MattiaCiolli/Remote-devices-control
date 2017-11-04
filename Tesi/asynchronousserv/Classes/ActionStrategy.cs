@@ -190,7 +190,7 @@ namespace asynchronousserv
             string risT = Rm.AnalyzeErrMsgObj(emo);
             if (emo.ErrCode == ENUM.ERRORS.NO_ERRORS)
             {
-                ris = Dev.CheckTime(emo.Address).ToString();
+                ris = Dev.CheckTime(emo.Address);
             }
             else
             {
