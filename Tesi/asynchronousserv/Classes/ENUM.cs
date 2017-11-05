@@ -22,7 +22,9 @@ namespace asynchronousserv
             DB_NO_RESULT = 1,
             DEVICE_NOT_FOUND = 2,
             DEVICE_FUNCTIONALITY_NOT_SUPPORTED = 3,
-            DB_UNREACHABLE = 100
+            DB_UNREACHABLE = 100,
+            TCP_CONNECTION_FAILED=200,
+            TCP_STREAM_READ_FAILED=201
         }
 
         public enum ACTIONS

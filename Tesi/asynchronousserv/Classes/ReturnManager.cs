@@ -32,6 +32,14 @@ namespace asynchronousserv
             {
                 ris = "Database unreachable";
             }
+            else if (emo_in.ErrCode == ENUM.ERRORS.TCP_CONNECTION_FAILED)
+            {
+                ris = "Connection to remote failed";
+            }
+            else if (emo_in.ErrCode == ENUM.ERRORS.TCP_STREAM_READ_FAILED)
+            {
+                ris = "Remote data read failed";
+            }
 
             return ris;
         }

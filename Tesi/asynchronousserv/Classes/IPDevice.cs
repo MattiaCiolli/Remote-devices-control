@@ -1,29 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace asynchronousserv
 {
     public class IPDevice : Device
     {
-        private string IpAddress { get; set; }
+        private ReturnManager rm = new ReturnManager();
 
-        public void CheckAll(string IpAddress)
+        internal ReturnManager Rm
+        {
+            get
+            {
+                return rm;
+            }
+
+            set
+            {
+                rm = value;
+            }
+        }
+
+        public void CheckAll(string ipAddress_in)
         { }
 
-        public string CheckReachable(string IpAddress_in)
+        public string CheckReachable(string ipAddress_in)
         {
             string ris = null;
             // Ping's the desired machine
             Ping pingSender = new Ping();
-            IPAddress address = IPAddress.Parse(IpAddress_in);
+            IPAddress address = IPAddress.Parse(ipAddress_in);
             PingReply reply = pingSender.Send(address);
 
             if (reply.Status == IPStatus.Success)
@@ -38,28 +48,164 @@ namespace asynchronousserv
             return ris;
         }
 
-        public double CheckTemperature(string IpAddress_in)
+        public double CheckTemperature(string ipAddress_in)
         {
             return 12.5;
         }
 
-        public string CheckTime(string IpAddress_in)
+        public string CheckTime(string ipAddress_in)
         {
-            string pkg = ConnectAndGet(IpAddress_in, 49152);
-            string result = AnalyzeRemotePackage(pkg, "0.9.1", "0.9.2");
+            ErrMsgObj pkg = ConnectAndGet(ipAddress_in, 49152);
+            string result = null;
+            if (pkg.ErrCode == ENUM.ERRORS.NO_ERRORS)
+            {
+                result = AnalyzeRemotePackage(pkg.Data, "0.9.1", "0.9.2");
+            }
+            else
+            {
+                result = Rm.AnalyzeErrMsgObj(pkg);
+            }
             return result;
         }
 
-        public string CheckNodes(string IpAddress_in)
+        public string CheckNodes(string ipAddress_in)
         {
             return "ok,ok,ok";
         }
 
-        public string CheckVoltage(string IpAddress_in)
+        public string CheckVoltage(string ipAddress_in)
         {
-            string pkg = ConnectAndGet(IpAddress_in, 49152);
-            string result = AnalyzeRemotePackage(pkg, "0.9.1", "0.9.2");            
+            ErrMsgObj pkg = ConnectAndGet(ipAddress_in, 49152);
+            string result = null;
+            if (pkg.ErrCode == ENUM.ERRORS.NO_ERRORS)
+            {
+                result = AnalyzeRemotePackage(pkg.Data, "32.7.0", "52.7.0", "72.7.0");
+            }
+            else
+            {
+                result = Rm.AnalyzeErrMsgObj(pkg);
+            }
             return result;
+        }
+
+        // connects to the server to get data
+        public ErrMsgObj ConnectAndGet(string ipAddress_in, int port)
+        {
+            TcpClient tcpClient = new TcpClient();
+            StringBuilder completeMessage = new StringBuilder();
+            ENUM.ERRORS err = ENUM.ERRORS.NO_ERRORS;
+            try
+            {
+                tcpClient.Connect(ipAddress_in, 49152);
+                NetworkStream tcpStream = tcpClient.GetStream();
+                byte[] writeBuffer = CreateMessage(175, 63, 33, 141, 10); //af 3f 21 8d 0a
+                tcpStream.Write(writeBuffer, 0, writeBuffer.Length);
+                tcpStream.ReadTimeout = 5000;
+
+                try
+                {
+                    byte[] myReadBuffer = new byte[1024];
+                    int numberOfBytesRead = 0;
+
+                    // the message is bigger than the buffer. Execute the read until the reach of the "ETX" character (0x3)
+                    while (!completeMessage.ToString().Contains("0x3"))
+                    {
+                        Console.WriteLine("-- " + completeMessage);
+                        numberOfBytesRead = tcpStream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                        completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
+                    }
+
+                    // Print out the received message to the console.
+                    Console.WriteLine("Received the following message: " + completeMessage);
+                }
+                catch
+                {
+                    err = ENUM.ERRORS.TCP_STREAM_READ_FAILED;
+                }
+                finally
+                {
+                    tcpStream.Close();
+                }
+            }
+            catch (SocketException e)
+            {               
+                err = ENUM.ERRORS.TCP_CONNECTION_FAILED;
+            }
+            finally
+            {
+                tcpClient.Close();
+            }
+
+
+            /*
+                        //per quando non funziona il contatore
+                   string myCompleteMessage = @"LGZ52ZMD3104407.B24
+            F.F(00000000)
+            0.0.0(95316176)
+            0.0.1(95316176)
+            0.9.1(13:23:08)
+            0.9.2(17 - 11 - 03)
+            0.9.6(00:00)
+            0.9.7(17 - 11 - 01)
+            0.1.0(19)
+            1.8.0(000101.96 * kWh)
+            1.8.0 * 19(000101.71 * kWh)
+            1.8.1(0000.067 * kWh)
+            1.8.1 * 19(0000.997 * kWh)
+            1.8.2(0000.025 * kWh)
+            1.8.2 * 19(0000.720 * kWh)
+            1.8.3(0000.164 * kWh)
+            1.8.3 * 19(0001.401 * kWh)
+            1.8.4(0000.000 * kWh)
+            1.8.4 * 19(0000.000 * kWh)
+            2.8.0(000008.09 * kWh)
+            2.8.0 * 19(000008.09 * kWh)
+            2.8.1(0000.000 * kWh)
+            2.8.1 * 19(0000.000 * kWh)
+            2.8.2(0000.000 * kWh)
+            2.8.2 * 19(0000.000 * kWh)
+            2.8.3(0000.000 * kWh)
+            2.8.3 * 19(0000.000 * kWh)
+            2.8.4(0000.000 * kWh)
+            2.8.4 * 19(0000.000 * kWh)
+            5.8.0(000145.63 * kvarh)
+            5.8.0 * 19(000144.36 * kvarh)
+            5.8.1(0000.333 * kvarh)
+            5.8.1 * 19(0004.939 * kvarh)
+            5.8.2(0000.123 * kvarh)
+            5.8.2 * 19(0003.568 * kvarh)
+            5.8.3(0000.813 * kvarh)
+            5.8.3 * 19(0006.913 * kvarh)
+            5.8.4(0000.000 * kvarh)
+            5.8.4 * 19(0000.000 * kvarh)
+            6.8.0(000000.26 * kvarh)
+            6.8.0 * 19(000000.26 * kvarh)
+            6.8.1(0000.000 * kvarh)
+            6.8.1 * 19(0000.000 * kvarh)
+            6.8.2(0000.000 * kvarh)
+            6.8.2 * 19(0000.000 * kvarh)
+            6.8.3(0000.000 * kvarh)
+            6.8.3 * 19(0000.000 * kvarh)
+            6.8.4(0000.000 * kvarh)
+            6.8.4 * 19(0000.000 * kvarh)
+            7.8.0(000000.80 * kvarh)
+            7.8.0 * 19(000000.80 * kvarh)
+            7.8.1(0000.000 * kvarh)
+            7.8.1 * 19(0000.000 * kvarh)
+            7.8.2(0000.000 * kvarh)
+            7.8.2 * 19(0000.000 * kvarh)
+            7.8.3(0000.000 * kvarh)
+            7.8.3 * 19(0000.000 * kvarh)
+            7.8.4(0000.000 * kvarh)
+            7.8.4 * 19(0000.000 * kvarh)
+            8.8.0(000000.23 * kvarh)
+            8.8.0 * 19(000000.23 * kvarh)
+            8.8.1(0000.000 * kvarh)
+            8.8.1 * 19(0000.000 * kvarh)
+            8.8.2(0000.000 * kvarh)";*/
+
+            return new ErrMsgObj(err, completeMessage.ToString(), null, 0);
+
         }
 
         // function to translate integers to exadecimals
@@ -75,7 +221,7 @@ namespace asynchronousserv
         // analyzes the package sent by the server searching for all the registers listed in the "params"
         public string AnalyzeRemotePackage(string pkg_in, params string[] registerId_in)
         {
-            string returnString = null;            
+            string returnString = "Unable to read data";
             StringReader reader = new StringReader(pkg_in.ToString());
 
             //in caso di stream multilinea
@@ -97,10 +243,10 @@ namespace asynchronousserv
         }
 
         // gets a register value
-        public string GetRegisterValue(string RegisterNum_in, string result_in)
+        public string GetRegisterValue(string registerNum_in, string result_in)
         {
             string FinalString;
-            string selectString = RegisterNum_in;
+            string selectString = registerNum_in;
 
             if (result_in.Contains(selectString))
             {
@@ -114,112 +260,11 @@ namespace asynchronousserv
             return FinalString;
         }
 
-        // connects to the server and gets its data
-        public string ConnectAndGet(string IpAddress_in, int port)
-        {
-        /*TcpClient client = new TcpClient();
-        client.Connect(IpAddress_in, 49152);
-        NetworkStream tcpStream = client.GetStream();
-        byte[] myWriteBuffer = CreateMessage(175, 63, 33, 141, 10); //af 3f 21 8d 0a
-        tcpStream.Write(myWriteBuffer, 0, myWriteBuffer.Length);
-        StringBuilder myCompleteMessage = new StringBuilder();
-
-        try
-        {
-            byte[] myReadBuffer = new byte[1024];
-            int numberOfBytesRead = 0;
-
-            // Incoming message may be larger than the buffer size.
-            do
-            {
-                numberOfBytesRead = tcpStream.Read(myReadBuffer, 0, myReadBuffer.Length);
-                myCompleteMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
-            }
-            while (tcpStream.DataAvailable);
-
-            // Print out the received message to the console.
-            Console.WriteLine("You received the following message : " + myCompleteMessage);
-        }
-        catch
-        {
-            Console.WriteLine("Sorry.  You cannot read from this NetworkStream.");
-        }*/
-
-            //per quando non funziona il contatore
-       string myCompleteMessage = @"LGZ52ZMD3104407.B24
-F.F(00000000)
-0.0.0(95316176)
-0.0.1(95316176)
-0.9.1(13:23:08)
-0.9.2(17 - 11 - 03)
-0.9.6(00:00)
-0.9.7(17 - 11 - 01)
-0.1.0(19)
-1.8.0(000101.96 * kWh)
-1.8.0 * 19(000101.71 * kWh)
-1.8.1(0000.067 * kWh)
-1.8.1 * 19(0000.997 * kWh)
-1.8.2(0000.025 * kWh)
-1.8.2 * 19(0000.720 * kWh)
-1.8.3(0000.164 * kWh)
-1.8.3 * 19(0001.401 * kWh)
-1.8.4(0000.000 * kWh)
-1.8.4 * 19(0000.000 * kWh)
-2.8.0(000008.09 * kWh)
-2.8.0 * 19(000008.09 * kWh)
-2.8.1(0000.000 * kWh)
-2.8.1 * 19(0000.000 * kWh)
-2.8.2(0000.000 * kWh)
-2.8.2 * 19(0000.000 * kWh)
-2.8.3(0000.000 * kWh)
-2.8.3 * 19(0000.000 * kWh)
-2.8.4(0000.000 * kWh)
-2.8.4 * 19(0000.000 * kWh)
-5.8.0(000145.63 * kvarh)
-5.8.0 * 19(000144.36 * kvarh)
-5.8.1(0000.333 * kvarh)
-5.8.1 * 19(0004.939 * kvarh)
-5.8.2(0000.123 * kvarh)
-5.8.2 * 19(0003.568 * kvarh)
-5.8.3(0000.813 * kvarh)
-5.8.3 * 19(0006.913 * kvarh)
-5.8.4(0000.000 * kvarh)
-5.8.4 * 19(0000.000 * kvarh)
-6.8.0(000000.26 * kvarh)
-6.8.0 * 19(000000.26 * kvarh)
-6.8.1(0000.000 * kvarh)
-6.8.1 * 19(0000.000 * kvarh)
-6.8.2(0000.000 * kvarh)
-6.8.2 * 19(0000.000 * kvarh)
-6.8.3(0000.000 * kvarh)
-6.8.3 * 19(0000.000 * kvarh)
-6.8.4(0000.000 * kvarh)
-6.8.4 * 19(0000.000 * kvarh)
-7.8.0(000000.80 * kvarh)
-7.8.0 * 19(000000.80 * kvarh)
-7.8.1(0000.000 * kvarh)
-7.8.1 * 19(0000.000 * kvarh)
-7.8.2(0000.000 * kvarh)
-7.8.2 * 19(0000.000 * kvarh)
-7.8.3(0000.000 * kvarh)
-7.8.3 * 19(0000.000 * kvarh)
-7.8.4(0000.000 * kvarh)
-7.8.4 * 19(0000.000 * kvarh)
-8.8.0(000000.23 * kvarh)
-8.8.0 * 19(000000.23 * kvarh)
-8.8.1(0000.000 * kvarh)
-8.8.1 * 19(0000.000 * kvarh)
-8.8.2(0000.000 * kvarh)";
-
-        return myCompleteMessage;
-
-        }
-
         // finds a register selected by registerId_in and extracts its value
-        public string FindRegister(string Text_in, string FirstString_in, string LastString_in)
+        public string FindRegister(string text_in, string firstString_in, string lastString_in)
         {
             string FinalString;
-            FinalString = Regex.Match(Text_in, FirstString_in +@"\((.*?)\)").Groups[1].Value;
+            FinalString = Regex.Match(text_in, firstString_in + @"\((.*?)\)").Groups[1].Value;
             return FinalString;
         }
     }

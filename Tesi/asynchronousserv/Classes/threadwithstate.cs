@@ -24,9 +24,9 @@ namespace asynchronousserv
         {
             StreamWriter sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
 
-            if (action == ENUM.ACTIONS.CHECK_REACHABILITY)
+            if (action != ENUM.ACTIONS.NO_ACTION)
             {
-                sWriter.WriteLine("Checking " + id + " reachability");
+                sWriter.WriteLine("Checking " + id + "...");
                 sWriter.Flush();
             }
 
@@ -43,8 +43,8 @@ namespace asynchronousserv
             }
             else
             {
-                Console.WriteLine("error");
-                sWriter.WriteLine("error");
+                Console.WriteLine("Error");
+                sWriter.WriteLine("Error");
                 sWriter.Flush();
             }
         }
