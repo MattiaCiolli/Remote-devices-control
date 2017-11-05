@@ -91,55 +91,57 @@ namespace asynchronousserv
         // connects to the server to get data
         public ErrMsgObj ConnectAndGet(string ipAddress_in, int port)
         {
-            TcpClient tcpClient = new TcpClient();
-            StringBuilder completeMessage = new StringBuilder();
-            ENUM.ERRORS err = ENUM.ERRORS.NO_ERRORS;
-            try
-            {
-                tcpClient.Connect(ipAddress_in, 49152);
-                NetworkStream tcpStream = tcpClient.GetStream();
-                byte[] writeBuffer = CreateMessage(175, 63, 33, 141, 10); //af 3f 21 8d 0a
-                tcpStream.Write(writeBuffer, 0, writeBuffer.Length);
-                tcpStream.ReadTimeout = 5000;
+             TcpClient tcpClient = new TcpClient();
+             StringBuilder completeMessage = new StringBuilder();
+             ENUM.ERRORS err = ENUM.ERRORS.NO_ERRORS;
+             try
+             {
+                 tcpClient.Connect(ipAddress_in, 49152);
+                 NetworkStream tcpStream = tcpClient.GetStream();
+                 byte[] writeBuffer = CreateMessage(175, 63, 33, 141, 10); //af 3f 21 8d 0a
+                 tcpStream.Write(writeBuffer, 0, writeBuffer.Length);
+                 tcpStream.ReadTimeout = 5000;
 
-                try
-                {
-                    byte[] myReadBuffer = new byte[1024];
-                    int numberOfBytesRead = 0;
+                 try
+                 {
+                     byte[] myReadBuffer = new byte[1024];
+                     int numberOfBytesRead = 0;
 
-                    // the message is bigger than the buffer. Execute the read until the reach of the "ETX" character (0x3)
-                    while (!completeMessage.ToString().Contains("0x3"))
-                    {
-                        Console.WriteLine("-- " + completeMessage);
-                        numberOfBytesRead = tcpStream.Read(myReadBuffer, 0, myReadBuffer.Length);
-                        completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
-                    }
+                     // the message is bigger than the buffer. Execute the read until the reach of the "ETX" character (0x3)
+                     while (!completeMessage.ToString().Contains("0x3"))
+                     {
+                         Console.WriteLine("-- " + completeMessage);
+                         numberOfBytesRead = tcpStream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                         completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
+                     }
 
-                    // Print out the received message to the console.
-                    Console.WriteLine("Received the following message: " + completeMessage);
-                }
-                catch
-                {
-                    err = ENUM.ERRORS.TCP_STREAM_READ_FAILED;
-                }
-                finally
-                {
-                    tcpStream.Close();
-                }
-            }
-            catch (SocketException e)
-            {               
-                err = ENUM.ERRORS.TCP_CONNECTION_FAILED;
-            }
-            finally
-            {
-                tcpClient.Close();
-            }
+                     // Print out the received message to the console.
+                     Console.WriteLine("Received the following message: " + completeMessage);
+                 }
+                 catch
+                 {
+                     err = ENUM.ERRORS.TCP_STREAM_READ_FAILED;
+                 }
+                 finally
+                 {
+                     tcpStream.Close();
+                 }
+             }
+             catch (SocketException e)
+             {               
+                 err = ENUM.ERRORS.TCP_CONNECTION_FAILED;
+             }
+             finally
+             {
+                 tcpClient.Close();
+             }
 
 
             /*
-                        //per quando non funziona il contatore
-                   string myCompleteMessage = @"LGZ52ZMD3104407.B24
+            //per quando non funziona il contatore
+
+            ENUM.ERRORS err = ENUM.ERRORS.NO_ERRORS;
+            string completeMessage = @"LGZ52ZMD3104407.B24
             F.F(00000000)
             0.0.0(95316176)
             0.0.1(95316176)
@@ -202,8 +204,11 @@ namespace asynchronousserv
             8.8.0 * 19(000000.23 * kvarh)
             8.8.1(0000.000 * kvarh)
             8.8.1 * 19(0000.000 * kvarh)
-            8.8.2(0000.000 * kvarh)";*/
-
+            8.8.2(0000.000 * kvarh)
+            32.7.0(1000.000 * kvarh)
+            52.7.0(2000.000 * kvarh)
+            72.7.0(3000.000 * kvarh)";
+            */
             return new ErrMsgObj(err, completeMessage.ToString(), null, 0);
 
         }
@@ -221,7 +226,8 @@ namespace asynchronousserv
         // analyzes the package sent by the server searching for all the registers listed in the "params"
         public string AnalyzeRemotePackage(string pkg_in, params string[] registerId_in)
         {
-            string returnString = "Unable to read data";
+            string returnString = null;
+            string errorString = "Unable to read data";
             StringReader reader = new StringReader(pkg_in.ToString());
 
             //in caso di stream multilinea
@@ -237,6 +243,11 @@ namespace asynchronousserv
             foreach (string r in registerId_in)
             {
                 returnString += GetRegisterValue(r, pkg_in) + " ";
+            }
+
+            if(string.IsNullOrWhiteSpace(returnString))
+            {
+                returnString = errorString;
             }
 
             return returnString;
@@ -264,7 +275,9 @@ namespace asynchronousserv
         public string FindRegister(string text_in, string firstString_in, string lastString_in)
         {
             string FinalString;
-            FinalString = Regex.Match(text_in, firstString_in + @"\((.*?)\)").Groups[1].Value;
+            // Groups[1] gets the data between parenthesis, excluding them and the register number.
+            // Without Groups[1] will return also the register number and the parenthesis
+            FinalString = Regex.Match(text_in, firstString_in + @"\((.*?)\)").Groups[1].Value; 
             return FinalString;
         }
     }
