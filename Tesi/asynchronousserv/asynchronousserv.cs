@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -13,10 +14,14 @@ namespace asynchronousserv
         private static TcpListener serverSocket;
         private static string ip = "127.0.0.1";
         private static int port = 8001;
+        private static BlockingCollection<Thread> threadQueue = new BlockingCollection<Thread>();
 
         static void Main(string[] args)
         {
             StartServer();
+            //a thread used to run all the requests added in threadQueue
+            Thread worker = new Thread(new ThreadStart(ExecuteThreads));
+            worker.Start();
             Console.Read();
         }
 
@@ -54,10 +59,19 @@ namespace asynchronousserv
             WaitForClients();
         }
 
-        /*private async void HandleConnectionAsync(TcpClient tcpClient)
+        // function used by the "worker" thread to take all the requests in the threadQueue and run them one before the other
+        private static void ExecuteThreads()
         {
-            //Write code here to process the incoming client connections
-        }*/
+            while (threadQueue.IsCompleted == false)
+            {
+                //extract a request (thread) from the queue
+                Thread t = threadQueue.Take();
+                //start the thread
+                t.Start();
+                //join main thread when finished
+                t.Join();
+            }
+        }
 
         //handles the client's requests. Creates a thread when a client executes a request and destroys it after the request is satisfied
         private static async void HandleClientRequest(TcpClient clientSocket_in)
@@ -90,14 +104,24 @@ namespace asynchronousserv
                         Console.WriteLine("Client " + clientSocket_in.Client.RemoteEndPoint.ToString() + ": " + sData);
                         if (Pr.ActionId != ENUM.ACTIONS.NO_ACTION && Pr.ObjId != null && Pr.Data != null)
                         {
-                            //create a thread with parameters
+                            //create a thread with parameters wich represents a request
                             ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket_in);
                             //set the thread's entry
                             Thread oThread = new Thread(new ThreadStart(tws.DeviceAction));
-                            //start the thread
-                            oThread.Start();
-                            //join main thread when finished
-                            oThread.Join();
+                            if(Pr.ActionId == ENUM.ACTIONS.DEVICE_INFO || Pr.ActionId == ENUM.ACTIONS.DEVICE_FUNCTIONS)
+                            {
+                                //start the thread
+                                oThread.Start();
+                                //join main thread when finished
+                                oThread.Join();
+                            }
+                            else
+                            {
+                                //add this thread in the threadQueue
+                                threadQueue.Add(oThread);
+                                sWriter.WriteLine("Resource may be busy, please wait");
+                                sWriter.Flush();
+                            }
                         }
                         else
                         {
