@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -14,15 +15,32 @@ namespace asynchronousserv
         private static TcpListener serverSocket;
         private static string ip = "127.0.0.1";
         private static int port = 8001;
-        private static BlockingCollection<Thread> threadQueue = new BlockingCollection<Thread>();
+        private static ConcurrentDictionary<string, QueueThread> threadMap = new ConcurrentDictionary<string, QueueThread>();
 
         static void Main(string[] args)
         {
             StartServer();
-            //a thread used to run all the requests added in threadQueue
-            Thread worker = new Thread(new ThreadStart(ExecuteThreads));
-            worker.Start();
+            //a thread used to run all the requests added in threadQueue           
             Console.Read();
+        }
+
+        // function used by the "worker" thread to take all the requests in the threadQueue and run them one before the other
+        private static void ExecuteThreads()
+        {
+            do
+            {
+                //loop over the map
+                foreach (var t in threadMap)
+                {
+                    var threadInMap = t.Value;
+                    if (threadInMap != null)
+                    {
+                        Thread thread = new Thread(new ThreadStart(threadInMap.ExecuteQueueThreads));
+                        thread.Start();
+                    }
+                }
+            } while (threadMap.Count >= 0);
+            
         }
 
         //initializes the server
@@ -57,20 +75,6 @@ namespace asynchronousserv
                 throw;
             }
             WaitForClients();
-        }
-
-        // function used by the "worker" thread to take all the requests in the threadQueue and run them one before the other
-        private static void ExecuteThreads()
-        {
-            while (threadQueue.IsCompleted == false)
-            {
-                //extract a request (thread) from the queue
-                Thread t = threadQueue.Take();
-                //start the thread
-                t.Start();
-                //join main thread when finished
-                t.Join();
-            }
         }
 
         //handles the client's requests. Creates a thread when a client executes a request and destroys it after the request is satisfied
@@ -108,7 +112,7 @@ namespace asynchronousserv
                             ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket_in);
                             //set the thread's entry
                             Thread oThread = new Thread(new ThreadStart(tws.DeviceAction));
-                            if(Pr.ActionId == ENUM.ACTIONS.DEVICE_INFO || Pr.ActionId == ENUM.ACTIONS.DEVICE_FUNCTIONS)
+                            if (Pr.ActionId == ENUM.ACTIONS.DEVICE_INFO || Pr.ActionId == ENUM.ACTIONS.DEVICE_FUNCTIONS)
                             {
                                 //start the thread
                                 oThread.Start();
@@ -116,12 +120,19 @@ namespace asynchronousserv
                                 oThread.Join();
                             }
                             else
-                            {
+                            {                               
                                 //add this thread in the threadQueue
-                                threadQueue.Add(oThread);
+                                threadMap.AddOrUpdate(Pr.ObjId, new QueueThread(), (key, oldValue) => threadMap[Pr.ObjId]);
+                                if (threadMap.ContainsKey(Pr.ObjId))
+                                {
+                                    threadMap[Pr.ObjId].ThreadQueue.Add(oThread);
+                                }
+                                Thread thread = new Thread(new ThreadStart(threadMap[Pr.ObjId].ExecuteQueueThreads));
+                                thread.Start();
                                 sWriter.WriteLine("Resource may be busy, please wait");
                                 sWriter.Flush();
                             }
+                            
                         }
                         else
                         {

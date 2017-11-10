@@ -53,6 +53,7 @@
     <Compile Include="Classes\ParserReturn.cs" />
     <Compile Include="Classes\Parser.cs" />
     <Compile Include="Classes\DBConnection.cs" />
+    <Compile Include="Classes\QueueThread.cs" />
     <Compile Include="Classes\ReturnManager.cs" />
     <Compile Include="Classes\SerialDevice.cs" />
     <Compile Include="Classes\threadwithstate.cs" />
