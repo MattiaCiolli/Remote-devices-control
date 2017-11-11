@@ -15,32 +15,14 @@ namespace asynchronousserv
         private static TcpListener serverSocket;
         private static string ip = "127.0.0.1";
         private static int port = 8001;
+        //this data structure allows to assign a queue of requests to each device in order to fullfill them one by one when
+        // all to the same device. Moreover more requests to multiple devices are fullfilled in the same time.
         private static ConcurrentDictionary<string, QueueThread> threadMap = new ConcurrentDictionary<string, QueueThread>();
 
         static void Main(string[] args)
         {
             StartServer();
-            //a thread used to run all the requests added in threadQueue           
             Console.Read();
-        }
-
-        // function used by the "worker" thread to take all the requests in the threadQueue and run them one before the other
-        private static void ExecuteThreads()
-        {
-            do
-            {
-                //loop over the map
-                foreach (var t in threadMap)
-                {
-                    var threadInMap = t.Value;
-                    if (threadInMap != null)
-                    {
-                        Thread thread = new Thread(new ThreadStart(threadInMap.ExecuteQueueThreads));
-                        thread.Start();
-                    }
-                }
-            } while (threadMap.Count >= 0);
-            
         }
 
         //initializes the server
@@ -112,6 +94,7 @@ namespace asynchronousserv
                             ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket_in);
                             //set the thread's entry
                             Thread oThread = new Thread(new ThreadStart(tws.DeviceAction));
+                            //if simple DB action execute it immediately
                             if (Pr.ActionId == ENUM.ACTIONS.DEVICE_INFO || Pr.ActionId == ENUM.ACTIONS.DEVICE_FUNCTIONS)
                             {
                                 //start the thread
@@ -119,20 +102,46 @@ namespace asynchronousserv
                                 //join main thread when finished
                                 oThread.Join();
                             }
+                            //else put it in a queue for the selected device
                             else
-                            {                               
+                            {
                                 //add this thread in the threadQueue
-                                threadMap.AddOrUpdate(Pr.ObjId, new QueueThread(), (key, oldValue) => threadMap[Pr.ObjId]);
-                                if (threadMap.ContainsKey(Pr.ObjId))
+                                //if first request to a device
+                                if (threadMap.ContainsKey(Pr.ObjId) == false)
                                 {
+                                    //create a couple (idDevice, requestsQueue)
+                                    threadMap.AddOrUpdate(Pr.ObjId, new QueueThread(), (key, oldValue) => threadMap[Pr.ObjId]);
+                                    //add a request in the queue
                                     threadMap[Pr.ObjId].ThreadQueue.Add(oThread);
+                                    //create a thread to fullfill all the requests to a device
+                                    Thread workerThread = new Thread(new ThreadStart(threadMap[Pr.ObjId].ExecuteQueueThreads));
+                                    //tell it has a thread
+                                    threadMap[Pr.ObjId].HasThread = true;
+                                    //start it
+                                    workerThread.Start();
                                 }
-                                Thread thread = new Thread(new ThreadStart(threadMap[Pr.ObjId].ExecuteQueueThreads));
-                                thread.Start();
+                                //not first request to a device. Means that there's already a couple, so just add the request to the queue
+                                else
+                                {
+                                    if(threadMap[Pr.ObjId].HasThread == false)
+                                    {
+                                        //create a thread to fullfill all the requests to a device
+                                        Thread workerThread = new Thread(new ThreadStart(threadMap[Pr.ObjId].ExecuteQueueThreads));
+                                        //tell it has a thread
+                                        threadMap[Pr.ObjId].HasThread = true;
+                                        //start it
+                                        workerThread.Start();
+                                    }
+                                    //add a request in the queue
+                                    threadMap[Pr.ObjId].ThreadQueue.Add(oThread);
+                                    //wake up the device's thread if sleeping
+                                    threadMap[Pr.ObjId].Wh.Set();
+                                }
+
                                 sWriter.WriteLine("Resource may be busy, please wait");
                                 sWriter.Flush();
                             }
-                            
+
                         }
                         else
                         {
