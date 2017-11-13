@@ -56,7 +56,6 @@
     <Compile Include="Classes\QueueThread.cs" />
     <Compile Include="Classes\ReturnManager.cs" />
     <Compile Include="Classes\SerialDevice.cs" />
-    <Compile Include="Classes\Signaller.cs" />
     <Compile Include="Classes\threadwithstate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

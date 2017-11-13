@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace asynchronousserv
 {
@@ -14,7 +10,7 @@ namespace asynchronousserv
         private AutoResetEvent wh = new AutoResetEvent(false);
         //contains all the requests to the device
         private BlockingCollection<Thread> threadQueue = new BlockingCollection<Thread>();
-
+        //true if a thread is assigned
         private bool hasThread = false;
 
         public BlockingCollection<Thread> ThreadQueue
@@ -56,36 +52,36 @@ namespace asynchronousserv
             }
         }
 
-        // function used by the workerThread to take all the requests in the threadQueue and run them one by one
+        //function used by the workerThread to take all the requests in the threadQueue and run them one by one
         public void ExecuteQueueThreads()
         {
-            bool goOn = true;      
+            bool goOn = true;
             //while the queue has elements
             while (threadQueue.Count >= 0)
             {
-                //if empty sleep
+                //if empty, wait for other requests for while
                 if (threadQueue.Count == 0)
                 {
-                    goOn = false;
-                    //sleep until requests are put in queue. Woken up by the Set() method in asynchronousserver
-                    if(Wh.WaitOne(3000))
+                    //wait until requests are put in queue. Woken up by the Set() method in asynchronousserver
+                    if (Wh.WaitOne(3000))
                     {
-                        goOn = true;
+                        if (threadQueue.Count > 0)
+                        {
+                            goOn = true;
+                        }
+                        else
+                        {
+                            goOn = false;
+                        }
                     }
+                    //if no request are made during the wait, close the thread because unused and free resources
                     else
                     {
-                        try
-                        {
-                            HasThread = false;
-                            Thread.CurrentThread.Abort();
-                        }
-                        catch
-                        {
-                            Console.WriteLine("Thread ended");
-                        }
-                        
+                        //tell the device has no thread
+                        goOn = false;
                     }
                 }
+                //if requests in queue
                 if (goOn == true)
                 {
                     //extract a request (thread) from the queue
@@ -95,8 +91,15 @@ namespace asynchronousserv
                     //join main thread when finished
                     t.Join();
                 }
-            }        
+                //if no request or empty queue
+                else if (goOn == false)
+                {
+                    HasThread = false;
+                    Console.WriteLine("Thread ended");
+                    //end gracefully the thread
+                    return;
+                }
+            }
         }
     }
 }
-

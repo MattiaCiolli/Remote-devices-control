@@ -5,14 +5,14 @@ namespace asynchronousserv
     class ParserReturn
     {
         private ENUM.ACTIONS actionId;
-        private string objId;
+        private string devId;
         private string data;
 
-        public ParserReturn(ENUM.ACTIONS a_in, string s_in, string d_in)
+        public ParserReturn(ENUM.ACTIONS action_in, string id_in, string data_in)
         {
-            actionId = a_in;
-            objId = s_in;
-            data = d_in;
+            actionId = action_in;
+            devId = id_in;
+            data = data_in;
         }
 
         public ENUM.ACTIONS ActionId
@@ -28,16 +28,16 @@ namespace asynchronousserv
             }
         }
 
-        public string ObjId
+        public string DevId
         {
             get
             {
-                return objId;
+                return devId;
             }
 
             set
             {
-                objId = value;
+                devId = value;
             }
         }
 

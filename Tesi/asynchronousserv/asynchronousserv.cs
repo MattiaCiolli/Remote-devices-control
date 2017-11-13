@@ -85,13 +85,15 @@ namespace asynchronousserv
                     }
                     else
                     {
+                        //parse the client's request
                         ParserReturn Pr = (ParserReturn)Par.ParseClientRequest(sData);
-                        // shows content on the console.
+                        //shows content on the console
                         Console.WriteLine("Client " + clientSocket_in.Client.RemoteEndPoint.ToString() + ": " + sData);
-                        if (Pr.ActionId != ENUM.ACTIONS.NO_ACTION && Pr.ObjId != null && Pr.Data != null)
+                        //if valid request
+                        if (Pr.ActionId != ENUM.ACTIONS.NO_ACTION && Pr.DevId != null && Pr.Data != null)
                         {
                             //create a thread with parameters wich represents a request
-                            ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.ObjId, Pr.Data, clientSocket_in);
+                            ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.DevId, Pr.Data, clientSocket_in);
                             //set the thread's entry
                             Thread oThread = new Thread(new ThreadStart(tws.DeviceAction));
                             //if simple DB action execute it immediately
@@ -105,41 +107,37 @@ namespace asynchronousserv
                             //else put it in a queue for the selected device
                             else
                             {
-                                //add this thread in the threadQueue
-                                //if first request to a device
-                                if (threadMap.ContainsKey(Pr.ObjId) == false)
+                                //if thread ended because unused for a long time
+                                if (threadMap.ContainsKey(Pr.DevId) == true && threadMap[Pr.DevId].HasThread == false)
+                                {
+                                    //remove <key,value> from dictionary
+                                    QueueThread qt;
+                                    threadMap.TryRemove(Pr.DevId, out qt);
+                                }
+                                //not first request to a device and thread running. Means that there's already a couple, so just add the request to the queue
+                                if (threadMap.ContainsKey(Pr.DevId) == true && threadMap[Pr.DevId].HasThread == true)
+                                {
+                                    //add a request in the queue
+                                    threadMap[Pr.DevId].ThreadQueue.Add(oThread);
+                                    //wake up the device's thread if sleeping
+                                    threadMap[Pr.DevId].Wh.Set();
+                                    sWriter.WriteLine("Resource may be busy, please wait");
+                                    sWriter.Flush();
+                                }
+                                //if first request to device
+                                if (threadMap.ContainsKey(Pr.DevId) == false)
                                 {
                                     //create a couple (idDevice, requestsQueue)
-                                    threadMap.AddOrUpdate(Pr.ObjId, new QueueThread(), (key, oldValue) => threadMap[Pr.ObjId]);
+                                    threadMap.AddOrUpdate(Pr.DevId, new QueueThread(), (key, oldValue) => threadMap[Pr.DevId]);
                                     //add a request in the queue
-                                    threadMap[Pr.ObjId].ThreadQueue.Add(oThread);
+                                    threadMap[Pr.DevId].ThreadQueue.Add(oThread);
                                     //create a thread to fullfill all the requests to a device
-                                    Thread workerThread = new Thread(new ThreadStart(threadMap[Pr.ObjId].ExecuteQueueThreads));
+                                    Thread workerThread = new Thread(new ThreadStart(threadMap[Pr.DevId].ExecuteQueueThreads));
                                     //tell it has a thread
-                                    threadMap[Pr.ObjId].HasThread = true;
+                                    threadMap[Pr.DevId].HasThread = true;
                                     //start it
                                     workerThread.Start();
                                 }
-                                //not first request to a device. Means that there's already a couple, so just add the request to the queue
-                                else
-                                {
-                                    if(threadMap[Pr.ObjId].HasThread == false)
-                                    {
-                                        //create a thread to fullfill all the requests to a device
-                                        Thread workerThread = new Thread(new ThreadStart(threadMap[Pr.ObjId].ExecuteQueueThreads));
-                                        //tell it has a thread
-                                        threadMap[Pr.ObjId].HasThread = true;
-                                        //start it
-                                        workerThread.Start();
-                                    }
-                                    //add a request in the queue
-                                    threadMap[Pr.ObjId].ThreadQueue.Add(oThread);
-                                    //wake up the device's thread if sleeping
-                                    threadMap[Pr.ObjId].Wh.Set();
-                                }
-
-                                sWriter.WriteLine("Resource may be busy, please wait");
-                                sWriter.Flush();
                             }
 
                         }
