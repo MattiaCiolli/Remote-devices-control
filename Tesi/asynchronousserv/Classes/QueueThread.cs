@@ -94,6 +94,7 @@ namespace asynchronousserv
                 //if no request or empty queue
                 else if (goOn == false)
                 {
+                    //tell the key has no thread
                     HasThread = false;
                     Console.WriteLine("Thread ended");
                     //end gracefully the thread

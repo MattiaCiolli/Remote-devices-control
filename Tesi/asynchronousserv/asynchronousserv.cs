@@ -93,7 +93,7 @@ namespace asynchronousserv
                         if (Pr.ActionId != ENUM.ACTIONS.NO_ACTION && Pr.DevId != null && Pr.Data != null)
                         {
                             //create a thread with parameters wich represents a request
-                            ThreadWithState tws = new ThreadWithState(Pr.ActionId, Pr.DevId, Pr.Data, clientSocket_in);
+                            RequestThread tws = new RequestThread(Pr.ActionId, Pr.DevId, Pr.Data, clientSocket_in);
                             //set the thread's entry
                             Thread oThread = new Thread(new ThreadStart(tws.DeviceAction));
                             //if simple DB action execute it immediately
