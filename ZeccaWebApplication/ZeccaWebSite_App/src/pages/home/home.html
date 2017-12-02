@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="home" padding>
+
+    <h2 class="center">Ionic 2 - Blank Starter ueppa</h2> 
+
+    <div class="center">
+        <p class="ionic-logo"></p>
+    </div>
+
+    <ion-card>
+        <ion-card-header>
+            Docs are here to help you
+        </ion-card-header>
+
+        <ion-item>
+            <ion-label>Dispositivo</ion-label>
+            <ion-select [(ngModel)]="Id" id="dispositivi">
+                <ion-option value="f">Female</ion-option>
+                <ion-option value="m">Male</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-select [(ngModel)]="Funzioni" multiple="true" id="funzioni">
+                <ion-option>Bacon</ion-option>
+                <ion-option>Black Olives</ion-option>
+                <ion-option>Extra Cheese</ion-option>
+                <ion-option>Mushrooms</ion-option>
+                <ion-option>Pepperoni</ion-option>
+                <ion-option>Sausage</ion-option>
+            </ion-select>
+        </ion-item>
+        
+    </ion-card>
+
+</ion-content>
