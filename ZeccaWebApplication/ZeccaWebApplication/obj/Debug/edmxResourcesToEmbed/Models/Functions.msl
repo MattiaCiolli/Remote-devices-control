@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="asdModel1StoreContainer" CdmEntityContainer="asdEntities2">
+    <EntitySetMapping Name="Funzioni">
+      <EntityTypeMapping TypeName="asdModel1.Funzioni">
+        <MappingFragment StoreEntitySet="Funzioni">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="descrizione" ColumnName="descrizione" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

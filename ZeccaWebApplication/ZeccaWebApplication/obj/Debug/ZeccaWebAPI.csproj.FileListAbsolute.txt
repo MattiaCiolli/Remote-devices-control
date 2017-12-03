@@ -26,6 +26,8 @@ C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Microsoft.App
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Newtonsoft.Json.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Net.Http.Formatting.dll
+C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Cors.dll
+C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.Cors.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.WebHost.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\EntityFramework.xml
@@ -36,13 +38,10 @@ C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Microsoft.AI.
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Microsoft.ApplicationInsights.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.Cors.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Newtonsoft.Json.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Net.Http.Formatting.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.WebHost.xml
-C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebAPI.csprojResolveAssemblyReference.cache
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebApplication.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebApplication.pdb
-C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Cors.dll
-C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.Cors.dll
-C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.Cors.xml

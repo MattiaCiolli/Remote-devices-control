@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="asdModel2StoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="Funzioni_ammissibili">
+      <EntityTypeMapping TypeName="asdModel2.Funzioni_ammissibili">
+        <MappingFragment StoreEntitySet="Funzioni_ammissibili">
+          <ScalarProperty Name="id_funzione" ColumnName="id_funzione" />
+          <ScalarProperty Name="id_tipo_dispositivo" ColumnName="id_tipo_dispositivo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="asdModel2" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Funzioni_ammissibili">
+    <Key>
+      <PropertyRef Name="id_funzione" />
+      <PropertyRef Name="id_tipo_dispositivo" />
+    </Key>
+    <Property Name="id_funzione" Type="Int32" Nullable="false" />
+    <Property Name="id_tipo_dispositivo" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Funzioni_ammissibili" EntityType="Self.Funzioni_ammissibili" />
+  </EntityContainer>
+</Schema>

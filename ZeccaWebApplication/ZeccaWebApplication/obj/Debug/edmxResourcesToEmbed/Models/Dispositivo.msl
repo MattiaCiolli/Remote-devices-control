@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="asdModelStoreContainer" CdmEntityContainer="asdEntities1">
+    <EntitySetMapping Name="Dispositivi">
+      <EntityTypeMapping TypeName="asdModel.Dispositivi">
+        <MappingFragment StoreEntitySet="Dispositivi">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="descrizione" ColumnName="descrizione" />
+          <ScalarProperty Name="tipo" ColumnName="tipo" />
+          <ScalarProperty Name="indirizzo" ColumnName="indirizzo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

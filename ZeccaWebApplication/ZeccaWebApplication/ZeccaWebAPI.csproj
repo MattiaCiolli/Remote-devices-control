@@ -128,21 +128,55 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Models\Device.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Device.edmx</DependentUpon>
+      <LastGenOutput>Device.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Device.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Device.edmx</DependentUpon>
+      <LastGenOutput>Device.cs</LastGenOutput>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\DispositiviController.cs" />
+    <Compile Include="Controllers\DevicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Dispositivo.cs" />
+    <Compile Include="Models\Device.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Device.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Device.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Device.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Device.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Device.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Dispositivi.cs">
+      <DependentUpon>Device.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EntityDeploy Include="Models\Device.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Device.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Device.edmx.diagram">
+      <DependentUpon>Device.edmx</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
