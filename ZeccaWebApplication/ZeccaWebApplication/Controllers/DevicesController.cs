@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -9,21 +10,26 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Script.Serialization;
+using ZeccaWebApplication;
 using ZeccaWebApplication.Models;
 
 namespace ZeccaWebApplication.Controllers
 {
+    [RoutePrefix("Devices")]
     public class DevicesController : ApiController
     {
         private asdEntities3 db = new asdEntities3();
 
-        // GET: api/Devices
+        // GET: Devices
+        [Route("")]
         public IHttpActionResult GetDispositivi()
         {
             return Json(db.Dispositivi);
         }
 
-        // GET: api/Devices/5
+        // GET: Devices/{id}
+        [Route("{id}")]
         [ResponseType(typeof(Dispositivi))]
         public async Task<IHttpActionResult> GetDispositivi(string id)
         {
@@ -34,6 +40,16 @@ namespace ZeccaWebApplication.Controllers
             }
 
             return Ok(dispositivi);
+        }
+
+        // GET: Devices/{id}/Functions
+        [Route("{id}/Functions")]
+        public HttpResponseMessage GetDeviceFunctions(string id)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            DBConnection db = new DBConnection();
+            response.Content = new StringContent(JsonConvert.SerializeObject(db.SelectDeviceFunctions("asd1")));
+            return response;
         }
 
         // PUT: api/Devices/5
