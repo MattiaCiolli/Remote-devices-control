@@ -165,6 +165,7 @@
     <Compile Include="Models\Dispositivi.cs">
       <DependentUpon>Device.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Function.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -48,7 +48,23 @@ namespace ZeccaWebApplication.Controllers
         {
             HttpResponseMessage response = new HttpResponseMessage();
             DBConnection db = new DBConnection();
-            response.Content = new StringContent(JsonConvert.SerializeObject(db.SelectDeviceFunctions("asd1")));
+            response.Content = new StringContent(JsonConvert.SerializeObject(db.SelectDeviceFunctions(id)));
+            return response;
+        }
+
+        // GET: Devices/{id}/Request/{idFunc}
+        [System.Web.Http.AcceptVerbs("GET", "POST")]
+        [Route("{id}/RequestInfos/{idFunc}")]
+        public HttpResponseMessage RequestInfos (string id, [FromUri]int[] idFunc)
+        {
+            int sum = 0;
+            HttpResponseMessage response = new HttpResponseMessage();
+            DBConnection db = new DBConnection();
+            foreach(int idf in idFunc)
+            {
+                sum = sum + idf;
+            }
+            response.Content = new StringContent(sum.ToString()); //new StringContent(JsonConvert.SerializeObject(db.SelectDeviceFunctions(id)));
             return response;
         }
 

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Newtonsoft.Json;
-using System;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using ZeccaWebApplication.Models;
 
 namespace ZeccaWebApplication
 {
@@ -38,16 +34,16 @@ namespace ZeccaWebApplication
         }
 
         //Shows available functions for a device selected by the Id passed by the client
-        public Dictionary<int, string> SelectDeviceFunctions(string id_in)
+        public List<Function> SelectDeviceFunctions(string id_in)
         {
-            Dictionary<int, string> jsonReturn = new Dictionary<int, string>();
+            List<Function> functions = new List<Function>();
             try
             {
                 //creates a new connection
                 NewConnObj();
                 //opens it
                 OpenConn();
-                string strSQL = "SELECT DISTINCT f.id, f.descrizione FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid";
+                string strSQL = "SELECT DISTINCT f.id AS id, f.descrizione AS descrizione FROM Funzioni f JOIN Funzioni_ammissibili fa ON fa.id_funzione = f.id JOIN Tipi_dispositivi td ON fa.id_tipo_dispositivo = td.id JOIN Dispositivi d ON d.tipo = td.id WHERE d.id = @stringaid";
                 SqlCommand objCmd = new SqlCommand(strSQL, objConn);
                 //create a parameter
                 SqlParameter sid = objCmd.Parameters.Add("@stringaid", System.Data.SqlDbType.NVarChar, 15);
@@ -61,7 +57,10 @@ namespace ZeccaWebApplication
                     //take all rows
                     while (objDR.Read())
                     {
-                        jsonReturn.Add((int)objDR["id"], (string)objDR["descrizione"]);
+                        Function f = new Function();
+                        f.id = (int)objDR["id"];
+                        f.descrizione = (string)objDR["descrizione"];
+                        functions.Add(f);
                     }
                 }
                 else
@@ -81,7 +80,7 @@ namespace ZeccaWebApplication
                 CloseConn();
             }
 
-            return jsonReturn;
+            return functions;
         }
 
     }

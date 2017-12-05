@@ -19,17 +19,27 @@
             Docs are here to help you
         </ion-card-header>
 
-        <ion-item>
-            <ion-label>Dispositivo</ion-label>
-            <ion-select [(ngModel)]="selectedValue" id="dispositivi">
-                <ion-option *ngFor="let dev of devices" value="{{dev.id}}">{{dev.id}}</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item>
-            <ion-select multiple="true" id="funzioni">
-            </ion-select>
-        </ion-item>
-        
-    </ion-card>
+        <ion-card>
+            <ion-card-header>
+                Dispositivo 1
+            </ion-card-header>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label>Dispositivo:</ion-label>
+                    <ion-select [ngModel]="selectedDevice" id="dispositivi" (ngModelChange)="deviceFunctions($event)" required>
+                        <ion-option *ngFor="let dev of devices" value="{{dev.id}}">{{dev.id}}</ion-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Funzioni:</ion-label>
+                    <ion-select [ngModel]="selectedFunctions" multiple="true" id="funzioni" (ngModelChange)="setFunctionsId($event)" required>
+                        <ion-option *ngFor="let fun of functions" value="{{fun.id}}">{{fun.descrizione}}</ion-option>
+                    </ion-select>
+                </ion-item>
+                <button ion-button color="secondary" (click)="requestInfosByFunctions(selectedDevice, selectedFunctions)">Esegui</button>
+            </ion-card-content>
+</ion-card>
+
+        </ion-card>
 
 </ion-content>
