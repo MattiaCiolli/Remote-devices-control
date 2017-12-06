@@ -26,17 +26,17 @@
             <ion-card-content>
                 <ion-item>
                     <ion-label>Dispositivo:</ion-label>
-                    <ion-select [ngModel]="selectedDevice" id="dispositivi" (ngModelChange)="deviceFunctions($event)" required>
+                    <ion-select [(ngModel)]="selectedDevice" id="dispositivi" (ngModelChange)="deviceFunctions($event)" value="" required>
                         <ion-option *ngFor="let dev of devices" value="{{dev.id}}">{{dev.id}}</ion-option>
                     </ion-select>
                 </ion-item>
                 <ion-item>
                     <ion-label>Funzioni:</ion-label>
-                    <ion-select [ngModel]="selectedFunctions" multiple="true" id="funzioni" (ngModelChange)="setFunctionsId($event)" required>
-                        <ion-option *ngFor="let fun of functions" value="{{fun.id}}">{{fun.descrizione}}</ion-option>
+                    <ion-select [(ngModel)]="selectedFunctions" multiple="true" id="funzioni" required>
+                        <ion-option *ngFor="let fun of functions" value="idFunc={{fun.id}}">{{fun.descrizione}}</ion-option>
                     </ion-select>
                 </ion-item>
-                <button ion-button color="secondary" (click)="requestInfosByFunctions(selectedDevice, selectedFunctions)">Esegui</button>
+                <button ion-button color="secondary" id="button1" (click)="requestInfosByFunctions()">Esegui</button>
             </ion-card-content>
 </ion-card>
 

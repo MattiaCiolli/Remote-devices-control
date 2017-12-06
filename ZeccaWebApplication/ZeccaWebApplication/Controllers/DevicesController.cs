@@ -54,7 +54,7 @@ namespace ZeccaWebApplication.Controllers
 
         // GET: Devices/{id}/Request/{idFunc}
         [System.Web.Http.AcceptVerbs("GET", "POST")]
-        [Route("{id}/RequestInfos/{idFunc}")]
+        [Route("{id}/RequestInfos/")]
         public HttpResponseMessage RequestInfos (string id, [FromUri]int[] idFunc)
         {
             int sum = 0;
