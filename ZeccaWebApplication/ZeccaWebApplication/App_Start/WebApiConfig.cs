@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
-namespace ZeccaWebApplication
+namespace ZeccaWebAPI
 {
     public static class WebApiConfig
     {

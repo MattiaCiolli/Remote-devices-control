@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ZeccaWebApplication.Models
+namespace ZeccaWebAPI.Models
 {
     using System;
     using System.Data.Entity;

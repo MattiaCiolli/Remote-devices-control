@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
-using ZeccaWebApplication.Models;
+using System.Threading.Tasks;
+using ZeccaWebAPI.Models;
 
-namespace ZeccaWebApplication
+namespace ZeccaWebAPI
 {
 
     public class DBConnection
     {
         private string strConnectionString = "Server=(local);Database=asd;Trusted_Connection=True;";
         private SqlConnection objConn;
+        private asdEntities3 db = new asdEntities3();
 
         //creates a new connection
         public void NewConnObj()
@@ -31,6 +34,17 @@ namespace ZeccaWebApplication
         public void CloseConn()
         {
             objConn.Close();
+        }
+
+        public DbSet<Dispositivi> GetAllDevices()
+        {
+            return db.Dispositivi;
+        }
+
+        public Dispositivi FindDeviceById(string id)
+        {
+            Dispositivi dispositivo = db.Dispositivi.Find(id);
+            return dispositivo;
         }
 
         //Shows available functions for a device selected by the Id passed by the client

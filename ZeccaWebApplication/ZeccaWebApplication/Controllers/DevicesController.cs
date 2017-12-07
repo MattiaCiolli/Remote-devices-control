@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -10,36 +7,37 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Script.Serialization;
-using ZeccaWebApplication;
-using ZeccaWebApplication.Models;
+using ZeccaWebAPI.Models;
+using ZeccaWebAPI.Services;
 
-namespace ZeccaWebApplication.Controllers
+namespace ZeccaWebAPI.Controllers
 {
     [RoutePrefix("Devices")]
     public class DevicesController : ApiController
     {
-        private asdEntities3 db = new asdEntities3();
+        private QueueThreadService qts = new QueueThreadService();
+        private DBConnection db = new DBConnection();
 
         // GET: Devices
         [Route("")]
         public IHttpActionResult GetDispositivi()
         {
-            return Json(db.Dispositivi);
+            return Json(db.GetAllDevices());
         }
 
         // GET: Devices/{id}
+        [System.Web.Http.AcceptVerbs("GET", "POST")]
         [Route("{id}")]
         [ResponseType(typeof(Dispositivi))]
-        public async Task<IHttpActionResult> GetDispositivi(string id)
+        public IHttpActionResult FindDeviceById(string id)
         {
-            Dispositivi dispositivi = await db.Dispositivi.FindAsync(id);
-            if (dispositivi == null)
+            Dispositivi dispositivo = db.FindDeviceById(id);
+            if (dispositivo == null)
             {
                 return NotFound();
             }
 
-            return Ok(dispositivi);
+            return Json(dispositivo);
         }
 
         // GET: Devices/{id}/Functions
@@ -52,22 +50,21 @@ namespace ZeccaWebApplication.Controllers
             return response;
         }
 
-        // GET: Devices/{id}/Request/{idFunc}
+        // GET: Devices/{id}/Request/?idFunc=1&idFunc=2}
         [System.Web.Http.AcceptVerbs("GET", "POST")]
         [Route("{id}/RequestInfos/")]
         public HttpResponseMessage RequestInfos (string id, [FromUri]int[] idFunc)
         {
-            int sum = 0;
             HttpResponseMessage response = new HttpResponseMessage();
             DBConnection db = new DBConnection();
             foreach(int idf in idFunc)
             {
-                sum = sum + idf;
+                qts.handleRequest(id, idf);
             }
-            response.Content = new StringContent(sum.ToString()); //new StringContent(JsonConvert.SerializeObject(db.SelectDeviceFunctions(id)));
+            response.Content = new StringContent("a");
             return response;
         }
-
+/*
         // PUT: api/Devices/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutDispositivi(string id, Dispositivi dispositivi)
@@ -161,6 +158,6 @@ namespace ZeccaWebApplication.Controllers
         private bool DispositiviExists(string id)
         {
             return db.Dispositivi.Count(e => e.id == id) > 0;
-        }
+        }*/
     }
 }
