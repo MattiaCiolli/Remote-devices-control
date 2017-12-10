@@ -9,11 +9,11 @@ namespace ZeccaWebAPI
         //used to wake or sleep the thread
         private AutoResetEvent wh = new AutoResetEvent(false);
         //contains all the requests to the device
-        private BlockingCollection<Thread> threadQueue = new BlockingCollection<Thread>();
+        private BlockingCollection<Request_ThreadCollection> threadQueue = new BlockingCollection<Request_ThreadCollection>();
         //true if a thread is assigned
         private bool hasThread = false;
 
-        public BlockingCollection<Thread> ThreadQueue
+        public BlockingCollection<Request_ThreadCollection> ThreadQueue
         {
             get
             {
@@ -84,11 +84,10 @@ namespace ZeccaWebAPI
                 if (goOn == true)
                 {
                     //extract a request (thread) from the queue
-                    Thread t = threadQueue.Take();
-                    //start the thread
-                    t.Start();
+                    Request_ThreadCollection t = threadQueue.Take();
+                    t.RequestThread.Wh.Set();
                     //join main thread when finished
-                    t.Join();
+                    t.Thread.Join();
                 }
                 //if no request or empty queue
                 else if (goOn == false)
