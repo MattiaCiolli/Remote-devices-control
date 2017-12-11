@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using ZeccaWebAPI.Controllers;
+using ZeccaWebApplication.Classes;
 
 namespace ZeccaWebAPI
 {
@@ -32,7 +33,7 @@ namespace ZeccaWebAPI
         public void DeviceAction()
         {
             //string returned by the thread
-            string result = null;
+            RequestReturn result = null;
 
             if (wh.WaitOne())
             {

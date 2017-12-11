@@ -1,18 +1,16 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <img src="img/zecca.png" style="display:inline-block" id="logo" />
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-navbar>
 </ion-header>
 
 <ion-content class="home" padding>
-
-    <h2 class="center">Ionic 2 - Blank Starter ueppa</h2> 
-
-    <div class="center">
-        <p class="ionic-logo"></p>
-    </div>
 
     <ion-card>
         <ion-card-header>
@@ -37,9 +35,15 @@
                     </ion-select>
                 </ion-item>
                 <button ion-button color="secondary" id="button1" (click)="requestInfosByFunctions()">Esegui</button>
-            </ion-card-content>
-</ion-card>
-
+                <ion-item-group>
+                    <ion-item *ngFor="let res of requestResults">{{res.RequestName}}: {{res.RequestData}}</ion-item>
+                </ion-item-group>
+</ion-card-content>
         </ion-card>
+
+    </ion-card>
+
+    <button ion-button color="secondary" id="button2"><ion-icon name="add"> Aggiungi dispositivo</ion-icon></button>
+
 
 </ion-content>

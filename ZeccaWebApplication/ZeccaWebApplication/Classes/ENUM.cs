@@ -30,13 +30,11 @@ namespace ZeccaWebAPI
         public enum ACTIONS
         {
             NO_ACTION = 0,
-            DEVICE_INFO = 1,
-            DEVICE_FUNCTIONS = 2,
+            CHECK_REACHABILITY = 1,
+            CHECK_TIME = 2,
             CHECK_TEMPERATURE = 3,
             CHECK_NODES = 4,
-            CHECK_TIME = 5,
-            CHECK_REACHABILITY = 6,
-            CHECK_VOLTAGE = 7
+            CHECK_VOLTAGE = 5
         }
     }
 }

@@ -148,7 +148,9 @@
     <Compile Include="Classes\ENUM.cs" />
     <Compile Include="Classes\IPDevice.cs" />
     <Compile Include="Classes\QueueThread.cs" />
+    <Compile Include="Classes\RequestReturn.cs" />
     <Compile Include="Classes\RequestThread.cs" />
+    <Compile Include="Classes\Request_ThreadCollection.cs" />
     <Compile Include="Classes\SerialDevice.cs" />
     <Compile Include="Controllers\DevicesController.cs" />
     <Compile Include="Foundation\DBConnection.cs" />

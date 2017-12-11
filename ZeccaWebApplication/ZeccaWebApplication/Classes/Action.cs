@@ -1,31 +1,38 @@
 ﻿// The 'Context' class, when created selects the correct strategy for the received command
+using ZeccaWebApplication.Classes;
+
 namespace ZeccaWebAPI
 {
     class Action
     {
         private ActionStrategy strategy;
-        private string id;
+        private string dev_id;
+        private string act_name;
         // Constructor, check cmd and chooses the correct strategy
-        public Action(string id_in, ENUM.ACTIONS act_in)
+        public Action(string devId_in, ENUM.ACTIONS act_in)
         {
-            this.id = id_in;
-
+            this.dev_id = devId_in;
             switch (act_in)
             {
                 case ENUM.ACTIONS.CHECK_TEMPERATURE:
-                    this.Strategy = new checkTempStrategy();
+                    this.strategy = new checkTempStrategy();
+                    this.act_name = ("Temperatura");
                     break;
                 case ENUM.ACTIONS.CHECK_NODES:
-                    this.Strategy = new checkNodesStrategy();
+                    this.strategy = new checkNodesStrategy();
+                    this.act_name = ("Stato dei nodi");
                     break;
                 case ENUM.ACTIONS.CHECK_TIME:
-                    this.Strategy = new checkTimeStrategy();
+                    this.strategy = new checkTimeStrategy();
+                    this.act_name = ("Orario");
                     break;
                 case ENUM.ACTIONS.CHECK_REACHABILITY:
-                    this.Strategy = new checkReachStrategy();
+                    this.strategy = new checkReachStrategy();
+                    this.act_name = ("Raggiungibilità");
                     break;
                 case ENUM.ACTIONS.CHECK_VOLTAGE:
-                    this.Strategy = new checkVoltStrategy();
+                    this.strategy = new checkVoltStrategy();
+                    this.act_name = ("Voltaggio");
                     break;
                 default:
                     break;
@@ -40,15 +47,16 @@ namespace ZeccaWebAPI
         }
 
         // Gets or sets the id
-        public string Id
+        public string Dev_id
         {
-            get { return id; }
-            set { id = value; }
+            get { return dev_id; }
+            set { dev_id = value; }
         }
 
-        public string Request()
+        public RequestReturn Request()
         {
-            return strategy.HandleCmd(id);
+            string data = strategy.HandleCmd(dev_id);
+            return new RequestReturn(act_name, data);
         }
     }
 }

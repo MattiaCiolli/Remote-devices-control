@@ -10,6 +10,7 @@ export class HomePage {
 
     public devices: any[];
     public functions: any[];
+    public requestResults: any[];
 
     selectedDevice: string;
     selectedFunctions: number[];
@@ -23,9 +24,8 @@ export class HomePage {
         var fid = this.selectedFunctions.toString();
         fid = fid.replace(/,/g, '&');
         this.http.get('http://localhost:54610/Devices/' + this.selectedDevice + '/RequestInfos/?' + fid)
-            .subscribe(res => this.functions = res.json());
+            .subscribe(res => this.requestResults = res.json());
     }
-
 
     constructor(private http: Http) {
         this.http.get('http://localhost:54610/Devices')

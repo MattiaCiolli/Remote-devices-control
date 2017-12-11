@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using ZeccaWebAPI.Models;
 using ZeccaWebAPI.Services;
+using ZeccaWebApplication.Classes;
 
 namespace ZeccaWebAPI.Controllers
 {
@@ -19,9 +21,9 @@ namespace ZeccaWebAPI.Controllers
         private QueueThreadService qts = new QueueThreadService();
         private DBConnection db = new DBConnection();
         private static readonly object sharedResultLock = new object();
-        private static string sharedResult;
+        private static RequestReturn sharedResult;
 
-        public static string SharedResult
+        public static RequestReturn SharedResult
         {
             get
             {
@@ -79,116 +81,116 @@ namespace ZeccaWebAPI.Controllers
         [Route("{id}/RequestInfos/")]
         public HttpResponseMessage RequestInfos(string id, [FromUri]int[] idFunc)
         {
-            string result = null;
-            
+            List<RequestReturn> resultList = new List<RequestReturn>();
+
             HttpResponseMessage response = new HttpResponseMessage();
             foreach (int idf in idFunc)
             {
-               Request_ThreadCollection waitThread = qts.handleRequest(id, idf);
-               waitThread.Thread.Join();
-                lock(sharedResultLock)
+                Request_ThreadCollection waitThread = qts.handleRequest(id, idf);
+                waitThread.Thread.Join();
+                lock (sharedResultLock)
                 {
-                    result = sharedResult;
+                    resultList.Add(sharedResult);
                 }
             }
 
-        response.Content = new StringContent(result);
+            response.Content = new StringContent(JsonConvert.SerializeObject(resultList));
             return response;
         }
-    /*
-            // PUT: api/Devices/5
-            [ResponseType(typeof(void))]
-            public async Task<IHttpActionResult> PutDispositivi(string id, Dispositivi dispositivi)
-            {
-                if (!ModelState.IsValid)
+        /*
+                // PUT: api/Devices/5
+                [ResponseType(typeof(void))]
+                public async Task<IHttpActionResult> PutDispositivi(string id, Dispositivi dispositivi)
                 {
-                    return BadRequest(ModelState);
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    if (id != dispositivi.id)
+                    {
+                        return BadRequest();
+                    }
+
+                    db.Entry(dispositivi).State = EntityState.Modified;
+
+                    try
+                    {
+                        await db.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!DispositiviExists(id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+                    return StatusCode(HttpStatusCode.NoContent);
                 }
 
-                if (id != dispositivi.id)
+                // POST: api/Devices
+                [ResponseType(typeof(Dispositivi))]
+                public async Task<IHttpActionResult> PostDispositivi(Dispositivi dispositivi)
                 {
-                    return BadRequest();
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    db.Dispositivi.Add(dispositivi);
+
+                    try
+                    {
+                        await db.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException)
+                    {
+                        if (DispositiviExists(dispositivi.id))
+                        {
+                            return Conflict();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+
+                    return CreatedAtRoute("DefaultApi", new { id = dispositivi.id }, dispositivi);
                 }
 
-                db.Entry(dispositivi).State = EntityState.Modified;
-
-                try
+                // DELETE: api/Devices/5
+                [ResponseType(typeof(Dispositivi))]
+                public async Task<IHttpActionResult> DeleteDispositivi(string id)
                 {
-                    await db.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DispositiviExists(id))
+                    Dispositivi dispositivi = await db.Dispositivi.FindAsync(id);
+                    if (dispositivi == null)
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
-                }
 
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-
-            // POST: api/Devices
-            [ResponseType(typeof(Dispositivi))]
-            public async Task<IHttpActionResult> PostDispositivi(Dispositivi dispositivi)
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                db.Dispositivi.Add(dispositivi);
-
-                try
-                {
+                    db.Dispositivi.Remove(dispositivi);
                     await db.SaveChangesAsync();
+
+                    return Ok(dispositivi);
                 }
-                catch (DbUpdateException)
+
+                protected override void Dispose(bool disposing)
                 {
-                    if (DispositiviExists(dispositivi.id))
+                    if (disposing)
                     {
-                        return Conflict();
+                        db.Dispose();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    base.Dispose(disposing);
                 }
 
-                return CreatedAtRoute("DefaultApi", new { id = dispositivi.id }, dispositivi);
-            }
-
-            // DELETE: api/Devices/5
-            [ResponseType(typeof(Dispositivi))]
-            public async Task<IHttpActionResult> DeleteDispositivi(string id)
-            {
-                Dispositivi dispositivi = await db.Dispositivi.FindAsync(id);
-                if (dispositivi == null)
+                private bool DispositiviExists(string id)
                 {
-                    return NotFound();
-                }
-
-                db.Dispositivi.Remove(dispositivi);
-                await db.SaveChangesAsync();
-
-                return Ok(dispositivi);
-            }
-
-            protected override void Dispose(bool disposing)
-            {
-                if (disposing)
-                {
-                    db.Dispose();
-                }
-                base.Dispose(disposing);
-            }
-
-            private bool DispositiviExists(string id)
-            {
-                return db.Dispositivi.Count(e => e.id == id) > 0;
-            }*/
-}
+                    return db.Dispositivi.Count(e => e.id == id) > 0;
+                }*/
+    }
 }
