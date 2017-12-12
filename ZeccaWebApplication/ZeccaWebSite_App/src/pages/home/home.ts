@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Http } from '@angular/http';
+import { DevSel } from '../devSelector/devSelector';
 
 @Component({
     selector: 'page-home',
@@ -8,27 +9,15 @@ import { Http } from '@angular/http';
 })
 export class HomePage {
 
-    public devices: any[];
-    public functions: any[];
-    public requestResults: any[];
+    public countDev=1;
 
-    selectedDevice: string;
-    selectedFunctions: number[];
-
-    deviceFunctions(selectedDev) {
-        this.http.get('http://localhost:54610/Devices/' + selectedDev +'/Functions')
-            .subscribe(res => this.functions = res.json());
+    addDevice() {
+        this.countDev++;
     }
 
-    requestInfosByFunctions() {
-        var fid = this.selectedFunctions.toString();
-        fid = fid.replace(/,/g, '&');
-        this.http.get('http://localhost:54610/Devices/' + this.selectedDevice + '/RequestInfos/?' + fid)
-            .subscribe(res => this.requestResults = res.json());
+    getNumber () {
+        return new Array(this.countDev);
     }
 
-    constructor(private http: Http) {
-        this.http.get('http://localhost:54610/Devices')
-            .subscribe(res => this.devices = res.json());
-    }
+    constructor() {}
 }
