@@ -11,12 +11,21 @@
 </ion-header>
 
 <ion-content class="home" padding>
-    {{countDev}}
     <ion-card>
         <ion-card-header>
             Lista richieste
         </ion-card-header>
-        <page-devSelector *ngFor="let i of getNumber(countDev)"></page-devSelector>
+        <ion-card *ngFor="let i of getNumber(countDev); let i2 = index" id="{{i2 + 1}}">
+            <ion-card-header>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col col-3>Dispositivo {{i2 + 1}}</ion-col>
+                        <ion-col col-1 offset-8><ion-icon name="close-circle" id="buttondel{{i2 + 1}}" (click)="deleteRequest(i2 + 1)"></ion-icon></ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-card-header>
+            <page-devSelector></page-devSelector>
+        </ion-card>
     </ion-card>
 
     <button ion-button color="secondary" id="button2" (click)="addDevice()"><ion-icon name="add"> Aggiungi dispositivo</ion-icon></button>

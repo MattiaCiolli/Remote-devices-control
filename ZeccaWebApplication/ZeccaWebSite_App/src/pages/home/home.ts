@@ -19,5 +19,14 @@ export class HomePage {
         return new Array(this.countDev);
     }
 
+    deleteRequest(i) {
+       
+        //var delBtn = document.getElementById("buttondel" + i.toString());
+        var delDiv = document.getElementById(i.toString());
+        var parentDiv = delDiv.parentNode;
+        parentDiv.removeChild(delDiv);
+        //this.countDev--;
+    }
+
     constructor() {}
 }

@@ -1,8 +1,4 @@
-﻿<ion-card>
-    <ion-card-header>
-        Dispositivo 1
-    </ion-card-header>
-    <ion-card-content>
+﻿    <ion-card-content>
         <ion-item>
             <ion-label>Dispositivo:</ion-label>
             <ion-select [(ngModel)]="selectedDevice" id="dispositivi" (ngModelChange)="deviceFunctions($event)" value="" required>
@@ -20,4 +16,3 @@
             <ion-item *ngFor="let res of requestResults">{{res.RequestName}}: {{res.RequestData}}</ion-item>
         </ion-item-group>
     </ion-card-content>
-</ion-card>
