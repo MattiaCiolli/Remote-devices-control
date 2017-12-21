@@ -1,34 +1,54 @@
-<ion-header>
-    <ion-navbar>
-        <ion-grid>
+<!--<ion-header>
+    <ion-navbar no-padding>
+        <ion-grid >
             <ion-row>
-                <ion-col>
-                    <img src="img/zecca.png" style="display:inline-block" id="logo" />
+                <ion-col col-3 col-md-4>
+                    <img src="img/zecca.png" id="logo" />
                 </ion-col>
             </ion-row>
         </ion-grid>
     </ion-navbar>
+</ion-header> -->
+
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle icon-only>
+            <ion-icon name='menu'></ion-icon>
+        </button>
+        <ion-title>
+            <ion-grid>
+                <ion-row>
+                    <ion-col col-4 offset-4>
+                        <img src="img/zecca.png" id="logo" />
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content class="home" padding>
-    <ion-card>
-        <ion-card-header>
-            Lista richieste
-        </ion-card-header>
-        <ion-card *ngFor="let i of getNumber(countDev); let i2 = index" id="{{i2 + 1}}">
-            <ion-card-header>
-                <ion-grid>
-                    <ion-row>
-                        <ion-col col-3>Dispositivo {{i2 + 1}}</ion-col>
-                        <ion-col col-1 offset-8><ion-icon name="close-circle" id="buttondel{{i2 + 1}}" (click)="deleteRequest(i2 + 1)"></ion-icon></ion-col>
-                    </ion-row>
-                </ion-grid>
-            </ion-card-header>
-            <page-devSelector></page-devSelector>
-        </ion-card>
-    </ion-card>
-
-    <button ion-button color="secondary" id="button2" (click)="addDevice()"><ion-icon name="add"> Aggiungi dispositivo</ion-icon></button>
-
-
+    <ion-grid>
+        <ion-row>
+            <ion-col col-lg-8 offset-lg-2>
+                <ion-card>
+                    <ion-card-header>
+                        Lista richieste
+                    </ion-card-header>
+                    <ion-card *ngFor="let i of getNumber(countDev); let i2 = index" id="{{i2 + 1}}">
+                        <ion-card-header>
+                                <ion-row>
+                                    <ion-col col-3>Dispositivo {{i2 + 1}}</ion-col>
+                                    <ion-col col-1 offset-8 class="red"><ion-icon name="close-circle" id="buttondel{{i2 + 1}}" (click)="deleteRequest(i2 + 1)"></ion-icon></ion-col>
+                                </ion-row>
+                        </ion-card-header>
+                        <page-devSelector></page-devSelector>
+                    </ion-card>
+                    
+                    <button ion-button color="secondary" id="button2" (click)="addDevice()"><ion-icon name="add"> Nuova Richiesta</ion-icon></button>
+                
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

@@ -1,18 +1,33 @@
-﻿    <ion-card-content>
-        <ion-item>
-            <ion-label>Dispositivo:</ion-label>
-            <ion-select [(ngModel)]="selectedDevice" id="dispositivi" (ngModelChange)="deviceFunctions($event)" value="" required>
-                <ion-option *ngFor="let dev of devices" value="{{dev.id}}">{{dev.id}}</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item>
-            <ion-label>Funzioni:</ion-label>
-            <ion-select [(ngModel)]="selectedFunctions" multiple="true" id="funzioni" required>
-                <ion-option *ngFor="let fun of functions" value="idFunc={{fun.id}}">{{fun.descrizione}}</ion-option>
-            </ion-select>
-        </ion-item>
-        <button ion-button color="secondary" id="button1" (click)="requestInfosByFunctions()">Esegui</button>
-        <ion-item-group>
-            <ion-item *ngFor="let res of requestResults">{{res.RequestName}}: {{res.RequestData}}</ion-item>
-        </ion-item-group>
-    </ion-card-content>
+﻿<ion-card-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-12>
+                <ion-item>
+                    <ion-label>Dispositivo:</ion-label>
+                    <ion-select [(ngModel)]="selectedDevice" id="dispositivi" (ngModelChange)="deviceFunctions($event)" value="" required>
+                        <ion-option *ngFor="let dev of devices" value="{{dev.id}}">{{dev.id}}</ion-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col col-12>
+                <ion-item>
+                    <ion-label>Funzioni:</ion-label>
+                    <ion-select [(ngModel)]="selectedFunctions" multiple="true" id="funzioni" required>
+                        <ion-option *ngFor="let fun of functions" value="idFunc={{fun.id}}">{{fun.descrizione}}</ion-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <button ion-button color="secondary" id="button1" (click)="requestInfosByFunctions()">Esegui</button>
+    <ion-item-group>
+        <ion-grid>
+            <ion-row *ngFor="let res of requestResults">
+                <ion-col col-12><b>{{res.RequestName}}:</b></ion-col>
+                <ion-col col-12>{{res.RequestData}}</ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-item-group>
+</ion-card-content>

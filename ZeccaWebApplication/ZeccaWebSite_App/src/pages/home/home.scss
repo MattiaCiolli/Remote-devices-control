@@ -1,18 +1,32 @@
 page-home {
-    #logo {
+    /*#logo {
+        display:inline-block;
         max-width: 60%;
         height: auto;
+    }*/
+    #button2 {
+       margin-left: 11px;
+       margin-bottom: 14px;
     }
 
     .center {
         text-align: center;
     }
 
-    .button-right{
-  display: block !important;
-  width: 100% !important;
-  text-align:right !important;
-}
+    .red {
+        color: #D80000;
+        text-align: right;
+    }
+
+    .red:hover {
+        color: red;
+    }
+
+    .button-right {
+        display: block !important;
+        width: 100% !important;
+        text-align: right !important;
+    }
 
     .ionic-logo {
         display: inline-flex;
