@@ -61,7 +61,11 @@ $colors: (
 // default are overridden.
 
 @import "ionic.theme.default";
-
+$toolbar-background: #315F97;//#205092;
+$toolbar-md-title-text-color: white;
+$toolbar-ios-title-text-color: white;
+$toolbar-wp-title-text-color: white;
+//$menu-width: 240px;
 
 // Ionicons
 // --------------------------------------------------

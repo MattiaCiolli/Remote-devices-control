@@ -1,6 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, Loading } from 'ionic-angular';
-//import { AuthService } from '../../providers/auth-service';
+import { Events } from 'ionic-angular';
 import { Http } from '@angular/http';
 import { HomePage } from '../home/home';
 
@@ -24,7 +24,7 @@ export class LoginPage {
     credentialPwd: string;
     userResult: User;
 
-    constructor(private nav: NavController, private alertCtrl: AlertController, private loadingCtrl: LoadingController, private http: Http) { }
+    constructor(public events: Events, private nav: NavController, private alertCtrl: AlertController, private loadingCtrl: LoadingController, private http: Http) { }
 
     public createAccount() {
         this.nav.push('RegisterPage');
@@ -32,21 +32,12 @@ export class LoginPage {
 
     login() {
         this.showLoading()
-        /*this.auth.login(this.credentialId, this.credentialPwd).then(data => {
-
-            this.userResult = data;
-            alert("A"+data);
-            if (this.userResult.Id == this.credentialId && this.userResult.Password == this.credentialPwd) {
-                this.nav.setRoot('HomePage');
-            } else {
-                this.showError("Access Denied");
-            }
-        });
-    }*/
         this.http.get('http://localhost:54610/Auth/login/' + this.credentialId + '/' + this.credentialPwd)
             .subscribe(res => {
                 var result = res.json();
                 if (result.Id == this.credentialId) {
+                    localStorage.setItem("userId", this.credentialId);
+                    this.events.publish('login', Date.now());
                     this.nav.setRoot(HomePage);
                 } else {
                     if (result.Id == "Username errato") {

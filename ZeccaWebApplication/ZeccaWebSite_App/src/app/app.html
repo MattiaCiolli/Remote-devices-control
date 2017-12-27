@@ -5,23 +5,28 @@
         </ion-toolbar>
     </ion-header>
 
-        <ion-content>
-            <ion-list>
-                <button menuClose ion-item (click)="openPage(p)">
-                    a1
-                </button>
-                <button menuClose ion-item (click)="openPage(p)">
-                    a
-                </button>
-                <button menuClose ion-item (click)="openPage(p)">
-                    b
-                </button>
-                <button menuClose ion-item (click)="openPage(p)">
-                    c
-                </button>
-            </ion-list>
-        </ion-content>
-
+    <ion-content>
+        <ion-grid>
+            <ion-row align-items-center style="background-color:#F5F5F5;" >
+                <ion-col col-4>
+                    <ion-avatar>
+                        <img src="img/user.png" />
+                    </ion-avatar>
+                </ion-col>
+                <ion-col col-4>
+                    <ion-label>{{storedUserId}}</ion-label>
+                </ion-col>
+                <ion-col col-3 offset-1>
+                    <button ion-button round small menuClose (click)="logout()"><ion-icon name="log-out"></ion-icon></button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <ion-list>                
+            <button menuClose ion-item (click)="openPage(SettingsPage)"><ion-icon name="settings">  Impostazioni</ion-icon></button>
+            <button menuClose ion-item (click)="openPage(InfoPage)"><ion-icon name="information-circle">  Info</ion-icon></button>
+            <button menuClose ion-item (click)="openPage(GuidePage)"><ion-icon name="help">  Guida</ion-icon></button>
+        </ion-list>
+    </ion-content>
 </ion-menu>
 
 <ion-nav id="nav" [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, MenuController, App } from 'ionic-angular';
+import { MenuController, App } from 'ionic-angular';
 import { Http } from '@angular/http';
 import { DevSel } from '../devSelector/devSelector';
 
@@ -23,13 +23,11 @@ import { DevSel } from '../devSelector/devSelector';
 </ion-header>
 `
 })
+
 export class BasicPage {
+
     constructor(app: App, menu: MenuController) {
         menu.enable(true);
-    }
-
-    openAddPage() {
-        //this.nav.push(AddPage)
     }
 }
 
@@ -39,7 +37,7 @@ export class BasicPage {
 })
 export class HomePage {
 
-    public countDev=1;
+    public countDev = 1;
 
     addDevice() {
         this.countDev++;
@@ -55,7 +53,9 @@ export class HomePage {
         var delDiv = document.getElementById(i.toString());
         var parentDiv = delDiv.parentNode;
         parentDiv.removeChild(delDiv);
-        //this.countDev--;
+        /*var count = document.getElementsByTagName("page-devSelector").length; 
+        alert(count);
+        this.countDev = count;*/
     }
 
     constructor() {}
