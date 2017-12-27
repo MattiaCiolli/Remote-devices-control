@@ -7,16 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ZeccaWebAPI.Models
+namespace ZeccaWebApplication.Models
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class asdEntities3 : DbContext
+    public partial class asdEntities5 : DbContext
     {
-        public asdEntities3()
-            : base("name=asdEntities3")
+        public asdEntities5()
+            : base("name=asdEntities5")
         {
         }
     
@@ -25,8 +25,6 @@ namespace ZeccaWebAPI.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Dispositivi> Dispositivi { get; set; }
-
-        public System.Data.Entity.DbSet<ZeccaWebApplication.Models.Utenti> Utentis { get; set; }
+        public virtual DbSet<Utenti> Utenti { get; set; }
     }
 }

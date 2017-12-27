@@ -138,6 +138,16 @@
       <DependentUpon>Device.edmx</DependentUpon>
       <LastGenOutput>Device.cs</LastGenOutput>
     </Content>
+    <Content Include="Models\Utente.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Utente.edmx</DependentUpon>
+      <LastGenOutput>Utente.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Utente.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Utente.edmx</DependentUpon>
+      <LastGenOutput>Utente.cs</LastGenOutput>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +162,7 @@
     <Compile Include="Classes\RequestThread.cs" />
     <Compile Include="Classes\Request_ThreadCollection.cs" />
     <Compile Include="Classes\SerialDevice.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\DevicesController.cs" />
     <Compile Include="Foundation\DBConnection.cs" />
     <Compile Include="Global.asax.cs">
@@ -176,6 +187,24 @@
       <DependentUpon>Device.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Function.cs" />
+    <Compile Include="Models\Utente.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Utente.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Utente.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Utente.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Utente.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Utente.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Utenti.cs">
+      <DependentUpon>Utente.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\QueueThreadService.cs" />
   </ItemGroup>
@@ -190,6 +219,13 @@
     </EntityDeploy>
     <Content Include="Models\Device.edmx.diagram">
       <DependentUpon>Device.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\Utente.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Utente.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Utente.edmx.diagram">
+      <DependentUpon>Utente.edmx</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

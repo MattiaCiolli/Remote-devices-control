@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="asdModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'asd.dbo.Utenti' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Utenti">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="asdModel1StoreContainer">
+    <EntitySet Name="Utenti" EntityType="Self.Utenti" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Utenti].[Id] AS [Id], 
+    [Utenti].[Password] AS [Password]
+    FROM [dbo].[Utenti] AS [Utenti]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>
