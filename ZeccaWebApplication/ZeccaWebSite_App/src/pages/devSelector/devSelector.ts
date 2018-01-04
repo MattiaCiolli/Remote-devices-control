@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController, Loading } from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
 import { Http } from '@angular/http';
 
 @Component({
@@ -34,16 +34,8 @@ export class DevSel {
             });
     }
 
-    constructor(private http: Http, public loadingCtrl: LoadingController) {
+    constructor(private http: Http) {
         this.http.get('http://localhost:54610/Devices')
             .subscribe(res => this.devices = res.json());
     }
-    /*
-    showLoading() {
-        this.loading = this.loadingCtrl.create({
-            content: 'Please wait...',
-            dismissOnPageChange: true
-        });
-        this.loading.present();
-    }*/
 }
