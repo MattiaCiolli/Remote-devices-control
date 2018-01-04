@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, Loading } from 'ionic-angular';
 import { Http } from '@angular/http';
 
 @Component({
@@ -9,6 +9,7 @@ import { Http } from '@angular/http';
 
 export class DevSel {
 
+    public loading = false;
     public devices: any[];
     public functions: any[];
     public requestResults: any[];
@@ -22,14 +23,27 @@ export class DevSel {
     }
 
     requestInfosByFunctions() {
+        this.requestResults = undefined;
         var fid = this.selectedFunctions.toString();
         fid = fid.replace(/,/g, '&');
+        this.loading = true;
         this.http.get('http://localhost:54610/Devices/' + this.selectedDevice + '/RequestInfos/?' + fid)
-            .subscribe(res => this.requestResults = res.json());
+            .subscribe(res => {
+                this.requestResults = res.json();
+                this.loading = false;
+            });
     }
 
-    constructor(private http: Http) {
+    constructor(private http: Http, public loadingCtrl: LoadingController) {
         this.http.get('http://localhost:54610/Devices')
             .subscribe(res => this.devices = res.json());
     }
+    /*
+    showLoading() {
+        this.loading = this.loadingCtrl.create({
+            content: 'Please wait...',
+            dismissOnPageChange: true
+        });
+        this.loading.present();
+    }*/
 }
