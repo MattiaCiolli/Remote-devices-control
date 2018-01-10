@@ -124,22 +124,3 @@ namespace ZeccaWebAPI
         }
     }
 }
-
-// A class for check all command
-/*class checkAll : State
-{
-    public override string HandleCmd(string id)
-    {
-
-        string ris = null;
-        if (DbC.ShowDeviceFunctions(id).Contains("orario"))
-        {
-            ris = caller.time().ToString();
-        }
-        else
-        {
-            ris = "Functionality not available on the device selected";
-        }
-        return ris;
-    }
-}*/

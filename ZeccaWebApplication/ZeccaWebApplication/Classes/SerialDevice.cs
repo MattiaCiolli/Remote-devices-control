@@ -18,6 +18,7 @@ namespace ZeccaWebAPI
                 //if not open, open the port
                 myPort.BaudRate = 9600;
                 myPort.Parity = Parity.None;
+                myPort.DataBits = 8;
                 myPort.StopBits = StopBits.One;
                 myPort.Handshake = Handshake.None;
                 myPort.Open();
@@ -34,9 +35,10 @@ namespace ZeccaWebAPI
         public string CheckReachable(string phoneNumber_in)
         {
             openCOM();
-
             string okString = " ";
             string connectString = " ";
+            string returnString = " ";
+            string closeString = " ";
 
             //message for AT checking
             byte[] writeBuffer = CreateMessage(65, 84, 13); //AT. -> 41 54 0d
@@ -47,8 +49,15 @@ namespace ZeccaWebAPI
             //if Clear To Send
             if (myPort.CtsHolding == true)
             {
-                //check if AT is OK
-                okString = WriteAndGet(writeBuffer, "OK");
+                try
+                {
+                    //check if AT is OK
+                    okString = WriteAndGet(writeBuffer, "OK");
+                }
+                catch
+                {
+                    returnString = "Rete assente";
+                }
 
                 //if OK
                 if (okString.Contains("OK"))
@@ -56,14 +65,23 @@ namespace ZeccaWebAPI
                     //create the call message
                     byte[] callBuffer = DeviceCallMsg(phoneNumber_in);
 
-                    //check if a connection can be established, so if reachable
-                    connectString = WriteAndGet(callBuffer, "CONNECT");                   
+                    try
+                    {
+                        //check if a connection can be established, so if reachable
+                        connectString = WriteAndGet(callBuffer, "CONNECT");
+                    }
+                    catch
+                    {
+                        returnString = "Non raggiungibile";
+                    }
                 }
 
+                //message for AT checking
+                byte[] closeBuffer = CreateMessage(65, 84, 72, 13); //ATH. -> 41 54 48 0d
+                closeString = WriteAndGet(closeBuffer, "OK");
                 myPort.Close();
             }
-
-            string returnString = " ";
+          
             if (connectString.Contains("CONNECT"))
             {
                 returnString = "Raggiungibile";
@@ -89,12 +107,49 @@ namespace ZeccaWebAPI
             return "ok,KO,ok";
         }
 
-        public string CheckVoltage(string PhoneNumber_in)
+        public string CheckVoltage(string phoneNumber_in)
         {
-            return "10,11,10";
+            string badge_in = "87640138";
+            string dataString = "no ";
+
+            string connectString = this.CheckReachable(phoneNumber_in);
+            //if CONNECTED get data
+            if (connectString.Contains("Raggiungibile"))
+            {
+                byte[] twentiesbuffer = CreateMessage(32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 13, 10); // 19spaces..                 ../?37665538!../?37665538!..-> 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 0d 0a 2f 3f 33 37 36 36 35 35 33 38 21 0d 0a 2f 3f 33 37 36 36 35 35 33 38 21 0d 0a
+                byte[] questionbuffer = CreateMessage(47, 63);// /?
+                byte[] closequestionbuffer = CreateMessage(33, 13, 10);// !..
+                char[] matricolaArray = badge_in.ToCharArray();//split badge number into single digits
+                byte[] badgeBuffer = new byte[matricolaArray.Length];
+                int i = 0;
+                //convert each digit and put in buffer
+                foreach (char num in matricolaArray)
+                {
+                    badgeBuffer[i] = CreateMessage(num)[0];//num matricola
+                    i++;
+                }
+                //create the question message
+                byte[] fullQuestionBuffer = new byte[twentiesbuffer.Length + questionbuffer.Length + badgeBuffer.Length + closequestionbuffer.Length + questionbuffer.Length + badgeBuffer.Length + closequestionbuffer.Length];
+
+                //create the message to be sent concatenating the arrays generated
+                twentiesbuffer.CopyTo(fullQuestionBuffer, 0);
+                questionbuffer.CopyTo(fullQuestionBuffer, twentiesbuffer.Length);
+                badgeBuffer.CopyTo(fullQuestionBuffer, twentiesbuffer.Length + questionbuffer.Length);
+                closequestionbuffer.CopyTo(fullQuestionBuffer, twentiesbuffer.Length + questionbuffer.Length + badgeBuffer.Length);
+                questionbuffer.CopyTo(fullQuestionBuffer, twentiesbuffer.Length + questionbuffer.Length + badgeBuffer.Length + closequestionbuffer.Length);
+                badgeBuffer.CopyTo(fullQuestionBuffer, twentiesbuffer.Length + questionbuffer.Length + badgeBuffer.Length + closequestionbuffer.Length + questionbuffer.Length);
+                closequestionbuffer.CopyTo(fullQuestionBuffer, twentiesbuffer.Length + questionbuffer.Length + badgeBuffer.Length + closequestionbuffer.Length + questionbuffer.Length + badgeBuffer.Length);
+                //check if a connection can be established, so if reachable
+                myPort.Parity = Parity.Even;
+                myPort.DataBits = 7;
+                dataString = WriteAndGet(fullQuestionBuffer, "\u0003");
+            }
+
+            return dataString;
         }
 
         // function to translate integers to exadecimals
+        // https://www.binaryhexconverter.com/hex-to-decimal-converter. Convert the hex value in the IONinja log to decimal and pass it as parameters
         public byte[] CreateMessage(params int[] parameters)
         {
             var buf = new byte[parameters.Length];
@@ -108,12 +163,25 @@ namespace ZeccaWebAPI
         public string WriteAndGet(byte[] buffer_in, string checkString_in)
         {
             string returnString = " ";
+            StringBuilder completeMessage = new StringBuilder();
             //write the newly created array
             myPort.Write(buffer_in, 0, buffer_in.Length);
             myPort.ReadTimeout = 10000;
+                        
             if (myPort.BytesToRead > 0)
             {
-                byte[] inbyte = new byte[1];
+                byte[] myReadBuffer = new byte[myPort.BytesToRead];
+                int numberOfBytesRead = 0;
+
+                // if the message is bigger than the buffer, execute the read until the reach of the "ETX" character (\u0003)
+                do
+                {
+                    Console.WriteLine("-- " + completeMessage);
+                    numberOfBytesRead = myPort.Read(myReadBuffer, 0, myReadBuffer.Length);
+                    completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
+                } while (completeMessage.ToString().Contains(checkString_in) == false);
+
+                /*byte[] inbyte = new byte[1];
 
                 while (returnString.Contains(checkString_in) == false)
                 {
@@ -128,10 +196,10 @@ namespace ZeccaWebAPI
                         }
                     }
                     catch { }
-                }
+                }*/
             }
 
-            return returnString;
+            return completeMessage.ToString();
         }
 
 
