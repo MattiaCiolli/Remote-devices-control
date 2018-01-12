@@ -8,6 +8,7 @@
     <Property Name="descrizione" Type="nvarchar" MaxLength="50" />
     <Property Name="tipo" Type="int" />
     <Property Name="indirizzo" Type="nvarchar" MaxLength="50" />
+    <Property Name="matricola" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityContainer Name="asdModelStoreContainer">
     <EntitySet Name="Dispositivi" EntityType="Self.Dispositivi" Schema="dbo" store:Type="Tables" />

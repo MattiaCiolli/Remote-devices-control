@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using ZeccaWebAPI.Models;
 using ZeccaWebAPI.Services;
 using ZeccaWebApplication.Classes;
+using ZeccaWebApplication.Models;
 
 namespace ZeccaWebAPI.Controllers
 {
@@ -19,7 +20,7 @@ namespace ZeccaWebAPI.Controllers
     public class DevicesController : ApiController
     {
         private QueueThreadService qts = new QueueThreadService();
-        private DBConnection db = new DBConnection();
+        private asdEntities3 db = new asdEntities3();
         private static readonly object sharedResultLock = new object();
         private static RequestReturn sharedResult;
 
@@ -48,7 +49,7 @@ namespace ZeccaWebAPI.Controllers
         [Route("")]
         public IHttpActionResult GetDispositivi()
         {
-            return Json(db.GetAllDevices());
+            return Json(db.Dispositivi);
         }
 
         // GET: Devices/{id}
@@ -57,7 +58,7 @@ namespace ZeccaWebAPI.Controllers
         [ResponseType(typeof(Dispositivi))]
         public IHttpActionResult FindDeviceById(string id)
         {
-            Dispositivi dispositivo = db.FindDeviceById(id);
+            Dispositivi dispositivo = db.Dispositivi.Find(id);
             if (dispositivo == null)
             {
                 return NotFound();
@@ -71,8 +72,8 @@ namespace ZeccaWebAPI.Controllers
         public HttpResponseMessage GetDeviceFunctions(string id)
         {
             HttpResponseMessage response = new HttpResponseMessage();
-            DBConnection db = new DBConnection();
-            response.Content = new StringContent(JsonConvert.SerializeObject(db.SelectDeviceFunctions(id)));
+            DBConnection dbc = new DBConnection();
+            response.Content = new StringContent(JsonConvert.SerializeObject(dbc.SelectDeviceFunctions(id)));
             return response;
         }
 

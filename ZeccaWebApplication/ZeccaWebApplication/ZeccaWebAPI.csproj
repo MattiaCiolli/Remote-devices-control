@@ -152,16 +152,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Classes\Action.cs" />
-    <Compile Include="Classes\ActionStrategy.cs" />
-    <Compile Include="Classes\Device.cs" />
-    <Compile Include="Classes\ENUM.cs" />
-    <Compile Include="Classes\IPDevice.cs" />
-    <Compile Include="Classes\QueueThread.cs" />
-    <Compile Include="Classes\RequestReturn.cs" />
-    <Compile Include="Classes\RequestThread.cs" />
-    <Compile Include="Classes\Request_ThreadCollection.cs" />
-    <Compile Include="Classes\SerialDevice.cs" />
+    <Compile Include="Utilities\Action.cs" />
+    <Compile Include="Utilities\ActionStrategy.cs" />
+    <Compile Include="Utilities\Caller\DeviceCaller.cs" />
+    <Compile Include="Utilities\ENUM.cs" />
+    <Compile Include="Utilities\Caller\IPDeviceCaller.cs" />
+    <Compile Include="Utilities\Threading\QueueThread.cs" />
+    <Compile Include="Utilities\RequestReturn.cs" />
+    <Compile Include="Utilities\Threading\RequestThread.cs" />
+    <Compile Include="Utilities\Threading\Request_ThreadCollection.cs" />
+    <Compile Include="Utilities\Caller\SerialDeviceCaller.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\DevicesController.cs" />
     <Compile Include="Foundation\DBConnection.cs" />

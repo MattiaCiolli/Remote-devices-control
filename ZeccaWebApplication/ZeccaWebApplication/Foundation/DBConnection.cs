@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using ZeccaWebAPI.Models;
+using ZeccaWebApplication.Models;
 
 namespace ZeccaWebAPI
 {
@@ -34,17 +35,6 @@ namespace ZeccaWebAPI
         public void CloseConn()
         {
             objConn.Close();
-        }
-
-        public DbSet<Dispositivi> GetAllDevices()
-        {
-            return db.Dispositivi;
-        }
-
-        public Dispositivi FindDeviceById(string id)
-        {
-            Dispositivi dispositivo = db.Dispositivi.Find(id);
-            return dispositivo;
         }
 
         //Shows available functions for a device selected by the Id passed by the client

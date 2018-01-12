@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ZeccaWebAPI.Models
+namespace ZeccaWebApplication.Models
 {
     using System;
     using System.Collections.Generic;
@@ -18,5 +18,6 @@ namespace ZeccaWebAPI.Models
         public string descrizione { get; set; }
         public Nullable<int> tipo { get; set; }
         public string indirizzo { get; set; }
+        public string matricola { get; set; }
     }
 }

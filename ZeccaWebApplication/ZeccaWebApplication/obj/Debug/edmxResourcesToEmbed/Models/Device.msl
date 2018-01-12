@@ -4,6 +4,7 @@
     <EntitySetMapping Name="Dispositivi">
       <EntityTypeMapping TypeName="asdModel.Dispositivi">
         <MappingFragment StoreEntitySet="Dispositivi">
+          <ScalarProperty Name="matricola" ColumnName="matricola" />
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="descrizione" ColumnName="descrizione" />
           <ScalarProperty Name="tipo" ColumnName="tipo" />

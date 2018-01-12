@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ZeccaWebAPI.Models
+namespace ZeccaWebApplication.Models
 {
     using System;
     using System.Data.Entity;
@@ -26,7 +26,5 @@ namespace ZeccaWebAPI.Models
         }
     
         public virtual DbSet<Dispositivi> Dispositivi { get; set; }
-
-        public System.Data.Entity.DbSet<ZeccaWebApplication.Models.Utenti> Utentis { get; set; }
     }
 }
