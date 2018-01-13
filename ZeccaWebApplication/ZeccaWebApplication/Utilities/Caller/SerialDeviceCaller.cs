@@ -5,13 +5,17 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace ZeccaWebAPI
 {
     public class SerialDeviceCaller : DeviceCaller
     {
         private SerialPort myPort = new SerialPort("COM4");
+        System.Timers.Timer timer1 = new System.Timers.Timer(2000);
+        System.Timers.Timer timer2 = new System.Timers.Timer(2100);
 
         //opens and sets the port
         private void openCOM()
@@ -27,19 +31,33 @@ namespace ZeccaWebAPI
                 myPort.Open();
                 myPort.DtrEnable = true;
                 myPort.RtsEnable = true;
-                myPort.ReadTimeout = 1000;
+                myPort.ReadTimeout = 2000;
+            }
+        }
+
+        //end call sending +++
+        private void CloseCall(Object source, ElapsedEventArgs e)
+        {
+            timer1.Stop();
+            byte[] closeBuffer1 = CreateMessage(43, 43, 43); //+++ -> 2b 2b 2b
+            myPort.Parity = Parity.None;
+            myPort.DataBits = 8;
+            string closeString1 = WriteAndGet(closeBuffer1, "OK");
+            if (closeString1.Contains("OK"))
+            {
+                //needed for Hayes "+++" command            
+                timer2.Elapsed += CloseCall2;
+                timer2.Start();
             }
         }
 
         //end call sending ATH.
-        private string CloseCall()
+        private void CloseCall2(Object source, ElapsedEventArgs e)
         {
-            //message for AT checking
+            timer2.Stop();
             byte[] closeBuffer = CreateMessage(65, 84, 72, 13); //ATH. -> 41 54 48 0d
             string closeString = WriteAndGet(closeBuffer, "OK");
             myPort.Close();
-
-            return closeString;
         }
 
         private string PhoneNumber { get; set; }
@@ -53,7 +71,6 @@ namespace ZeccaWebAPI
 
             string connectString = ConnectToDevice(phoneNumber_in);
             string returnString = " ";
-            string closeString = " ";
 
             if (connectString.Contains("CONNECT"))
             {
@@ -64,7 +81,9 @@ namespace ZeccaWebAPI
                 returnString = "Non raggiungibile";
             }
 
-            closeString = CloseCall();
+            //needed for Hayes "+++" command            
+            timer1.Elapsed += CloseCall;
+            timer1.Start();
 
             return returnString;
         }
@@ -77,25 +96,35 @@ namespace ZeccaWebAPI
         {
             openCOM();
             string dataString = " ";
+            string result = " ";
             string connectString = ConnectToDevice(phoneNumber_in);
             //if CONNECTED get data
             if (connectString.Contains("Raggiungibile"))
             {
+                //create query message
                 byte[] fullQuestionBuffer = QueryMessage(badgeNumber_in);
 
                 try
                 {
-                    dataString = WriteAndGet(fullQuestionBuffer, "\u0003");
+                    //read until end message
+                    dataString = WriteAndGet(fullQuestionBuffer, "!");
                 }
                 catch
                 {
                     dataString = "Errore di lettura dei dati";
                 }
+
+                //filter registers
+                result = AnalyzeRemotePackage(dataString, "0.9.1", "0.9.2");
+            }
+            else
+            {
+                result = "Errore di connessione";
             }
 
-            string closeString = CloseCall();
-
-            string result = AnalyzeRemotePackage(dataString, "0.9.1", "0.9.2");
+            //needed for Hayes "+++" command
+            timer1.Elapsed += CloseCall;
+            timer1.Start();
 
             return result;
         }
@@ -114,21 +143,29 @@ namespace ZeccaWebAPI
             //if CONNECTED get data
             if (connectString.Contains("Raggiungibile"))
             {
+                //create query message
                 byte[] fullQuestionBuffer = QueryMessage(badgeNumber_in);
 
                 try
                 {
-                    dataString = WriteAndGet(fullQuestionBuffer, "\u0003");
+                    //read until end message
+                    dataString = WriteAndGet(fullQuestionBuffer, "!");
                 }
                 catch
                 {
                     dataString = "Errore di lettura dei dati";
                 }
-
+                //filter registers
                 result = AnalyzeRemotePackage(dataString, "32.7.0", "52.7.0", "72.7.0");
             }
+            else
+            {
+                result = "Errore di connessione";
+            }
 
-            string closeString = CloseCall();
+            //needed for Hayes "+++" command
+            timer1.Elapsed += CloseCall;
+            timer1.Start();
 
             return result;
         }
@@ -176,6 +213,7 @@ namespace ZeccaWebAPI
             //change parity bits to even and databits to 7 in order to talk with the device
             myPort.Parity = Parity.Even;
             myPort.DataBits = 7;
+            myPort.ReadTimeout = 5000;
 
             return fullQuestionBuffer;
         }
@@ -189,7 +227,7 @@ namespace ZeccaWebAPI
             ENUM.ERRORS err = ENUM.ERRORS.NO_ERRORS;
             //message for AT checking
             byte[] writeBuffer = CreateMessage(65, 84, 13); //AT. -> 41 54 0d
-
+            myPort.ReadTimeout = 20000;
             //wait until Clear To Send
             while (myPort.CtsHolding == false) { }
 
@@ -240,29 +278,31 @@ namespace ZeccaWebAPI
         {
             ENUM.ERRORS err = ENUM.ERRORS.NO_ERRORS;
             StringBuilder completeMessage = new StringBuilder();
-            myPort.ReadTimeout = 16000;
             //write the newly created array
             myPort.Write(buffer_in, 0, buffer_in.Length);
-
-            byte[] myReadBuffer = new byte[myPort.BytesToRead];
+            string a = "";
+            byte[] myReadBuffer = new byte[1024];
             int numberOfBytesRead = 0;
-
-            try
+            //if received data doesn't contain the checkstring, return the received data anyway
+            bool exit = false;
+            // if the message is bigger than the buffer, execute the read until the reach of the "ETX" character (\u0003)
+            do
             {
-                // if the message is bigger than the buffer, execute the read until the reach of the "ETX" character (\u0003)
-                while (completeMessage.ToString().Contains(checkString_in) == false) ;
+                try
                 {
-                    Console.WriteLine("-- " + completeMessage);
-                    numberOfBytesRead = myPort.Read(myReadBuffer, 0, myReadBuffer.Length);
-                    completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
+                    //numberOfBytesRead = myPort.Read(myReadBuffer, 0, myReadBuffer.Length);
+                    // completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
+                    a = a + myPort.ReadLine();
                 }
-            }
-            catch
-            {
-                err = ENUM.ERRORS.SERIAL_GSM_READ_FAILED;
-            }
+                catch
+                {
+                    err = ENUM.ERRORS.SERIAL_GSM_READ_FAILED;
+                    exit = true;
+                }
+            } while (a.Contains(checkString_in) == false || exit == true);
 
-            return completeMessage.ToString();
+            return a;
+
         }
 
 
