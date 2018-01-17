@@ -15,7 +15,7 @@ namespace ZeccaWebAPI
     {
         private SerialPort myPort = new SerialPort("COM4");
         System.Timers.Timer timer1 = new System.Timers.Timer(2000);
-        System.Timers.Timer timer2 = new System.Timers.Timer(2100);
+        System.Timers.Timer timer2 = new System.Timers.Timer(2000);
 
         //opens and sets the port
         private void openCOM()
@@ -38,6 +38,7 @@ namespace ZeccaWebAPI
         //end call sending +++
         private void CloseCall(Object source, ElapsedEventArgs e)
         {
+            myPort.ReadTimeout = 3000;
             timer1.Stop();
             byte[] closeBuffer1 = CreateMessage(43, 43, 43); //+++ -> 2b 2b 2b
             myPort.Parity = Parity.None;
@@ -54,6 +55,7 @@ namespace ZeccaWebAPI
         //end call sending ATH.
         private void CloseCall2(Object source, ElapsedEventArgs e)
         {
+            myPort.ReadTimeout = 3000;
             timer2.Stop();
             byte[] closeBuffer = CreateMessage(65, 84, 72, 13); //ATH. -> 41 54 48 0d
             string closeString = WriteAndGet(closeBuffer, "OK");
@@ -69,6 +71,7 @@ namespace ZeccaWebAPI
         {
             openCOM();
 
+            myPort.ReadTimeout = 20000;
             string connectString = ConnectToDevice(phoneNumber_in);
             string returnString = " ";
 
@@ -97,17 +100,20 @@ namespace ZeccaWebAPI
             openCOM();
             string dataString = " ";
             string result = " ";
+            myPort.ReadTimeout = 20000;
             string connectString = ConnectToDevice(phoneNumber_in);
             //if CONNECTED get data
             if (connectString.Contains("Raggiungibile"))
             {
+                myPort.ReadTimeout = 2000;
                 //create query message
                 byte[] fullQuestionBuffer = QueryMessage(badgeNumber_in);
 
                 try
                 {
+                    myPort.ReadTimeout = 5000;
                     //read until end message
-                    dataString = WriteAndGet(fullQuestionBuffer, "!");
+                    dataString = WriteAndGet(fullQuestionBuffer, "\u0003");
                 }
                 catch
                 {
@@ -139,17 +145,20 @@ namespace ZeccaWebAPI
             openCOM();
             string dataString = " ";
             string result = " ";
+            myPort.ReadTimeout = 20000;
             string connectString = ConnectToDevice(phoneNumber_in);
             //if CONNECTED get data
             if (connectString.Contains("Raggiungibile"))
             {
+                myPort.ReadTimeout = 3000;
                 //create query message
                 byte[] fullQuestionBuffer = QueryMessage(badgeNumber_in);
 
                 try
                 {
+                    myPort.ReadTimeout = 5000;
                     //read until end message
-                    dataString = WriteAndGet(fullQuestionBuffer, "!");
+                    dataString = WriteAndGet(fullQuestionBuffer, "\u0003");
                 }
                 catch
                 {
@@ -183,7 +192,6 @@ namespace ZeccaWebAPI
         //create a message to ask the device to send its registers.
         public byte[] QueryMessage(string badgeNumber_in)
         {
-            string badge_in = "87640138";
             byte[] twentiesbuffer = CreateMessage(32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 13, 10); // 19spaces..                 ../?37665538!../?37665538!..-> 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 0d 0a 2f 3f 33 37 36 36 35 35 33 38 21 0d 0a 2f 3f 33 37 36 36 35 35 33 38 21 0d 0a
             byte[] questionbuffer = CreateMessage(47, 63);// /?
             byte[] closequestionbuffer = CreateMessage(33, 13, 10);// !..
@@ -212,8 +220,7 @@ namespace ZeccaWebAPI
 
             //change parity bits to even and databits to 7 in order to talk with the device
             myPort.Parity = Parity.Even;
-            myPort.DataBits = 7;
-            myPort.ReadTimeout = 5000;
+            myPort.DataBits = 7;           
 
             return fullQuestionBuffer;
         }
@@ -227,7 +234,6 @@ namespace ZeccaWebAPI
             ENUM.ERRORS err = ENUM.ERRORS.NO_ERRORS;
             //message for AT checking
             byte[] writeBuffer = CreateMessage(65, 84, 13); //AT. -> 41 54 0d
-            myPort.ReadTimeout = 20000;
             //wait until Clear To Send
             while (myPort.CtsHolding == false) { }
 
@@ -280,28 +286,42 @@ namespace ZeccaWebAPI
             StringBuilder completeMessage = new StringBuilder();
             //write the newly created array
             myPort.Write(buffer_in, 0, buffer_in.Length);
-            string a = "";
+            string returnMsg = "";
             byte[] myReadBuffer = new byte[1024];
             int numberOfBytesRead = 0;
             //if received data doesn't contain the checkstring, return the received data anyway
             bool exit = false;
             // if the message is bigger than the buffer, execute the read until the reach of the "ETX" character (\u0003)
-            do
+            while (returnMsg.Contains(checkString_in) == false && exit == false) 
             {
                 try
                 {
                     //numberOfBytesRead = myPort.Read(myReadBuffer, 0, myReadBuffer.Length);
                     // completeMessage.AppendFormat("{0}", Encoding.ASCII.GetString(myReadBuffer, 0, numberOfBytesRead));
-                    a = a + myPort.ReadLine();
+                    if (exit == false)
+                    {
+                        returnMsg = returnMsg + myPort.ReadLine();
+                    }
                 }
                 catch
                 {
                     err = ENUM.ERRORS.SERIAL_GSM_READ_FAILED;
                     exit = true;
                 }
-            } while (a.Contains(checkString_in) == false || exit == true);
+            }
 
-            return a;
+            
+            if (returnMsg.Contains(checkString_in) == false)
+            {
+                try
+                {
+                    myPort.ReadTimeout = 1000;
+                    returnMsg = returnMsg + myPort.ReadLine();
+                }
+                catch { }
+            }
+
+            return returnMsg;
 
         }
 

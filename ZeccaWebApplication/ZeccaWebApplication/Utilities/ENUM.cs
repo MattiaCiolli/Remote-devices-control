@@ -36,7 +36,8 @@ namespace ZeccaWebAPI
             CHECK_TIME = 2,
             CHECK_TEMPERATURE = 3,
             CHECK_NODES = 4,
-            CHECK_VOLTAGE = 5
+            CHECK_VOLTAGE = 5,
+            GET_INFOS = 6
         }
     }
 }

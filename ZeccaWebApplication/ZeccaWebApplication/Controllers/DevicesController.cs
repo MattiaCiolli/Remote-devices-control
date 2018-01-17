@@ -5,10 +5,12 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Script.Serialization;
 using ZeccaWebAPI.Models;
 using ZeccaWebAPI.Services;
 using ZeccaWebApplication.Classes;
@@ -85,13 +87,30 @@ namespace ZeccaWebAPI.Controllers
             List<RequestReturn> resultList = new List<RequestReturn>();
 
             HttpResponseMessage response = new HttpResponseMessage();
+            
             foreach (int idf in idFunc)
             {
-                Request_ThreadCollection waitThread = qts.handleRequest(id, idf);
-                waitThread.Thread.Join();
-                lock (sharedResultLock)
+                if (idf == (int)ENUM.ACTIONS.GET_INFOS)
                 {
-                    resultList.Add(sharedResult);
+                    var serializer = new JavaScriptSerializer();
+                    System.Text.StringBuilder writer = new System.Text.StringBuilder();
+                    serializer.Serialize(db.Dispositivi.Find(id), writer);
+                    string data = (writer.ToString()).Replace("{", "").Replace("}", "").Replace(@"\", "").Replace("\"", " ");
+                    RequestReturn rt = new RequestReturn("Info", data);
+                    lock (sharedResultLock)
+                    {
+                        resultList.Add(rt);
+                    }
+
+                }
+                else
+                {
+                    Request_ThreadCollection waitThread = qts.handleRequest(id, idf);
+                    waitThread.Thread.Join();
+                    lock (sharedResultLock)
+                    {
+                        resultList.Add(sharedResult);
+                    }
                 }
             }
 

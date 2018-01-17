@@ -31,7 +31,7 @@
             </ion-row>
             <ion-row *ngFor="let res of requestResults" style="border-bottom: 1px solid lightgray;">
                 <ion-col col-12><b>{{res.RequestName}}:</b></ion-col>
-                <ion-col col-12>{{res.RequestData}}</ion-col>
+                <ion-col col-12 *ngFor="let r of res.RequestData.split(',')" style="padding-top: 0px; padding-bottom: 2px;">{{r}}</ion-col>
             </ion-row>
         </ion-grid>
     </ion-item-group>

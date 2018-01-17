@@ -39,12 +39,21 @@ export class HomePage {
 
     public countDev = 1;
     public hideReq: boolean[];
+    private effectiveCount = 0;
 
     addDevice() {
         this.countDev++;
-        this.hideReq[this.countDev-1] = false;
-        //var reqCont = document.getElementById("reqContainer");
-        //reqCont.insertAdjacentHTML('beforeend', '<ion-card><ion-card-header style="padding-bottom:0px;"><ion-row align-items-center><ion-col col-3>Dispositivo</ion-col><ion-col col-4 offset-5 class="red"><button ion-button color="danger" small icon-only id="buttondel" (click) ="deleteRequest(2)"><ion-icon name="trash"></ion-icon></button></ion-col></ion-row></ion-card-header><page-devSelector></page-devSelector></ion-card>');
+        this.hideReq[this.countDev - 1] = false;
+    }
+
+    orderValue() {
+        var elemList = document.getElementsByClassName("reqOrder");
+        //this.effectiveCount++;
+        //alert(elemList.length);
+        for (var i = 0; i < elemList.length; i++) {            
+            elemList[i].innerHTML = "Richiesta " + (i + 1);
+            i++;
+        }
     }
 
     getNumber() {
@@ -57,6 +66,7 @@ export class HomePage {
         var parentDiv = delDiv.parentNode;
         parentDiv.removeChild(delDiv);*/
         this.hideReq[i] = true;
+        this.orderValue();
     }
 
     constructor() {

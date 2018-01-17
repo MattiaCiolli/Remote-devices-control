@@ -45,4 +45,3 @@ C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Ht
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.WebHost.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebApplication.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebApplication.pdb
-C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebAPI.csprojResolveAssemblyReference.cache
