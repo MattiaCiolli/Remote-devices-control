@@ -1,12 +1,20 @@
 page-home {
-    /*#logo {
-        display:inline-block;
-        max-width: 60%;
-        height: auto;
-    }*/
+
+    #reqContainer {
+        counter-reset: my-counter;
+    }
+
+    .reqOrder {
+        counter-increment: my-counter;
+    }
+
+    .reqOrder:before {
+        content: "Richiesta " counter(my-counter);
+    }
+
     #button2 {
-       margin-left: 11px;
-       margin-bottom: 14px;
+        margin-left: 11px;
+        margin-bottom: 14px;
     }
 
     .center {

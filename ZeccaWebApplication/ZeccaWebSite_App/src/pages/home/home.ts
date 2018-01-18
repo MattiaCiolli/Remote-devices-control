@@ -39,34 +39,19 @@ export class HomePage {
 
     public countDev = 1;
     public hideReq: boolean[];
-    private effectiveCount = 0;
 
     addDevice() {
         this.countDev++;
         this.hideReq[this.countDev - 1] = false;
     }
 
-    orderValue() {
-        var elemList = document.getElementsByClassName("reqOrder");
-        //this.effectiveCount++;
-        //alert(elemList.length);
-        for (var i = 0; i < elemList.length; i++) {            
-            elemList[i].innerHTML = "Richiesta " + (i + 1);
-            i++;
-        }
-    }
 
     getNumber() {
         return new Array(this.countDev);
     }
 
     deleteRequest(i) {
-        /*     
-        var delDiv = document.getElementById(i.toString());
-        var parentDiv = delDiv.parentNode;
-        parentDiv.removeChild(delDiv);*/
         this.hideReq[i] = true;
-        this.orderValue();
     }
 
     constructor() {
