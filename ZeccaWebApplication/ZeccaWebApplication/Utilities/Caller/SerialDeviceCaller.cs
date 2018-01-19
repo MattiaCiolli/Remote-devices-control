@@ -15,7 +15,7 @@ namespace ZeccaWebAPI
     {
         private SerialPort myPort = new SerialPort("COM4");
         System.Timers.Timer timer1 = new System.Timers.Timer(2000);
-        System.Timers.Timer timer2 = new System.Timers.Timer(2000);
+        System.Timers.Timer timer2 = new System.Timers.Timer(3000);
 
         //opens and sets the port
         private void openCOM()
@@ -35,14 +35,14 @@ namespace ZeccaWebAPI
             }
         }
 
-        //end call sending +++
+        //pass to command mode with +++ to send close command
         private void CloseCall(Object source, ElapsedEventArgs e)
         {
             myPort.ReadTimeout = 3000;
             timer1.Stop();
             byte[] closeBuffer1 = CreateMessage(43, 43, 43); //+++ -> 2b 2b 2b
-            myPort.Parity = Parity.None;
             myPort.DataBits = 8;
+            myPort.Parity = Parity.None;            
             string closeString1 = WriteAndGet(closeBuffer1, "OK");
             if (closeString1.Contains("OK"))
             {
@@ -52,13 +52,21 @@ namespace ZeccaWebAPI
             }
         }
 
-        //end call sending ATH.
+        //end call sending ATH. command
         private void CloseCall2(Object source, ElapsedEventArgs e)
         {
-            myPort.ReadTimeout = 3000;
+            myPort.ReadTimeout = 400;
             timer2.Stop();
+            string closeString = "";
             byte[] closeBuffer = CreateMessage(65, 84, 72, 13); //ATH. -> 41 54 48 0d
-            string closeString = WriteAndGet(closeBuffer, "OK");
+            while (closeString.Contains("ATH") == false)
+            {
+                while (closeString.Contains("OK") == false)
+                {
+                    closeString = WriteAndGet(closeBuffer, "OK");
+                }
+            }
+
             myPort.Close();
         }
 
@@ -268,6 +276,10 @@ namespace ZeccaWebAPI
                         err = ENUM.ERRORS.SERIAL_GSM_CONNECTION_FAILED;
                     }
                 }
+                else
+                {
+                    returnString = "Non raggiungibile";
+                }
             }
 
             if (connectString.Contains("CONNECT"))
@@ -288,7 +300,6 @@ namespace ZeccaWebAPI
             myPort.Write(buffer_in, 0, buffer_in.Length);
             string returnMsg = "";
             byte[] myReadBuffer = new byte[1024];
-            int numberOfBytesRead = 0;
             //if received data doesn't contain the checkstring, return the received data anyway
             bool exit = false;
             // if the message is bigger than the buffer, execute the read until the reach of the "ETX" character (\u0003)
@@ -310,7 +321,7 @@ namespace ZeccaWebAPI
                 }
             }
 
-            
+            /*
             if (returnMsg.Contains(checkString_in) == false)
             {
                 try
@@ -319,7 +330,7 @@ namespace ZeccaWebAPI
                     returnMsg = returnMsg + myPort.ReadLine();
                 }
                 catch { }
-            }
+            }*/
 
             return returnMsg;
 
