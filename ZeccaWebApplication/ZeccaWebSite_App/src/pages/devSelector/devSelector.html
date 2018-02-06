@@ -33,9 +33,12 @@
 
     <ion-item-group>
         <ion-grid>
-            <ion-row>
-                <ion-col col-2 offset-5>
-                    <ion-spinner *ngIf="loading == true"></ion-spinner>
+            <ion-row *ngIf="loading == true" align-items-center>
+                <ion-col col-2 offset-1>
+                    <ion-spinner></ion-spinner>
+                </ion-col>
+                <ion-col col-9>
+                    Connessione in corso ...
                 </ion-col>
             </ion-row>
             <ion-row *ngFor="let res of requestResults" style="border-bottom: 1px solid lightgray;">

@@ -146,7 +146,16 @@ export class DevSel {
             //textEle: this.text.nativeElement,
             devsTot: this.devices
         });
-        popover.present({ ev: ev });
+        let ev1 = {
+            target: {
+                getBoundingClientRect: () => {
+                    return {
+                        top: '100'
+                    };
+                }
+            }
+        };
+        popover.present({ ev: ev1, animate:false });
         popover.onDidDismiss(data => { this.selectedDevice = data; this.deviceFunctions(this.selectedDevice);});
     }
 
