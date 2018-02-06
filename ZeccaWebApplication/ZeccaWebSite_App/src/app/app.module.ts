@@ -4,6 +4,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { DevSel } from '../pages/devSelector/devSelector';
+import { PopoverPage } from '../pages/devSelector/devSelector';
 import { LoginPage } from '../pages/login/login';
 
 @NgModule({
@@ -11,7 +12,8 @@ import { LoginPage } from '../pages/login/login';
     MyApp,
       HomePage,
       DevSel,
-      LoginPage
+      LoginPage,
+      PopoverPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -21,7 +23,8 @@ import { LoginPage } from '../pages/login/login';
     MyApp,
       HomePage,
       DevSel,
-      LoginPage
+      LoginPage,
+      PopoverPage
   ],
   providers: [
       { provide: ErrorHandler, useClass: IonicErrorHandler },
