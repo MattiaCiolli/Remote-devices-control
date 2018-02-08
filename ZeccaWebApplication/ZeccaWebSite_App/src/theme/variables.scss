@@ -60,8 +60,13 @@ $colors: (
 // so that the above variables are used and Ionic's
 // default are overridden.
 
+.popover-content {
+    height:350px;
+}
+
+
 @import "ionic.theme.default";
-$toolbar-background: #315F97;//#205092;
+$toolbar-background: #205092;//#315F97;
 $toolbar-md-title-text-color: white;
 $toolbar-ios-title-text-color: white;
 $toolbar-wp-title-text-color: white;

@@ -5,11 +5,12 @@ import { Http } from '@angular/http';
 
 @Component({
     template: `
-<ion-searchbar [(ngModel)]="searchterm" (ionInput)="setFilteredItems()"></ion-searchbar>
+<h2 style="margin:0; padding:24px 24px 20px 24px; font-size: 22px;">Dispositivi:</h2>
+<ion-searchbar [(ngModel)]="searchterm" (ionInput)="setFilteredItems()" style="border-top:solid; border-width:1px; border-color:#f1f1f1;"></ion-searchbar>
 <ion-list radio-group [(ngModel)]="selected">
 <ion-item *ngFor="let dev of devs">
-<ion-label>{{dev.id}}</ion-label>
 <ion-radio (ionSelect)="close(dev.id)"></ion-radio>
+<ion-label>{{dev.id}}</ion-label>
 </ion-item>
 </ion-list>
 `
