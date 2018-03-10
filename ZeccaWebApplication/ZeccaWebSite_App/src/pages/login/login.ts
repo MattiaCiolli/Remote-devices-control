@@ -24,20 +24,27 @@ export class LoginPage {
     credentialPwd: string;
     userResult: User;
 
+    private address = "localhost";//use "169.254.80.80" for android emulator (run Visual Studio as admin), "localhost" for ripple or browser
+    private port = "54610";
+
     constructor(public events: Events, private nav: NavController, private alertCtrl: AlertController, private loadingCtrl: LoadingController, private http: Http) { }
 
-    public createAccount() {
+    /*public createAccount() {
         this.nav.push('RegisterPage');
-    }
+    }*/
 
+    //sends credentialId and credentialPwd to the server and checks if user can login
     login() {
         this.showLoading()
-        this.http.get('http://localhost:54610/Auth/login/' + this.credentialId + '/' + this.credentialPwd)
+        this.http.get('http://' + this.address + ':' + this.port + '/Auth/login/' + this.credentialId + '/' + this.credentialPwd)
             .subscribe(res => {
+                //if correct the DB user is returned
                 var result = res.json();
                 if (result.Id == this.credentialId) {
                     localStorage.setItem("userId", this.credentialId);
+                    //tell app.component the login is successful
                     this.events.publish('login', Date.now());
+                    //redirect to home page
                     this.nav.setRoot(HomePage);
                 } else {
                     if (result.Id == "Username errato") {
@@ -50,6 +57,7 @@ export class LoginPage {
             });
     }
 
+    //show loadin
     showLoading() {
         this.loading = this.loadingCtrl.create({
             content: 'Accesso in corso...',
@@ -58,6 +66,7 @@ export class LoginPage {
         this.loading.present();
     }
 
+    //show error
     showError(text) {
         this.loading.dismiss();
 

@@ -20,8 +20,6 @@ export class PopoverPage {
     searchterm: string = '';
     selected: string;
     background: string;
-    //contentEle: any;
-    //textEle: any;
     devsTot: any[];
     devs: any[];
     fontFamily;
@@ -48,6 +46,7 @@ export class PopoverPage {
     constructor(private navParams: NavParams, public viewCtrl: ViewController) {
     }
 
+    //filters devices in list on input in searchbar
     setFilteredItems() {
 
         this.devs = this.devsTot.filter((dev) => {
@@ -56,18 +55,16 @@ export class PopoverPage {
 
     }
 
+    //closes popover and passes the selected device to the devSelector's controller
     close(selected) {
         this.viewCtrl.dismiss(selected);
     }
 
+    //initializes popover with all devices
     ngOnInit() {
         if (this.navParams.data) {
-            //this.contentEle = this.navParams.data.contentEle;
-            //this.textEle = this.navParams.data.textEle;
             this.devsTot = this.navParams.data.devsTot;
             this.devs = this.devsTot;
-            //this.background = this.getColorName(this.contentEle.style.backgroundColor);
-            //this.setFontFamily();
         }
     }
 
@@ -119,32 +116,36 @@ export class DevSel {
     public devices: any[];
     public functions: any[];
     public requestResults: any[];
+    private address = "localhost";//use "169.254.80.80" for android emulator (run Visual Studio as admin), "localhost" for ripple or browser
+    private port = "54610";
 
     selectedDevice: string = "--- ";
     selectedFunctions: number[];
 
+    //gets device functions
     deviceFunctions(selectedDev) {
-        this.http.get('http://localhost:54610/Devices/' + selectedDev + '/Functions')
+        //subscribe executes the code in brackets only when data is received
+        this.http.get('http://' + this.address + ':' + this.port + '/Devices/' + selectedDev + '/Functions')
             .subscribe(res => this.functions = res.json());
     }
 
+    //gets infos for each selected function
     requestInfosByFunctions() {
         this.requestResults = undefined;
         var fid = this.selectedFunctions.toString();
         fid = fid.replace(/,/g, '&');
         this.loading = true;
-        this.http.get('http://localhost:54610/Devices/' + this.selectedDevice + '/RequestInfos/?' + fid)
+        this.http.get('http://' + this.address + ':' + this.port + '/Devices/' + this.selectedDevice + '/RequestInfos/?' + fid)
             .subscribe(res => {
                 this.requestResults = res.json();
                 this.loading = false;
             });
     }
 
+    //show select device popover
     presentPopover(ev?: Event) {
 
         let popover = this.popoverCtrl.create(PopoverPage, {
-            //contentEle: this.content.nativeElement,
-            //textEle: this.text.nativeElement,
             devsTot: this.devices
         });
         let ev1 = {
@@ -156,12 +157,14 @@ export class DevSel {
                 }
             }
         };
-        popover.present({ ev: ev1, animate:false });
+        popover.present({ ev: ev1, animate: false });
+        //when dismissed get the selected device and launch deviceFunctions function
         popover.onDidDismiss(data => { this.selectedDevice = data; this.deviceFunctions(this.selectedDevice);});
     }
 
+    //load device list on startup
     constructor(private http: Http, private popoverCtrl: PopoverController) {
-        this.http.get('http://localhost:54610/Devices')
+        this.http.get('http://' + this.address + ':' + this.port + '/Devices')
             .subscribe(res => this.devices = res.json());
     }
 }

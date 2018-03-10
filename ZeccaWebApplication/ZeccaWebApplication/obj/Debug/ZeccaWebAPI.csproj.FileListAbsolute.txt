@@ -43,6 +43,6 @@ C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\Newtonsoft.Js
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Net.Http.Formatting.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.xml
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\bin\System.Web.Http.WebHost.xml
+C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebAPI.csprojResolveAssemblyReference.cache
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebApplication.dll
 C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebApplication.pdb
-C:\Users\matti\Desktop\ZeccaWebApplication\ZeccaWebApplication\obj\Debug\ZeccaWebAPI.csprojResolveAssemblyReference.cache

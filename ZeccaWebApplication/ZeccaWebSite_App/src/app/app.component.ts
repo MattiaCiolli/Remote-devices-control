@@ -22,6 +22,7 @@ export class MyApp {
             // here you can do any higher level native things you might need.
             StatusBar.styleDefault();
             Splashscreen.hide();
+            //listen if login is successful
             events.subscribe('login', (time) => {
                 // time is the same argument passed in `events.publish(login, time)`
                 this.storedUserId = localStorage.getItem("userId");

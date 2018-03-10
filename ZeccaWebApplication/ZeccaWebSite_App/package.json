@@ -10,6 +10,7 @@
     "ionic:serve": "ionic-app-scripts serve",
     "watch": "ionic-app-scripts watch"
   },
+
   "dependencies": {
     "@angular/common": "2.4.8",
     "@angular/compiler": "2.4.8",
@@ -32,6 +33,7 @@
     "@ionic/app-scripts": "1.1.4",
     "typescript": "2.0.9"
   },
+
   "description": "Ionic2Blank: An Ionic project",
   "cordovaPlugins": [
     "cordova-plugin-whitelist",

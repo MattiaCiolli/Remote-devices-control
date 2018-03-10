@@ -26,6 +26,7 @@ import { DevSel } from '../devSelector/devSelector';
 
 export class BasicPage {
 
+    //enable side menu on startup
     constructor(app: App, menu: MenuController) {
         menu.enable(true);
     }
@@ -40,20 +41,23 @@ export class HomePage {
     public countDev = 1;
     public hideReq: boolean[];
 
+    //increment and unhide a request
     addDevice() {
         this.countDev++;
         this.hideReq[this.countDev - 1] = false;
     }
 
-
+    //creates an array with length = countDev
     getNumber() {
         return new Array(this.countDev);
     }
 
+    //hides a request in position = i
     deleteRequest(i) {
         this.hideReq[i] = true;
     }
 
+    //initializes all requests hidden except the first
     constructor() {
         this.hideReq = new Array(100);
         this.hideReq[0] = false;

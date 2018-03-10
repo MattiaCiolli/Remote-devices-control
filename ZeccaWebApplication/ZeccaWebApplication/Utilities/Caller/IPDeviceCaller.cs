@@ -17,7 +17,7 @@ namespace ZeccaWebAPI
         public string CheckReachable(string ipAddress_in, string badgeNumber_in)
         {
             string ris = null;
-            // Ping's the desired machine
+            // Pings the desired machine
             Ping pingSender = new Ping();
             IPAddress address = IPAddress.Parse(ipAddress_in);
             PingReply reply = pingSender.Send(address);
@@ -227,8 +227,8 @@ C.7.0(00000197)
         }
 
         // function to translate integers to exadecimals
-        // https://www.binaryhexconverter.com/hex-to-decimal-converter. Convert the hex value in the IONinja log to decimal and pass it as parameters
-        // "af 3f 21 8d 0a" = ".?!.." but "." is represented also with "2e". Use 175 to represent "af" and so on
+        // https://www.binaryhexconverter.com/hex-to-decimal-converter. Convert the decimal value in the IONinja log to hex and pass it as parameters
+        // "af 3f 21 0d 0a"= ".?!.." but "." is represented also with "2e". Use 175 to represent "af" and so on
         public byte[] CreateMessage(params int[] parameters)
         {
             var buf = new byte[parameters.Length];
